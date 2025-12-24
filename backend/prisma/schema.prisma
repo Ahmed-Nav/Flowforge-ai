@@ -1,0 +1,43 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  workflows Workflow[]
+}
+
+model Workflow {
+  id          String   @id @default(uuid())
+  name        String
+  userId      String
+  triggerType String   // e.g., "webhook"
+  status      String   // "active" or "draft"
+  
+  // This JSON field stores the entire graph (nodes & edges)
+  // We do NOT normalize nodes into separate tables for flexibility.
+  definition  Json 
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  runs        WorkflowRun[]
+  
+  User        User     @relation(fields: [userId], references: [id])
+}
+
+model WorkflowRun {
+  id          String   @id @default(uuid())
+  workflowId  String
+  status      String   // "PENDING", "COMPLETED", "FAILED"
+  outputs     Json?    // Store the final results here
+  createdAt   DateTime @default(now())
+  completedAt DateTime?
+
+  Workflow    Workflow @relation(fields: [workflowId], references: [id])
+}

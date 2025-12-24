@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: flowforge_db
+    environment:
+      POSTGRES_USER: naveed
+      POSTGRES_PASSWORD: naveed123
+      POSTGRES_DB: flowforge
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:alpine
+    container_name: flowforge_queue
+    ports:
+      - "6379:6379"
+
+volumes:
+  pg_data:
