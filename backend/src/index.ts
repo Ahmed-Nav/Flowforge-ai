@@ -16,11 +16,13 @@ const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
-const connection = new IORedis({
-  host: "localhost",
-  port: 6379,
-  maxRetriesPerRequest: null,
-});
+const connection = new IORedis(
+  process.env.REDIS_URL || "redis://localhost:6379",
+  {
+    maxRetriesPerRequest: null,
+  }
+);
+
 const workflowQueue = new Queue("workflow-queue", { connection });
 
 app.post("/workflows", async (req: express.Request, res: express.Response) => {
