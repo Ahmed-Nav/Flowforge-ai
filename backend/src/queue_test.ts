@@ -7,12 +7,24 @@ import { WorkflowEngine } from "./engine";
 import { Pool } from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
 
-const connection = new IORedis(
-  process.env.REDIS_URL || "redis://localhost:6379",
-  {
-    maxRetriesPerRequest: null,  
-  }
+console.log("-----------------------------------------");
+console.log("🔍 WORKER STARTING...");
+console.log(
+  "🔍 REDIS_URL:",
+  process.env.REDIS_URL ? "✅ FOUND (Hidden)" : "❌ MISSING (Using localhost)"
 );
+console.log(
+  "🔍 DATABASE_URL:",
+  process.env.DATABASE_URL ? "✅ FOUND (Hidden)" : "❌ MISSING"
+);
+console.log("-----------------------------------------");
+
+const redisUrl = process.env.REDIS_URL || "redis://localhost:6379";
+
+const connection = new IORedis(redisUrl, {
+  maxRetriesPerRequest: null,
+});
+
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
