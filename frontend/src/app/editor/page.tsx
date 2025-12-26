@@ -104,7 +104,7 @@ export default function EditorPage() {
     };
 
     try {
-      const res = await fetch("http://localhost:3001/workflows", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/workflows`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -134,9 +134,12 @@ export default function EditorPage() {
 
     setRunStatus("INITIALIZING_AI_AGENTS...");
 
-    await fetch(`http://localhost:3001/workflows/${workflowId}/run`, {
-      method: "POST",
-    });
+    await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/workflows/${workflowId}/run`,
+      {
+        method: "POST",
+      }
+    );
 
     setRunStatus("EXECUTING_WORKFLOW... [WAITING_FOR_GEMINI]");
     setRefreshTrigger((prev) => prev + 1);
@@ -147,7 +150,7 @@ export default function EditorPage() {
     const interval = setInterval(async () => {
       try {
         const res = await fetch(
-          `http://localhost:3001/workflows/${workflowId}/runs`
+          `${process.env.NEXT_PUBLIC_API_URL}/workflows/${workflowId}/runs`
         );
         const runs = await res.json();
         const latestRun = runs[0];

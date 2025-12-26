@@ -23,7 +23,7 @@ export default function RunHistory({
 
       try {
         const res = await fetch(
-          `http://localhost:3001/workflows/${workflowId}/runs`
+          `${process.env.NEXT_PUBLIC_API_URL}/workflows/${workflowId}/runs`
         );
         const data = await res.json();
         setRuns(data);
