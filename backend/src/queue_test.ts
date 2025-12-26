@@ -10,8 +10,7 @@ import { PrismaPg } from "@prisma/adapter-pg";
 const connection = new IORedis(
   process.env.REDIS_URL || "redis://localhost:6379",
   {
-    maxRetriesPerRequest: null,
-    tls: process.env.REDIS_URL?.startsWith("rediss://") ? {} : undefined,
+    maxRetriesPerRequest: null,  
   }
 );
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
