@@ -50,3 +50,13 @@ const worker = new Worker(
 );
 
 console.log("👷 Worker is listening for jobs...");
+
+import express from "express";
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.get("/health", (req, res) => res.send("Worker is alive!"));
+
+app.listen(PORT, () => {
+  console.log(`❤️ Health check server running on port ${PORT}`);
+});

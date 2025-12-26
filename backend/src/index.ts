@@ -124,6 +124,13 @@ app.post(
   }
 );
 
+app.get("/workflows", async (req: express.Request, res: express.Response) => {
+  const workflows = await prisma.workflow.findMany({
+    orderBy: { updatedAt: "desc" },
+  });
+  res.json(workflows);
+});
+
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`🚀 API Server running on ${PORT}`);
