@@ -26,28 +26,33 @@ const connection = new IORedis(
 const workflowQueue = new Queue("workflow-queue", { connection });
 
 app.post("/workflows", async (req: express.Request, res: express.Response) => {
-  const { id, name, definition } = req.body; 
+  const { id, name, definition } = req.body;
 
-  const user = await prisma.user.findFirst();
+  let user = await prisma.user.findFirst();
+
   if (!user) {
-     res.status(500).json({ error: "No user found" });
-     return;
+    console.log("⚠️ No user found. Creating default user...");
+    user = await prisma.user.create({
+      data: {
+        email: "demo@flowforge.com",
+        name: "Demo User",
+        clerkId: "demo-123"
+      }
+    });
+    console.log("✅ Default user created:", user.id);
   }
 
   let workflow;
-
   if (id) {
     workflow = await prisma.workflow.update({
       where: { id },
-      data: {
-        definition: definition,
-      }
+      data: { definition }
     });
   } else {
     workflow = await prisma.workflow.create({
       data: {
         name: name || "Untitled Workflow",
-        userId: user.id,
+        userId: user.id, 
         triggerType: "webhook",
         status: "active",
         definition: definition,
@@ -55,7 +60,6 @@ app.post("/workflows", async (req: express.Request, res: express.Response) => {
     });
   }
 
-  console.log(`💾 Saved/Updated Workflow: ${workflow.id}`);
   res.json(workflow);
 });
 
