@@ -35,9 +35,8 @@ app.post("/workflows", async (req: express.Request, res: express.Response) => {
     user = await prisma.user.create({
       data: {
         email: "demo@flowforge.com",
-        name: "Demo User",
-        clerkId: "demo-123"
-      }
+        password: "hashed_password_123",
+      },
     });
     console.log("✅ Default user created:", user.id);
   }
