@@ -7,6 +7,11 @@ import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";
 import { Queue } from "bullmq";
 import IORedis from "ioredis";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import { authenticateToken, AuthRequest } from "./middleware";
+
+const JWT_SECRET = process.env.JWT_SECRET || "secret_JWT";
 
 const app = express();
 app.use(express.json());
@@ -25,42 +30,73 @@ const connection = new IORedis(
 
 const workflowQueue = new Queue("workflow-queue", { connection });
 
-app.post("/workflows", async (req: express.Request, res: express.Response) => {
-  const { id, name, definition } = req.body;
+app.post("/auth/register", async (req: express.Request, res: express.Response) => {
+  const { email, password } = req.body;
 
-  let user = await prisma.user.findFirst();
-
-  if (!user) {
-    console.log("⚠️ No user found. Creating default user...");
-    user = await prisma.user.create({
-      data: {
-        email: "demo@flowforge.com",
-        password: "hashed_password_123",
-      },
-    });
-    console.log("✅ Default user created:", user.id);
+  const existingUser = await prisma.user.findUnique({ where: { email } });
+  if (existingUser) {
+    return res.status(400).json({ error: "User already exists" });
   }
 
-  let workflow;
-  if (id) {
-    workflow = await prisma.workflow.update({
-      where: { id },
-      data: { definition }
-    });
-  } else {
-    workflow = await prisma.workflow.create({
-      data: {
-        name: name || "Untitled Workflow",
-        userId: user.id, 
-        triggerType: "webhook",
-        status: "active",
-        definition: definition,
-      }
-    });
-  }
+  const hashedPassword = await bcrypt.hash(password, 10);
 
-  res.json(workflow);
+  const user = await prisma.user.create({
+    data: {
+      email,
+      password: hashedPassword,
+    },
+  });
+
+  res.json({ message: "User created successfully", userId: user.id });
 });
+
+app.post("/auth/login", async (req: express.Request, res: express.Response) => {
+  const { email, password } = req.body;
+
+  const user = await prisma.user.findUnique({ where: { email } });
+  if (!user) return res.status(400).json({ error: "User not found" });
+
+  const validPassword = await bcrypt.compare(password, user.password || "");
+  if (!validPassword) return res.status(400).json({ error: "Invalid password" });
+
+  const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: "1h" });
+
+  res.json({ token, email: user.email });
+});
+
+app.post(
+  "/workflows",
+  authenticateToken, 
+  async (req: AuthRequest, res: express.Response) => {
+    const { id, name, definition } = req.body;
+    
+    const userId = req.userId; 
+
+    if (!userId) {
+        return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    let workflow;
+    if (id) {
+      workflow = await prisma.workflow.update({
+        where: { id },
+        data: { definition },
+      });
+    } else {
+      workflow = await prisma.workflow.create({
+        data: {
+          name: name || "Untitled Workflow",
+          userId: userId, 
+          triggerType: "webhook",
+          status: "active",
+          definition: definition,
+        },
+      });
+    }
+
+    res.json(workflow);
+  }
+);
 
 app.post(
   "/workflows/:id/run",
