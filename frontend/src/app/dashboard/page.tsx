@@ -12,12 +12,14 @@ interface Workflow {
 }
 
 export default function Dashboard() {
-  const { token, logout, isAuthenticated } = useAuth();
+  const { token, logout, isAuthenticated, loading: authLoading } = useAuth();
   const [workflows, setWorkflows] = useState<Workflow[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [dataLoading, setDataLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
+    if (authLoading) return;
+
     if (!isAuthenticated) {
       router.push("/login");
       return;
@@ -29,7 +31,7 @@ export default function Dashboard() {
           `${process.env.NEXT_PUBLIC_API_URL}/workflows`,
           {
             headers: {
-              Authorization: `Bearer ${token}`, 
+              Authorization: `Bearer ${token}`,
             },
           }
         );
@@ -40,14 +42,14 @@ export default function Dashboard() {
       } catch (error) {
         console.error("Failed to fetch workflows", error);
       } finally {
-        setLoading(false);
+        setDataLoading(false);
       }
     };
 
     fetchWorkflows();
-  }, [isAuthenticated, token, router]);
+  }, [isAuthenticated, authLoading, token, router]);
 
-  if (loading)
+  if (dataLoading)
     return <div className="p-10 text-white">Loading mission control...</div>;
 
   return (

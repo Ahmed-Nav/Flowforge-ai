@@ -13,25 +13,30 @@ interface AuthContextType {
   login: (token: string, email: string) => void;
   logout: () => void;
   isAuthenticated: boolean;
+  loading: boolean; 
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [token, setToken] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true); 
   const router = useRouter();
 
-  // 1. Check for existing token on load
   useEffect(() => {
+    // Check localStorage when app starts
     const storedToken = localStorage.getItem("token");
-    if (storedToken) setToken(storedToken);
+    if (storedToken) {
+      setToken(storedToken);
+    }
+    setLoading(false); 
   }, []);
 
   const login = (newToken: string, email: string) => {
     localStorage.setItem("token", newToken);
     localStorage.setItem("userEmail", email);
     setToken(newToken);
-    router.push("/editor"); 
+    router.push("/dashboard"); 
   };
 
   const logout = () => {
@@ -43,7 +48,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ token, login, logout, isAuthenticated: !!token }}
+      value={{ token, login, logout, isAuthenticated: !!token, loading }}
     >
       {children}
     </AuthContext.Provider>
