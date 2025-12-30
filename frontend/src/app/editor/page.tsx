@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import {
   ReactFlow,
   Background,
@@ -66,6 +66,7 @@ const initialEdges = [
 export default function EditorPage() {
   const { token } = useAuth();
   const searchParams = useSearchParams();
+  const router = useRouter();
   const workflowId = searchParams.get("id");
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
@@ -146,7 +147,7 @@ export default function EditorPage() {
       });
 
       const data = await res.json();
-      setWorkflowId(data.id);
+      router.push(`/editor?id=${data.id}`);
       return data.id; 
     } catch (err) {
       console.error(err);
