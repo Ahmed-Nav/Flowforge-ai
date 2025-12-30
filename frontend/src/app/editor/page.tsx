@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import {
   ReactFlow,
@@ -63,7 +63,7 @@ const initialEdges = [
   },
 ];
 
-export default function EditorPage() {
+function EditorPage() {
   const { token } = useAuth();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -276,5 +276,19 @@ export default function EditorPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function Editor() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex h-screen items-center justify-center text-white bg-gray-900">
+          Loading Console...
+        </div>
+      }
+    >
+      <EditorPage />
+    </Suspense>
   );
 }
