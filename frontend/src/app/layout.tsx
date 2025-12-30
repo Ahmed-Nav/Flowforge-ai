@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { VT323 } from "next/font/google";
+import { AuthProvider } from "@/context/AuthContext";
 import "./globals.css";
 
 const vt323 = VT323({
@@ -23,7 +24,9 @@ export default function RootLayout({
       <body
         className={`${vt323.variable} font-pixel bg-retro-bg text-retro-dark antialiased`}
       >
-        {children}
+        <AuthProvider>
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );

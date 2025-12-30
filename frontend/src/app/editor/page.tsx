@@ -17,6 +17,8 @@ import RetroNode from "@/components/nodes/RetroNode";
 import ConfigPanel from "@/components/ConfigPanel";
 import RunHistory from "@/components/RunHistory"; 
 
+import { useAuth } from "@/context/AuthContext";
+
 const nodeTypes: NodeTypes = {
   retro: RetroNode,
 };
@@ -61,6 +63,7 @@ const initialEdges = [
 ];
 
 export default function EditorPage() {
+  const { token } = useAuth();
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [runStatus, setRunStatus] = useState<string | null>(null);
@@ -106,7 +109,9 @@ export default function EditorPage() {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/workflows`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+         },
         body: JSON.stringify({
           id: workflowId,
           name: "My Visual Workflow",
