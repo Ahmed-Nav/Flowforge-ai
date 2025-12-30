@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import {
   ReactFlow,
   Background,
@@ -64,13 +65,38 @@ const initialEdges = [
 
 export default function EditorPage() {
   const { token } = useAuth();
+  const searchParams = useSearchParams();
+  const workflowId = searchParams.get("id");
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [runStatus, setRunStatus] = useState<string | null>(null);
   const [logs, setLogs] = useState<any[]>([]);
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
-  const [workflowId, setWorkflowId] = useState<string | null>(null);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+  useEffect(() => {
+    if (workflowId && token) {
+      const loadWorkflow = async () => {
+        try {
+          const res = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/workflows`,
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
+          const workflows = await res.json();
+          const current = workflows.find((w: any) => w.id === workflowId);
+
+          if (current && current.definition) {
+            console.log("Loaded workflow:", current);
+          }
+        } catch (err) {
+          console.error("Failed to load workflow", err);
+        }
+      };
+      loadWorkflow();
+    }
+  }, [workflowId, token]);
 
   const onConnect = useCallback(
     (params: Connection) =>

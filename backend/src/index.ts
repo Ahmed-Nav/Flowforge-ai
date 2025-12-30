@@ -163,12 +163,23 @@ app.post(
   }
 );
 
-app.get("/workflows", async (req: express.Request, res: express.Response) => {
-  const workflows = await prisma.workflow.findMany({
-    orderBy: { updatedAt: "desc" },
-  });
-  res.json(workflows);
-});
+app.get(
+  "/workflows",
+  authenticateToken,
+  async (req: AuthRequest, res: express.Response) => {
+    const userId = req.userId;
+
+    if (!userId) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const workflows = await prisma.workflow.findMany({
+      where: { userId: userId },
+      orderBy: { updatedAt: "desc" },
+    });
+    res.json(workflows);
+  }
+);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
