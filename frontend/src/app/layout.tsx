@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { VT323 } from "next/font/google";
 import { AuthProvider } from "@/context/AuthContext";
 import "./globals.css";
+import Navbar from "@/components/Navbar";
 
 const vt323 = VT323({
   weight: "400",
@@ -25,6 +26,7 @@ export default function RootLayout({
         className={`${vt323.variable} font-pixel bg-retro-bg text-retro-dark antialiased`}
       >
         <AuthProvider>
+          <Navbar />
           {children}
         </AuthProvider>
       </body>

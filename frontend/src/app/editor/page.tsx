@@ -64,7 +64,7 @@ const initialEdges = [
 ];
 
 function EditorPage() {
-  const { token } = useAuth();
+  const { token, isAuthenticated, loading } = useAuth();
   const searchParams = useSearchParams();
   const router = useRouter();
   const workflowId = searchParams.get("id");
@@ -76,28 +76,51 @@ function EditorPage() {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   useEffect(() => {
-    if (workflowId && token) {
-      const loadWorkflow = async () => {
-        try {
-          const res = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/workflows`,
-            {
-              headers: { Authorization: `Bearer ${token}` },
-            }
-          );
-          const workflows = await res.json();
-          const current = workflows.find((w: any) => w.id === workflowId);
+    if (!loading && !isAuthenticated) {
+      router.push("/login");
+    }
+  }, [loading, isAuthenticated, router]);
+
+  
+  useEffect(() => {
+    if (!workflowId || !token) return; 
+    const loadWorkflow = async () => {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/runs/${workflowId}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        const resList = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/workflows`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        if (resList.ok) {
+          const allWorkflows = await resList.json();
+          const current = allWorkflows.find((w: any) => w.id === workflowId);
 
           if (current && current.definition) {
-            console.log("Loaded workflow:", current);
+            const graph =
+              typeof current.definition === "string"
+                ? JSON.parse(current.definition)
+                : current.definition;
+
+            if (graph.nodes) setNodes(graph.nodes);
+            if (graph.edges) setEdges(graph.edges);
           }
-        } catch (err) {
-          console.error("Failed to load workflow", err);
         }
-      };
-      loadWorkflow();
-    }
-  }, [workflowId, token]);
+      } catch (err) {
+        console.error("Failed to load workflow", err);
+      }
+    };
+
+    loadWorkflow();
+  }, [workflowId, token, setNodes, setEdges]);
 
   const onConnect = useCallback(
     (params: Connection) =>
@@ -206,6 +229,13 @@ function EditorPage() {
       setSelectedNodeId(node.id);
     }
   }, []);
+
+  if (loading)
+    return (
+      <div className="bg-gray-900 h-screen text-white p-10">
+        System Initializing...
+      </div>
+    );
 
   return (
     <div className="h-screen flex flex-col bg-retro-bg">

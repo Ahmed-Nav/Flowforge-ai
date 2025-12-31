@@ -1,21 +1,46 @@
-// frontend/src/components/Navbar.tsx
-import { Zap } from "lucide-react";
+"use client";
+import Link from "next/link";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Navbar() {
+  const { logout, isAuthenticated } = useAuth();
+
   return (
-    <nav className="w-full border-b-4 border-retro-dark bg-retro-bg p-4 flex justify-between items-center">
-      <div className="flex items-center gap-2">
-        <div className="bg-retro-primary p-2 border-2 border-retro-dark shadow-pixel">
-          <Zap className="w-6 h-6 text-white" />
-        </div>
-        <h1 className="text-3xl font-bold tracking-widest uppercase">
-          FlowForge<span className="text-retro-primary">.AI</span>
-        </h1>
+    <nav className="w-full h-16 bg-black border-b border-gray-800 flex items-center justify-between px-6 z-50">
+      <div className="flex items-center gap-6">
+        <Link
+          href="/"
+          className="text-xl font-bold text-white tracking-tighter"
+        >
+          FLOWFORGE<span className="text-red-600">.AI</span>
+        </Link>
+        {isAuthenticated && (
+          <Link
+            href="/dashboard"
+            className="text-gray-400 hover:text-white text-sm font-mono uppercase"
+          >
+            Dashboard
+          </Link>
+        )}
       </div>
 
-      <button className="bg-retro-dark text-white px-6 py-2 text-xl hover:bg-retro-primary transition-colors border-2 border-transparent hover:border-retro-dark hover:shadow-pixel">
-        Connect Wallet
-      </button>
+      <div className="flex items-center gap-4">
+        {isAuthenticated ? (
+          <button
+            onClick={logout}
+            className="text-gray-400 hover:text-red-500 text-sm font-mono uppercase"
+          >
+            Disconnect
+          </button>
+        ) : (
+          <Link
+            href="/login"
+            className="px-4 py-1 bg-gray-800 hover:bg-gray-700 border border-gray-600 text-white text-xs uppercase rounded"
+          >
+            Login
+          </Link>
+        )}
+      </div>
     </nav>
   );
 }

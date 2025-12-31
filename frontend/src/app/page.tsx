@@ -13,7 +13,7 @@ export default function Home() {
             Build AI Agents with 0% Code and 100% Swagger.
           </p>
 
-          <Link href="/editor">
+          <Link href="/dashboard">
             <button className="bg-retro-primary text-white text-2xl px-8 py-4 border-4 border-retro-dark hover:translate-x-1 hover:translate-y-1 hover:shadow-none shadow-pixel transition-all">
               START_ENGINE_V1
             </button>
