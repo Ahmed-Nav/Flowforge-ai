@@ -36,34 +36,11 @@ const initialNodes = [
       type: "trigger",
       subline: "Listening for POST requests...",
     },
-  },
-  {
-    id: "2",
-    type: "retro",
-    position: { x: 100, y: 350 },
-    data: { label: "GPT-4 Brain", type: "ai", subline: "Summarizing input..." },
-  },
-  {
-    id: "3",
-    type: "retro",
-    position: { x: 500, y: 350 },
-    data: {
-      label: "Email Action",
-      type: "action",
-      subline: "Sending to user@example.com",
-    },
-  },
+    deletable: false,
+  }
 ];
 
-const initialEdges = [
-  {
-    id: "e1-2",
-    source: "1",
-    target: "2",
-    animated: true,
-    style: { stroke: "#1D1D1D", strokeWidth: 2 },
-  },
-];
+const initialEdges: any[] = [];
 
 function EditorPage() {
   const { token, isAuthenticated, loading } = useAuth();
@@ -220,7 +197,14 @@ function EditorPage() {
         );
 
         if (!res.ok) {
+          if (res.status === 401 || res.status === 403) {
+            clearInterval(interval);
+            alert("Session expired. Please login again.");
+            router.push("/login"); 
+            return;
+          }
           console.error("Polling failed:", res.status);
+          return;
         }
 
         const runs = await res.json();
@@ -259,6 +243,15 @@ function EditorPage() {
     };
     setNodes((nds) => [...nds, newNode]);
   };
+
+  const deleteNode = useCallback(
+    (id: string) => {
+      setNodes((nds) => nds.filter((n) => n.id !== id));
+      setEdges((eds) => eds.filter((e) => e.source !== id && e.target !== id));
+      setSelectedNodeId(null);
+    },
+    [setNodes, setEdges]
+  );
 
   if (loading)
     return (
@@ -319,6 +312,7 @@ function EditorPage() {
           nodes={nodes}
           setNodes={setNodes}
           onClose={() => setSelectedNodeId(null)}
+          onDelete={deleteNode}
         />
 
         <div className="absolute bottom-4 left-4 right-4 h-48 bg-black border-4 border-retro-dark p-4 font-pixel text-green-400 overflow-y-auto shadow-pixel z-20 opacity-90">

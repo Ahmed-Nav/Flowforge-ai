@@ -1,4 +1,4 @@
-import { X, Save } from "lucide-react";
+import { X, Save, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
 interface ConfigPanelProps {
@@ -6,6 +6,7 @@ interface ConfigPanelProps {
   nodes: any[];
   setNodes: (nodes: any[]) => void;
   onClose: () => void;
+  onDelete: (id: string) => void;
 }
 
 export default function ConfigPanel({
@@ -13,6 +14,7 @@ export default function ConfigPanel({
   nodes,
   setNodes,
   onClose,
+  onDelete,
 }: ConfigPanelProps) {
   const [prompt, setPrompt] = useState("");
   const selectedNode = nodes.find((n) => n.id === selectedNodeId);
@@ -40,6 +42,16 @@ export default function ConfigPanel({
     onClose();
   };
 
+  const handleDelete = () => {
+    if (selectedNode.data.type === "trigger") {
+      alert("Root trigger cannot be deleted.");
+      return;
+    }
+    if (confirm("Are you sure you want to delete this node?")) {
+      onDelete(selectedNodeId);
+    }
+  };
+
   return (
     <div className="absolute top-0 right-0 h-full w-80 bg-white border-l-4 border-retro-dark shadow-[-4px_0px_0px_#1D1D1D] z-30 flex flex-col">
       <div className="bg-retro-primary p-4 border-b-4 border-retro-dark flex justify-between items-center">
@@ -56,27 +68,28 @@ export default function ConfigPanel({
 
       <div className="p-6 flex-1 bg-retro-bg">
         <label className="block text-retro-dark font-bold mb-2 font-pixel text-lg">
-          AI_INSTRUCTION (PROMPT):
+          AI_INSTRUCTION:
         </label>
         <textarea
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
           className="w-full h-48 border-4 border-retro-dark p-4 font-mono text-sm focus:outline-none focus:shadow-pixel transition-all"
-          placeholder="Ex: Write a poem about {{previous_step}}..."
+          placeholder="Ex: Summarize this data..."
         />
-        <p className="text-xs mt-2 opacity-60 font-mono">
-        Tip: Use <span className="font-bold">{`{{ previous_step }}`}</span> to
-          insert data from the trigger.
-        </p>
       </div>
 
-      <div className="p-4 border-t-4 border-retro-dark bg-white">
+      <div className="p-4 border-t-4 border-retro-dark bg-white flex gap-2">
+        <button
+          onClick={handleDelete}
+          className="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-3 border-2 border-retro-dark shadow-pixel flex justify-center items-center gap-2"
+        >
+          <Trash2 size={20} /> DELETE
+        </button>
         <button
           onClick={handleSave}
-          className="w-full bg-green-500 text-white font-bold py-3 border-2 border-retro-dark shadow-pixel hover:translate-y-1 hover:shadow-none transition-all flex justify-center items-center gap-2"
+          className="flex-[2] bg-green-500 hover:bg-green-600 text-white font-bold py-3 border-2 border-retro-dark shadow-pixel flex justify-center items-center gap-2"
         >
-          <Save size={20} />
-          SAVE_CONFIG
+          <Save size={20} /> SAVE
         </button>
       </div>
     </div>
