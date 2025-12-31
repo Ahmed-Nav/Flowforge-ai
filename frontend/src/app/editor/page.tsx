@@ -129,9 +129,11 @@ function EditorPage() {
           id: node.id,
           type: backendType,
           data: node.data,
+          position: node.position,
           nextStepId: edge ? edge.target : null,
         };
       }),
+      edges: edges,
     };
 
     try {
