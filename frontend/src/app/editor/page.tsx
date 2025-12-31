@@ -70,7 +70,7 @@ function EditorPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const workflowId = searchParams.get("id");
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [nodes, setNodes, onNodesChange] = useNodesState<any>(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [runStatus, setRunStatus] = useState<string | null>(null);
   const [logs, setLogs] = useState<any[]>([]);
@@ -289,6 +289,15 @@ function EditorPage() {
             position="bottom-left"
           />
         </ReactFlow>
+
+        <div className="absolute top-4 right-4 z-10">
+          <button
+            onClick={addNode}
+            className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-bold rounded shadow-lg border-2 border-red-800 uppercase tracking-wider transition transform hover:scale-105"
+          >
+            + Add AI Node
+          </button>
+        </div>
 
         <RunHistory
           workflowId={workflowId}
