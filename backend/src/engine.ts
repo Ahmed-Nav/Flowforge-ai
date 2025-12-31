@@ -25,9 +25,9 @@ export class WorkflowEngine {
         const node = definition.nodes.find((n) => n.id === currentStepId);
         if (!node) break;
 
-        const output = await this.executeNode(node, context);
-        context[node.id] = output;
+        const output = await this.executeNode(node, context, definition);
 
+        context[node.id] = output;
         currentStepId = node.nextStepId || null;
       }
 
@@ -39,7 +39,6 @@ export class WorkflowEngine {
           completedAt: new Date(),
         },
       });
-      console.log(`🏁 Run ${runId} Completed!`);
     } catch (error: any) {
       console.error("Workflow Failed:", error);
       await prisma.workflowRun.update({
@@ -53,7 +52,11 @@ export class WorkflowEngine {
     }
   }
 
-  private async executeNode(node: WorkflowNode, context: any) {
+  private async executeNode(
+    node: WorkflowNode,
+    context: any,
+    definition: WorkflowDefinition
+  ) {
     switch (node.type) {
       case "TRIGGER":
         return { message: "Webhook received!" };
