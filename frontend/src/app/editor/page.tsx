@@ -16,18 +16,20 @@ import "@xyflow/react/dist/style.css";
 import Navbar from "@/components/Navbar";
 import RetroNode from "@/components/nodes/RetroNode";
 import ConfigPanel from "@/components/ConfigPanel";
-import RunHistory from "@/components/RunHistory"; 
+import RunHistory from "@/components/RunHistory";
+import PromptNode from "@/components/nodes/PromptNode";
 
 import { useAuth } from "@/context/AuthContext";
 
 const nodeTypes: NodeTypes = {
   retro: RetroNode,
+  promptNode: PromptNode,
 };
 
 const initialNodes = [
   {
     id: "1",
-    type: "retro", 
+    type: "retro",
     position: { x: 100, y: 100 },
     data: {
       label: "Webhook Trigger",
@@ -81,9 +83,8 @@ function EditorPage() {
     }
   }, [loading, isAuthenticated, router]);
 
-  
   useEffect(() => {
-    if (!workflowId || !token) return; 
+    if (!workflowId || !token) return;
     const loadWorkflow = async () => {
       try {
         const res = await fetch(
@@ -142,14 +143,13 @@ function EditorPage() {
       triggerId: nodes.find((n) => n.data.type === "trigger")?.id,
       nodes: nodes.map((node) => {
         const edge = edges.find((e) => e.source === node.id);
+        let backendType = "ACTION"; 
+        if (node.data.type === "trigger") backendType = "TRIGGER";
+        else if (node.data.type === "ai" || node.type === "promptNode")
+          backendType = "AI";
         return {
           id: node.id,
-          type:
-            node.data.type === "trigger"
-              ? "TRIGGER"
-              : node.data.type === "ai"
-              ? "AI"
-              : "ACTION",
+          type: backendType,
           data: node.data,
           nextStepId: edge ? edge.target : null,
         };
@@ -159,9 +159,10 @@ function EditorPage() {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/workflows`, {
         method: "POST",
-        headers: { "Content-Type": "application/json",
+        headers: {
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
-         },
+        },
         body: JSON.stringify({
           id: workflowId,
           name: "My Visual Workflow",
@@ -171,7 +172,7 @@ function EditorPage() {
 
       const data = await res.json();
       router.push(`/editor?id=${data.id}`);
-      return data.id; 
+      return data.id;
     } catch (err) {
       console.error(err);
       return null;
@@ -193,6 +194,10 @@ function EditorPage() {
       `${process.env.NEXT_PUBLIC_API_URL}/workflows/${workflowId}/run`,
       {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
       }
     );
 
@@ -205,8 +210,19 @@ function EditorPage() {
     const interval = setInterval(async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/workflows/${workflowId}/runs`
+          `${process.env.NEXT_PUBLIC_API_URL}/workflows/${workflowId}/runs`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
+
+        if (!res.ok) {
+          console.error("Polling failed:", res.status);
+        }
+
         const runs = await res.json();
         const latestRun = runs[0];
 
@@ -220,8 +236,9 @@ function EditorPage() {
           clearInterval(interval);
         }
       } catch (e) {
-        console.log("Error polling logs:", e);}
-    }, 1000); 
+        console.log("Error polling logs:", e);
+      }
+    }, 1000);
   };
 
   const onNodeClick = useCallback((event: any, node: any) => {
@@ -229,6 +246,19 @@ function EditorPage() {
       setSelectedNodeId(node.id);
     }
   }, []);
+
+  const addNode = () => {
+    const newNode = {
+      id: `node-${nodes.length + 1}`,
+      type: "promptNode",
+      position: { x: Math.random() * 400, y: Math.random() * 400 },
+      data: {
+        type: "ai", 
+        prompt: "Tell me a fun fact about space.",
+      },
+    };
+    setNodes((nds) => [...nds, newNode]);
+  };
 
   if (loading)
     return (
