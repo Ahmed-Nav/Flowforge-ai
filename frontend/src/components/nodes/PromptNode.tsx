@@ -1,10 +1,16 @@
 import { Handle, Position } from "@xyflow/react";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 
 export default function PromptNode({ data, id }: { data: any; id: string }) {
   const [prompt, setPrompt] = useState(
     data.prompt || "Write your instruction here..."
   );
+
+  useEffect(() => {
+    if (data.prompt) {
+      setPrompt(data.prompt);
+    }
+  }, [data.prompt]);
 
   const handleChange = useCallback(
     (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -17,7 +23,6 @@ export default function PromptNode({ data, id }: { data: any; id: string }) {
 
   return (
     <div className="bg-gray-800 border-2 border-red-500 rounded-lg p-4 shadow-xl w-64">
-      {/* Header */}
       <div className="bg-red-600 -mx-4 -mt-4 mb-4 p-2 rounded-t-lg font-bold text-white text-xs tracking-widest flex items-center gap-2">
         <span>🤖</span> AI_INSTRUCTION_NODE
       </div>
