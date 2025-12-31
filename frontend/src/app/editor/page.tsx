@@ -120,10 +120,11 @@ function EditorPage() {
       triggerId: nodes.find((n) => n.data.type === "trigger")?.id,
       nodes: nodes.map((node) => {
         const edge = edges.find((e) => e.source === node.id);
-        let backendType = "ACTION"; 
+        let backendType = "ACTION";
         if (node.data.type === "trigger") backendType = "TRIGGER";
         else if (node.data.type === "ai" || node.type === "promptNode")
           backendType = "AI";
+
         return {
           id: node.id,
           type: backendType,
@@ -134,11 +135,13 @@ function EditorPage() {
     };
 
     try {
+      console.log("🚀 Deploying with Token:", token?.slice(0, 10) + "..."); 
+
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/workflows`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token}`, 
         },
         body: JSON.stringify({
           id: workflowId,
@@ -147,11 +150,29 @@ function EditorPage() {
         }),
       });
 
+      if (res.status === 401 || res.status === 403) {
+        alert(
+          "Session Expired: The backend rejected your token. Redirecting to login..."
+        );
+        localStorage.removeItem("token"); 
+        router.push("/login");
+        return null;
+      }
+
+      if (!res.ok) {
+        const errText = await res.text();
+        throw new Error(`Deployment Failed: ${res.status} ${errText}`);
+      }
+
       const data = await res.json();
-      router.push(`/editor?id=${data.id}`);
+
+      if (!workflowId) {
+        router.push(`/editor?id=${data.id}`);
+      }
       return data.id;
-    } catch (err) {
-      console.error(err);
+    } catch (err: any) {
+      console.error("❌ Deployment Error:", err);
+      setRunStatus(`ERROR: ${err.message}`);
       return null;
     }
   };
