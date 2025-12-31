@@ -10,6 +10,7 @@ export interface WorkflowNode {
 export interface WorkflowDefinition {
   nodes: WorkflowNode[];
   triggerId: string; 
+  edges: any[];
 }
 
 export interface ExecutionState {

@@ -62,8 +62,19 @@ export class WorkflowEngine {
         const promptTemplate =
           node.data.prompt || "Summarize this: {{previous_step}}";
 
-        const previousData = Object.values(context)[0] || {};
-        const previousText = JSON.stringify(previousData);
+        const incomingEdge = (definition.edges || []).find(
+          (e) => e.target === node.id
+        );
+
+        let previousText = "";
+
+        if (incomingEdge) {
+          const parentOutput = context[incomingEdge.source];
+          previousText =
+            parentOutput?.result || JSON.stringify(parentOutput) || "";
+        } else {
+          previousText = "No input data found.";
+        }
 
         const finalPrompt = promptTemplate.replace(
           "{{previous_step}}",
