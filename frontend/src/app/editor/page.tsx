@@ -239,7 +239,6 @@ function EditorPage() {
 
   return (
     <div className="h-screen flex flex-col bg-retro-bg">
-      <Navbar />
 
       <div className="flex-1 border-t-4 border-retro-dark relative">
         <ReactFlow
