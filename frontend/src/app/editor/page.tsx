@@ -62,15 +62,9 @@ function EditorPage() {
 
   useEffect(() => {
     if (!workflowId || !token) return;
+
     const loadWorkflow = async () => {
       try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/runs/${workflowId}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-
         const resList = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/workflows`,
           {
@@ -88,7 +82,21 @@ function EditorPage() {
                 ? JSON.parse(current.definition)
                 : current.definition;
 
-            if (graph.nodes) setNodes(graph.nodes);
+            if (graph.nodes) {
+              const restoredNodes = graph.nodes.map((n: any) => {
+                let frontendType = "retro"; 
+
+                if (n.type === "AI") frontendType = "promptNode";
+                if (n.type === "TRIGGER") frontendType = "retro";
+
+                return {
+                  ...n,
+                  type: frontendType, 
+                };
+              });
+              setNodes(restoredNodes);
+            }
+
             if (graph.edges) setEdges(graph.edges);
           }
         }
@@ -137,13 +145,13 @@ function EditorPage() {
     };
 
     try {
-      console.log("🚀 Deploying with Token:", token?.slice(0, 10) + "..."); 
+      console.log("🚀 Deploying with Token:", token?.slice(0, 10) + "...");
 
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/workflows`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, 
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           id: workflowId,
@@ -156,7 +164,7 @@ function EditorPage() {
         alert(
           "Session Expired: The backend rejected your token. Redirecting to login..."
         );
-        localStorage.removeItem("token"); 
+        localStorage.removeItem("token");
         router.push("/login");
         return null;
       }
@@ -207,6 +215,7 @@ function EditorPage() {
   };
 
   const pollLogs = async (workflowId: string) => {
+    if (!workflowId) return;
     const interval = setInterval(async () => {
       try {
         const res = await fetch(
@@ -223,7 +232,7 @@ function EditorPage() {
           if (res.status === 401 || res.status === 403) {
             clearInterval(interval);
             alert("Session expired. Please login again.");
-            router.push("/login"); 
+            router.push("/login");
             return;
           }
           console.error("Polling failed:", res.status);
@@ -260,7 +269,7 @@ function EditorPage() {
       type: "promptNode",
       position: { x: Math.random() * 400, y: Math.random() * 400 },
       data: {
-        type: "ai", 
+        type: "ai",
         prompt: "Tell me a fun fact about space.",
       },
     };

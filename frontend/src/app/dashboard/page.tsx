@@ -4,6 +4,7 @@ import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
+import { Trash2 } from "lucide-react";
 
 interface Workflow {
   id: string;
@@ -49,6 +50,34 @@ export default function Dashboard() {
 
     fetchWorkflows();
   }, [isAuthenticated, authLoading, token, router]);
+
+  const handleDelete = async (e: React.MouseEvent, id: string) => {
+    e.stopPropagation();
+    if (
+      !confirm(
+        "Are you sure you want to delete this agent? This cannot be undone."
+      )
+    )
+      return;
+
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/workflows/${id}`,
+        {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (res.ok) {
+        setWorkflows((prev) => prev.filter((w) => w.id !== id));
+      } else {
+        alert("Failed to delete workflow");
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   if (dataLoading)
     return <div className="p-10 text-white">Loading mission control...</div>;
@@ -104,6 +133,13 @@ export default function Dashboard() {
                   <span className="text-gray-500 text-xs">
                     {new Date(wf.createdAt).toLocaleDateString()}
                   </span>
+                  <button
+                    onClick={(e) => handleDelete(e, wf.id)}
+                    className="absolute top-4 right-4 text-gray-600 hover:text-red-500 transition z-20 p-2 hover:bg-gray-700/50 rounded"
+                    title="Delete Agent"
+                  >
+                    <Trash2 size={16} />
+                  </button>
                   <Link
                     href={`/editor?id=${wf.id}`}
                     className="text-red-400 hover:text-red-300 text-sm hover:underline"

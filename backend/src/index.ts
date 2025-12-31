@@ -181,6 +181,24 @@ app.get(
   }
 );
 
+app.delete("/workflows/:id", authenticateToken, async (req: AuthRequest, res: express.Response) => {
+  const { id } = req.params;
+  const userId = req.userId;
+
+  try {
+    const workflow = await prisma.workflow.findUnique({ where: { id } });
+    if (!workflow || workflow.userId !== userId) {
+      return res.status(403).json({ error: "Not authorized to delete this workflow" });
+    }
+
+    await prisma.workflow.delete({ where: { id } });
+    
+    res.json({ message: "Workflow deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to delete workflow" });
+  }
+});
+
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`🚀 API Server running on ${PORT}`);
