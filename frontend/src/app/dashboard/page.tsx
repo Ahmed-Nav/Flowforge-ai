@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Navbar from "@/components/Navbar";
 
 interface Workflow {
   id: string;
@@ -54,6 +55,8 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white font-mono p-8">
+      <Navbar />
+
       <div className="flex justify-between items-center mb-10 border-b border-gray-700 pb-4">
         <h1 className="text-3xl font-bold text-red-500">MISSION CONTROL</h1>
         <div className="space-x-4">
@@ -105,7 +108,7 @@ export default function Dashboard() {
                   {new Date(wf.createdAt).toLocaleDateString()}
                 </span>
                 <Link
-                  href={`/editor?id=${wf.id}`} 
+                  href={`/editor?id=${wf.id}`}
                   className="text-red-400 hover:text-red-300 text-sm hover:underline"
                 >
                   Open Console &rarr;
