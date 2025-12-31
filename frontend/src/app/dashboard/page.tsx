@@ -110,7 +110,7 @@ export default function Dashboard() {
             workflows.map((wf) => (
               <div
                 key={wf.id}
-                className="bg-gray-800 border border-gray-700 p-6 rounded-lg hover:border-red-500 transition shadow-lg"
+                className="relative group bg-gray-800 border border-gray-700 p-6 rounded-lg hover:border-red-500 transition shadow-lg"
               >
                 <div className="flex justify-between items-start mb-4">
                   <h2 className="text-xl font-bold text-white truncate">
@@ -135,10 +135,10 @@ export default function Dashboard() {
                   </span>
                   <button
                     onClick={(e) => handleDelete(e, wf.id)}
-                    className="absolute top-4 right-4 text-gray-600 hover:text-red-500 transition z-20 p-2 hover:bg-gray-700/50 rounded"
+                    className="absolute top-4 right-4 text-gray-500 hover:text-red-500 transition-all opacity-0 group-hover:opacity-100 z-20 p-2 bg-gray-900/50 rounded-full"
                     title="Delete Agent"
                   >
-                    <Trash2 size={16} />
+                    <Trash2 size={18} />
                   </button>
                   <Link
                     href={`/editor?id=${wf.id}`}

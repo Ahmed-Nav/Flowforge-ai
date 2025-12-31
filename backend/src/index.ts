@@ -191,7 +191,11 @@ app.delete("/workflows/:id", authenticateToken, async (req: AuthRequest, res: ex
       return res.status(403).json({ error: "Not authorized to delete this workflow" });
     }
 
-    await prisma.workflow.delete({ where: { id } });
+    await prisma.workflowRun.deleteMany({ where: { workflowId: id } });
+
+    await prisma.workflow.delete({
+      where: { id },
+    });
     
     res.json({ message: "Workflow deleted successfully" });
   } catch (error) {
