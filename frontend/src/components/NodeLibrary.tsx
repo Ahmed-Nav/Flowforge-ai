@@ -52,6 +52,25 @@ export default function NodeLibrary() {
           </div>
         </div>
       </div>
+      <div
+        className="bg-gray-800 border border-blue-600 p-3 rounded cursor-grab hover:border-blue-400 transition shadow-lg flex items-center gap-3"
+        onDragStart={(event) =>
+          onDragStart(event, "httpNode", {
+            type: "http",
+            url: "",
+            method: "GET",
+          })
+        }
+        draggable
+      >
+        <div className="w-8 h-8 bg-blue-900/50 rounded flex items-center justify-center text-blue-200">
+          🌐
+        </div>
+        <div>
+          <div className="text-sm font-bold text-gray-200">HTTP Request</div>
+          <div className="text-[10px] text-gray-500">Fetch API Data</div>
+        </div>
+      </div>
     </aside>
   );
 }

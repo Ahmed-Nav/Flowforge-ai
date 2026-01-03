@@ -98,6 +98,22 @@ export class WorkflowEngine {
           target: node.data.email || "unknown",
         };
 
+      case "HTTP":
+        const url = node.data.url;
+        const method = node.data.method || "GET";
+
+        console.log(`   🌐 HTTP ${method}: ${url}`);
+
+        if (!url) return { error: "No URL provided" };
+
+        try {
+          const res = await fetch(url, { method });
+          const data = await res.json();
+          return { result: JSON.stringify(data), status: res.status };
+        } catch (err: any) {
+          console.error("HTTP Node Error:", err.message);
+          return { error: "HTTP Request Failed", details: err.message };
+        }
       default:
         return { error: "Unknown Node Type" };
     }

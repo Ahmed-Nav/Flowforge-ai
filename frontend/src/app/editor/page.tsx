@@ -19,12 +19,14 @@ import ConfigPanel from "@/components/ConfigPanel";
 import RunHistory from "@/components/RunHistory";
 import PromptNode from "@/components/nodes/PromptNode";
 import NodeLibrary from "@/components/NodeLibrary";
+import HttpNode from "@/components/nodes/HttpNode";
 
 import { useAuth } from "@/context/AuthContext";
 
 const nodeTypes: NodeTypes = {
   retro: RetroNode,
   promptNode: PromptNode,
+  httpNode: HttpNode,
 };
 
 const initialNodes = [
@@ -85,14 +87,15 @@ function EditorPage() {
 
             if (graph.nodes) {
               const restoredNodes = graph.nodes.map((n: any) => {
-                let frontendType = "retro"; 
+                let frontendType = "retro";
 
                 if (n.type === "AI") frontendType = "promptNode";
                 if (n.type === "TRIGGER") frontendType = "retro";
+                if (n.type === "HTTP") frontendType = "httpNode";
 
                 return {
                   ...n,
-                  type: frontendType, 
+                  type: frontendType,
                 };
               });
               setNodes(restoredNodes);
@@ -133,6 +136,7 @@ function EditorPage() {
         if (node.data.type === "trigger") backendType = "TRIGGER";
         else if (node.data.type === "ai" || node.type === "promptNode")
           backendType = "AI";
+        else if (node.type === "httpNode") backendType = "HTTP";
 
         return {
           id: node.id,
