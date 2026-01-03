@@ -150,6 +150,7 @@ function EditorPage() {
     };
 
     try {
+      console.log("🚀 DEPLOYING NODES:", JSON.stringify(nodes, null, 2));
       console.log("🚀 Deploying with Token:", token?.slice(0, 10) + "...");
 
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/workflows`, {

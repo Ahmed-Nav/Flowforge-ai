@@ -1,43 +1,27 @@
-import { Handle, Position, useReactFlow } from '@xyflow/react';
-import { useState, useCallback, useEffect } from 'react';
-import { Globe } from 'lucide-react'; 
+import { Handle, Position, useReactFlow } from "@xyflow/react";
+import { useState, useEffect } from "react";
+import { Globe } from "lucide-react";
 
-export default function HttpNode({ data, id }: { data: any, id: string }) {
-  const { setNodes } = useReactFlow();
-  const [url, setUrl] = useState(data.url || "https://api.coindesk.com/v1/bpi/currentprice.json");
+export default function HttpNode({ data, id }: { data: any; id: string }) {
+  const { updateNodeData } = useReactFlow(); 
+  const [url, setUrl] = useState(data.url || "");
   const [method, setMethod] = useState(data.method || "GET");
 
   useEffect(() => {
-    if (data.url) setUrl(data.url);
-    if (data.method) setMethod(data.method);
+    if (data.url !== undefined) setUrl(data.url);
+    if (data.method !== undefined) setMethod(data.method);
   }, [data.url, data.method]);
 
   const handleUrlChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
     const newVal = evt.target.value;
     setUrl(newVal);
-
-    setNodes((nds) =>
-      nds.map((node) => {
-        if (node.id === id) {
-          return { ...node, data: { ...node.data, url: newVal } };
-        }
-        return node;
-      })
-    );
+    updateNodeData(id, { url: newVal });
   };
 
   const handleMethodChange = (evt: React.ChangeEvent<HTMLSelectElement>) => {
     const newVal = evt.target.value;
     setMethod(newVal);
-
-    setNodes((nds) =>
-      nds.map((node) => {
-        if (node.id === id) {
-          return { ...node, data: { ...node.data, method: newVal } };
-        }
-        return node;
-      })
-    );
+    updateNodeData(id, { method: newVal });
   };
 
   return (
@@ -47,20 +31,24 @@ export default function HttpNode({ data, id }: { data: any, id: string }) {
       </div>
 
       <div className="mb-2">
-        <label className="text-gray-400 text-[10px] uppercase font-bold">Method</label>
-        <select 
-            value={method} 
-            onChange={handleMethodChange}
-            className="w-full bg-gray-900 text-blue-300 text-xs font-mono p-1 rounded border border-gray-700 outline-none mb-2"
+        <label className="text-gray-400 text-[10px] uppercase font-bold">
+          Method
+        </label>
+        <select
+          value={method}
+          onChange={handleMethodChange}
+          className="w-full bg-gray-900 text-blue-300 text-xs font-mono p-1 rounded border border-gray-700 outline-none mb-2"
         >
-            <option value="GET">GET</option>
-            <option value="POST">POST</option>
+          <option value="GET">GET</option>
+          <option value="POST">POST</option>
         </select>
       </div>
 
       <div className="mb-2">
-        <label className="text-gray-400 text-[10px] uppercase font-bold">Target URL</label>
-        <input 
+        <label className="text-gray-400 text-[10px] uppercase font-bold">
+          Target URL
+        </label>
+        <input
           type="text"
           className="w-full bg-gray-900 text-green-400 text-xs font-mono p-2 rounded border border-gray-700 focus:border-blue-500 outline-none"
           value={url}
@@ -69,9 +57,19 @@ export default function HttpNode({ data, id }: { data: any, id: string }) {
         />
       </div>
 
-      <Handle type="target" position={Position.Left} className="!bg-blue-500 !w-3 !h-3" />
-      <div className="text-[9px] text-gray-500 text-right mt-1">RESPONSE &rarr;</div>
-      <Handle type="source" position={Position.Right} className="!bg-green-500 !w-3 !h-3" />
+      <Handle
+        type="target"
+        position={Position.Left}
+        className="!bg-blue-500 !w-3 !h-3"
+      />
+      <div className="text-[9px] text-gray-500 text-right mt-1">
+        RESPONSE &rarr;
+      </div>
+      <Handle
+        type="source"
+        position={Position.Right}
+        className="!bg-green-500 !w-3 !h-3"
+      />
     </div>
   );
 }
