@@ -18,6 +18,7 @@ import RetroNode from "@/components/nodes/RetroNode";
 import ConfigPanel from "@/components/ConfigPanel";
 import RunHistory from "@/components/RunHistory";
 import PromptNode from "@/components/nodes/PromptNode";
+import NodeLibrary from "@/components/NodeLibrary";
 
 import { useAuth } from "@/context/AuthContext";
 
@@ -263,18 +264,36 @@ function EditorPage() {
     }
   }, []);
 
-  const addNode = () => {
-    const newNode = {
-      id: `node-${nodes.length + 1}`,
-      type: "promptNode",
-      position: { x: Math.random() * 400, y: Math.random() * 400 },
-      data: {
-        type: "ai",
-        prompt: "Tell me a fun fact about space.",
-      },
-    };
-    setNodes((nds) => [...nds, newNode]);
-  };
+  const onDragOver = useCallback((event: React.DragEvent) => {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = "move";
+  }, []);
+
+  const onDrop = useCallback(
+    (event: React.DragEvent) => {
+      event.preventDefault();
+
+      const type = event.dataTransfer.getData("application/reactflow");
+      const dataString = event.dataTransfer.getData("application/nodedata");
+
+      if (!type || !dataString) return;
+
+      const data = JSON.parse(dataString);
+
+      
+      const position = { x: event.clientX - 300, y: event.clientY - 100 }; 
+
+      const newNode = {
+        id: `node-${Date.now()}`, 
+        type,
+        position,
+        data: data,
+      };
+
+      setNodes((nds) => nds.concat(newNode));
+    },
+    [setNodes]
+  );
 
   const deleteNode = useCallback(
     (id: string) => {
@@ -296,84 +315,82 @@ function EditorPage() {
     <div className="h-screen flex flex-col bg-retro-bg">
       <Navbar />
 
-      <div className="flex-1 border-t-4 border-retro-dark relative">
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          nodeTypes={nodeTypes}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          onConnect={onConnect}
-          onNodeClick={onNodeClick}
-          fitView
-        >
-          <Background color="#1D1D1D" gap={30} size={2} />
+      <div className="flex-1 flex overflow-hidden border-t-4 border-retro-dark relative">
+        <NodeLibrary />
 
-          <Controls
-            className="bg-retro-bg border-2 border-retro-dark shadow-pixel text-retro-dark"
-            position="bottom-left"
-          />
-        </ReactFlow>
-
-        <div className="absolute top-4 right-4 z-10">
-          <button
-            onClick={addNode}
-            className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-bold rounded shadow-lg border-2 border-red-800 uppercase tracking-wider transition transform hover:scale-105"
+        <div className="flex-1 relative h-full ">
+          <ReactFlow
+            nodes={nodes}
+            edges={edges}
+            nodeTypes={nodeTypes}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            onConnect={onConnect}
+            onNodeClick={onNodeClick}
+            onDragOver={onDragOver}
+            onDrop={onDrop}
+            fitView
           >
-            + Add AI Node
-          </button>
-        </div>
+            <Background color="#1D1D1D" gap={30} size={2} />
 
-        <RunHistory
-          workflowId={workflowId}
-          refreshTrigger={refreshTrigger}
-          onSelectRun={(run) => {
-            setRunStatus(
-              run.status === "COMPLETED"
-                ? "✅ MISSION_COMPLETED"
-                : run.status === "FAILED"
-                ? "❌ MISSION_FAILED"
-                : "⏳ RUN_PENDING"
-            );
-            setLogs(run.outputs ? [run.outputs] : []);
-          }}
-        />
+            <Controls
+              className="bg-retro-bg border-2 border-retro-dark shadow-pixel text-retro-dark"
+              position="bottom-left"
+            />
+          </ReactFlow>
 
-        <ConfigPanel
-          selectedNodeId={selectedNodeId}
-          nodes={nodes}
-          setNodes={setNodes}
-          onClose={() => setSelectedNodeId(null)}
-          onDelete={deleteNode}
-        />
+          <RunHistory
+            workflowId={workflowId}
+            refreshTrigger={refreshTrigger}
+            onSelectRun={(run) => {
+              setRunStatus(
+                run.status === "COMPLETED"
+                  ? "✅ MISSION_COMPLETED"
+                  : run.status === "FAILED"
+                  ? "❌ MISSION_FAILED"
+                  : "⏳ RUN_PENDING"
+              );
+              setLogs(run.outputs ? [run.outputs] : []);
+            }}
+          />
 
-        <div className="absolute bottom-4 left-4 right-4 h-48 bg-black border-4 border-retro-dark p-4 font-pixel text-green-400 overflow-y-auto shadow-pixel z-20 opacity-90">
-          <div className="flex justify-between border-b-2 border-green-800 mb-2 pb-1">
-            <span>TERMINAL_OUTPUT</span>
-            <button
-              onClick={runWorkflow}
-              className="hover:text-white hover:underline"
-            >
-              [ EXECUTE_RUN ]
-            </button>
+          <ConfigPanel
+            selectedNodeId={selectedNodeId}
+            nodes={nodes}
+            setNodes={setNodes}
+            onClose={() => setSelectedNodeId(null)}
+            onDelete={deleteNode}
+          />
+
+          <div className="absolute bottom-4 left-4 right-4 h-48 bg-black border-4 border-retro-dark p-4 font-pixel text-green-400 overflow-y-auto shadow-pixel z-20 opacity-90">
+            <div className="flex justify-between border-b-2 border-green-800 mb-2 pb-1">
+              <span>TERMINAL_OUTPUT</span>
+              <button
+                onClick={runWorkflow}
+                className="hover:text-white hover:underline"
+              >
+                [ EXECUTE_RUN ]
+              </button>
+            </div>
+
+            <div>{runStatus || "READY_TO_DEPLOY..."}</div>
+
+            {logs.map((log, i) => (
+              <pre
+                key={i}
+                className="whitespace-pre-wrap mt-2 text-sm text-retro-bg"
+              >
+                {JSON.stringify(log, null, 2)}
+              </pre>
+            ))}
           </div>
-
-          <div>{runStatus || "READY_TO_DEPLOY..."}</div>
-
-          {logs.map((log, i) => (
-            <pre
-              key={i}
-              className="whitespace-pre-wrap mt-2 text-sm text-retro-bg"
-            >
-              {JSON.stringify(log, null, 2)}
-            </pre>
-          ))}
         </div>
       </div>
     </div>
   );
 }
 
+import { ReactFlowProvider } from "@xyflow/react";
 export default function Editor() {
   return (
     <Suspense
@@ -383,7 +400,9 @@ export default function Editor() {
         </div>
       }
     >
-      <EditorPage />
+      <ReactFlowProvider>
+        <EditorPage />
+      </ReactFlowProvider>
     </Suspense>
   );
 }
