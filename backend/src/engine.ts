@@ -4,6 +4,7 @@ import { WorkflowDefinition, WorkflowNode } from "./types";
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";
+import fetch from "cross-fetch";
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 const adapter = new PrismaPg(pool);
@@ -108,6 +109,9 @@ export class WorkflowEngine {
 
         try {
           const res = await fetch(url, { method });
+          if (!res.ok) {
+            throw new Error(`API responded with ${res.status}`);
+          }
           const data = await res.json();
           return { result: JSON.stringify(data), status: res.status };
         } catch (err: any) {
