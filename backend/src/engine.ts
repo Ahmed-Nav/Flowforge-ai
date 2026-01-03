@@ -62,36 +62,65 @@ export class WorkflowEngine {
       case "TRIGGER":
         return { message: "Webhook received!" };
 
+      case "HTTP":
+        const url = node.data.url;
+        const method = node.data.method || "GET";
+        console.log(`   🌐 HTTP START: ${method} ${url}`);
+
+        if (!url) return { error: "No URL provided" };
+
+        try {
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+          const res = await fetch(url, {
+            method,
+            headers: { "Content-Type": "application/json" },
+            signal: controller.signal, // Connects the timer
+          });
+
+          clearTimeout(timeoutId); 
+
+          if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
+
+          const data = await res.json();
+          console.log("   ✅ HTTP SUCCESS");
+          return { result: JSON.stringify(data), status: res.status };
+        } catch (err: any) {
+          console.error("   ❌ HTTP FAILED:", err.message);
+          return { error: `HTTP Failed: ${err.message}` };
+        }
+
       case "AI":
         const promptTemplate =
           node.data.prompt || "Summarize this: {{previous_step}}";
-
         const incomingEdge = (definition.edges || []).find(
           (e) => e.target === node.id
         );
-
-        let previousText = "";
-
-        if (incomingEdge) {
-          const parentOutput = context[incomingEdge.source];
-          previousText =
-            parentOutput?.result || JSON.stringify(parentOutput) || "";
-        } else {
-          previousText = "No input data found.";
-        }
+        const parentOutput = incomingEdge ? context[incomingEdge.source] : {};
+        const previousText =
+          parentOutput?.result || JSON.stringify(parentOutput) || "No input";
 
         const finalPrompt = promptTemplate.replace(
           "{{previous_step}}",
           previousText
         );
+        console.log(`   🤖 AI START: Asking Gemini...`);
 
-        console.log(
-          `   🤖 Asking Gemini: "${finalPrompt.substring(0, 50)}..."`
-        );
+        try {
+          const timeoutPromise = new Promise((_, reject) =>
+            setTimeout(() => reject(new Error("Gemini Timed Out (10s)")), 10000)
+          );
 
-        const result = await model.generateContent(finalPrompt);
-        const response = result.response;
-        return { result: response.text() };
+          const aiPromise = model.generateContent(finalPrompt);
+          const result: any = await Promise.race([aiPromise, timeoutPromise]);
+
+          console.log("   ✅ AI SUCCESS");
+          return { result: result.response.text() };
+        } catch (error: any) {
+          console.error("   ❌ AI FAILED:", error.message);
+          return { error: `AI Failed: ${error.message}` };
+        }
 
       case "ACTION":
         return {
@@ -99,25 +128,6 @@ export class WorkflowEngine {
           target: node.data.email || "unknown",
         };
 
-      case "HTTP":
-        const url = node.data.url;
-        const method = node.data.method || "GET";
-
-        console.log(`   🌐 HTTP ${method}: ${url}`);
-
-        if (!url) return { error: "No URL provided" };
-
-        try {
-          const res = await fetch(url, { method });
-          if (!res.ok) {
-            throw new Error(`API responded with ${res.status}`);
-          }
-          const data = await res.json();
-          return { result: JSON.stringify(data), status: res.status };
-        } catch (err: any) {
-          console.error("HTTP Node Error:", err.message);
-          return { error: "HTTP Request Failed", details: err.message };
-        }
       default:
         return { error: "Unknown Node Type" };
     }
