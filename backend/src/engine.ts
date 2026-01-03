@@ -172,6 +172,44 @@ export class WorkflowEngine {
 
         return { result: isTrue ? "TRUE" : "FALSE" };
 
+      case "DISCORD":
+        const webhookUrl = node.data.url;
+        const msgTemplate = node.data.message || "Alert: {{previous_step}}";
+
+        const discordInputEdge = (definition.edges || []).find(
+          (e) => e.target === node.id
+        );
+        const discordParent = discordInputEdge
+          ? context[discordInputEdge.source]
+          : {};
+        const discordInputVal =
+          discordParent?.result || JSON.stringify(discordParent) || "";
+
+        const finalMessage = msgTemplate.replace(
+          "{{previous_step}}",
+          discordInputVal
+        );
+
+        console.log(
+          `   📢 Sending to Discord: "${finalMessage.substring(0, 30)}..."`
+        );
+
+        if (!webhookUrl) return { error: "No Webhook URL provided" };
+
+        try {
+          const res = await fetch(webhookUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ content: finalMessage }),
+          });
+
+          if (!res.ok) throw new Error(`Discord API ${res.status}`);
+          return { result: "Message Sent Successfully" };
+        } catch (err: any) {
+          console.error("   ❌ Discord Failed:", err.message);
+          return { error: `Discord Failed: ${err.message}` };
+        }
+
       default:
         return { error: "Unknown Node Type" };
     }

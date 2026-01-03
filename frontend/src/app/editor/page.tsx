@@ -21,6 +21,7 @@ import PromptNode from "@/components/nodes/PromptNode";
 import NodeLibrary from "@/components/NodeLibrary";
 import HttpNode from "@/components/nodes/HttpNode";
 import ConditionNode from "@/components/nodes/ConditionNode";
+import DiscordNode from "@/components/nodes/DiscordNode";
 
 import { useAuth } from "@/context/AuthContext";
 
@@ -29,6 +30,7 @@ const nodeTypes: NodeTypes = {
   promptNode: PromptNode,
   httpNode: HttpNode,
   conditionNode: ConditionNode,
+  discordNode: DiscordNode,
 };
 
 const initialNodes = [
@@ -95,6 +97,7 @@ function EditorPage() {
                 if (n.type === "TRIGGER") frontendType = "retro";
                 if (n.type === "HTTP") frontendType = "httpNode";
                 if (n.type === "CONDITION") frontendType = "conditionNode";
+                if (n.type === "DISCORD") frontendType = "discordNode";
 
                 return {
                   ...n,
@@ -141,6 +144,7 @@ function EditorPage() {
           backendType = "AI";
         else if (node.type === "httpNode") backendType = "HTTP";
         else if (node.type === "conditionNode") backendType = "CONDITION";
+        else if (node.type === "discordNode") backendType = "DISCORD";
 
         return {
           id: node.id,
