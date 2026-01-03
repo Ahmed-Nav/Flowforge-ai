@@ -1,8 +1,9 @@
-import { Handle, Position } from '@xyflow/react';
+import { Handle, Position, useReactFlow } from '@xyflow/react';
 import { useState, useCallback, useEffect } from 'react';
 import { Globe } from 'lucide-react'; 
 
 export default function HttpNode({ data, id }: { data: any, id: string }) {
+  const { setNodes } = useReactFlow();
   const [url, setUrl] = useState(data.url || "https://api.coindesk.com/v1/bpi/currentprice.json");
   const [method, setMethod] = useState(data.method || "GET");
 
@@ -11,21 +12,36 @@ export default function HttpNode({ data, id }: { data: any, id: string }) {
     if (data.method) setMethod(data.method);
   }, [data.url, data.method]);
 
-  const handleUrlChange = useCallback((evt: React.ChangeEvent<HTMLInputElement>) => {
+  const handleUrlChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
     const newVal = evt.target.value;
     setUrl(newVal);
-    data.url = newVal; 
-  }, [data]);
 
-  const handleMethodChange = useCallback((evt: React.ChangeEvent<HTMLSelectElement>) => {
+    setNodes((nds) =>
+      nds.map((node) => {
+        if (node.id === id) {
+          return { ...node, data: { ...node.data, url: newVal } };
+        }
+        return node;
+      })
+    );
+  };
+
+  const handleMethodChange = (evt: React.ChangeEvent<HTMLSelectElement>) => {
     const newVal = evt.target.value;
     setMethod(newVal);
-    data.method = newVal;
-  }, [data]);
+
+    setNodes((nds) =>
+      nds.map((node) => {
+        if (node.id === id) {
+          return { ...node, data: { ...node.data, method: newVal } };
+        }
+        return node;
+      })
+    );
+  };
 
   return (
     <div className="bg-gray-800 border-2 border-blue-500 rounded-lg p-4 shadow-xl w-64 transition-all hover:shadow-blue-500/20">
-      {/* Header */}
       <div className="bg-blue-600 -mx-4 -mt-4 mb-4 p-2 rounded-t-lg font-bold text-white text-xs tracking-widest flex items-center gap-2">
         <Globe size={14} /> HTTP_REQUEST
       </div>
