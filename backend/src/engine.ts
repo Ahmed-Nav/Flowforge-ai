@@ -27,9 +27,24 @@ export class WorkflowEngine {
         if (!node) break;
 
         const output = await this.executeNode(node, context, definition);
-
         context[node.id] = output;
-        currentStepId = node.nextStepId || null;
+
+        if (node.type === "CONDITION") {
+          const chosenHandle = output.result === "TRUE" ? "true" : "false";
+          console.log(
+            `   🔀 Logic Decision: ${chosenHandle.toUpperCase()} path`
+          );
+
+          const nextEdge = (definition.edges || []).find(
+            (e) => e.source === node.id && e.sourceHandle === chosenHandle
+          );
+          currentStepId = nextEdge ? nextEdge.target : null;
+        } else {
+          const nextEdge = (definition.edges || []).find(
+            (e) => e.source === node.id
+          );
+          currentStepId = nextEdge ? nextEdge.target : null;
+        }
       }
 
       await prisma.workflowRun.update({
@@ -79,7 +94,7 @@ export class WorkflowEngine {
             signal: controller.signal, // Connects the timer
           });
 
-          clearTimeout(timeoutId); 
+          clearTimeout(timeoutId);
 
           if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
 
@@ -127,6 +142,35 @@ export class WorkflowEngine {
           status: "Action executed",
           target: node.data.email || "unknown",
         };
+
+      case "CONDITION":
+        const targetValue = node.data.value || "";
+        const conditionType = node.data.condition || "contains";
+
+        const inputEdge = (definition.edges || []).find(
+          (e) => e.target === node.id
+        );
+        const parentResult = inputEdge ? context[inputEdge.source] : {};
+        const inputValue =
+          parentResult?.result || JSON.stringify(parentResult) || "";
+
+        console.log(
+          `   ⚖️ Checking: "${inputValue.substring(
+            0,
+            20
+          )}..." ${conditionType} "${targetValue}"`
+        );
+
+        let isTrue = false;
+        if (conditionType === "contains") {
+          isTrue = inputValue.toLowerCase().includes(targetValue.toLowerCase());
+        } else if (conditionType === "equals") {
+          isTrue =
+            inputValue.trim().toLowerCase() ===
+            targetValue.trim().toLowerCase();
+        }
+
+        return { result: isTrue ? "TRUE" : "FALSE" };
 
       default:
         return { error: "Unknown Node Type" };

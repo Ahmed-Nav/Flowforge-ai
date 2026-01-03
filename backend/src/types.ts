@@ -2,7 +2,7 @@
 
 export interface WorkflowNode {
   id: string;
-  type: "TRIGGER" | "ACTION" | "AI" | "HTTP";
+  type: "TRIGGER" | "ACTION" | "AI" | "HTTP" | "CONDITION";
   data: any; 
   nextStepId?: string | null; 
 }

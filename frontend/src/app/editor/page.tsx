@@ -20,6 +20,7 @@ import RunHistory from "@/components/RunHistory";
 import PromptNode from "@/components/nodes/PromptNode";
 import NodeLibrary from "@/components/NodeLibrary";
 import HttpNode from "@/components/nodes/HttpNode";
+import ConditionNode from "@/components/nodes/ConditionNode";
 
 import { useAuth } from "@/context/AuthContext";
 
@@ -27,6 +28,7 @@ const nodeTypes: NodeTypes = {
   retro: RetroNode,
   promptNode: PromptNode,
   httpNode: HttpNode,
+  conditionNode: ConditionNode,
 };
 
 const initialNodes = [
@@ -92,6 +94,7 @@ function EditorPage() {
                 if (n.type === "AI") frontendType = "promptNode";
                 if (n.type === "TRIGGER") frontendType = "retro";
                 if (n.type === "HTTP") frontendType = "httpNode";
+                if (n.type === "CONDITION") frontendType = "conditionNode";
 
                 return {
                   ...n,
@@ -137,6 +140,7 @@ function EditorPage() {
         else if (node.data.type === "ai" || node.type === "promptNode")
           backendType = "AI";
         else if (node.type === "httpNode") backendType = "HTTP";
+        else if (node.type === "conditionNode") backendType = "CONDITION";
 
         return {
           id: node.id,
