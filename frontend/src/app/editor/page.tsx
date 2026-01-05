@@ -22,6 +22,7 @@ import NodeLibrary from "@/components/NodeLibrary";
 import HttpNode from "@/components/nodes/HttpNode";
 import ConditionNode from "@/components/nodes/ConditionNode";
 import DiscordNode from "@/components/nodes/DiscordNode";
+import EmailNode from "@/components/nodes/EmailNode";
 
 import { useAuth } from "@/context/AuthContext";
 
@@ -31,6 +32,7 @@ const nodeTypes: NodeTypes = {
   httpNode: HttpNode,
   conditionNode: ConditionNode,
   discordNode: DiscordNode,
+  emailNode: EmailNode,
 };
 
 const initialNodes = [
@@ -98,6 +100,7 @@ function EditorPage() {
                 if (n.type === "HTTP") frontendType = "httpNode";
                 if (n.type === "CONDITION") frontendType = "conditionNode";
                 if (n.type === "DISCORD") frontendType = "discordNode";
+                if (n.type === "EMAIL") frontendType = "emailNode";
 
                 return {
                   ...n,
@@ -145,6 +148,7 @@ function EditorPage() {
         else if (node.type === "httpNode") backendType = "HTTP";
         else if (node.type === "conditionNode") backendType = "CONDITION";
         else if (node.type === "discordNode") backendType = "DISCORD";
+        else if (node.type === "emailNode") backendType = "EMAIL";
 
         return {
           id: node.id,

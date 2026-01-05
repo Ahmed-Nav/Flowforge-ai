@@ -2,9 +2,16 @@
 
 export interface WorkflowNode {
   id: string;
-  type: "TRIGGER" | "ACTION" | "AI" | "HTTP" | "CONDITION" | "DISCORD";
-  data: any; 
-  nextStepId?: string | null; 
+  type:
+    | "TRIGGER"
+    | "ACTION"
+    | "AI"
+    | "HTTP"
+    | "CONDITION"
+    | "DISCORD"
+    | "EMAIL";
+  data: any;
+  nextStepId?: string | null;
 }
 
 export interface WorkflowDefinition {

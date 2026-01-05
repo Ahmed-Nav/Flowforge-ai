@@ -1,4 +1,4 @@
-import { GitFork, MessageSquare } from "lucide-react";
+import { GitFork, Mail, MessageSquare } from "lucide-react";
 import React from "react";
 
 export default function NodeLibrary() {
@@ -108,6 +108,26 @@ export default function NodeLibrary() {
         <div>
           <div className="text-sm font-bold text-gray-200">Discord Bot</div>
           <div className="text-[10px] text-gray-500">Send Notification</div>
+        </div>
+      </div>
+      <div
+        className="bg-gray-800 border border-yellow-600 p-3 rounded cursor-grab hover:border-yellow-400 transition shadow-lg flex items-center gap-3"
+        onDragStart={(event) =>
+          onDragStart(event, "emailNode", {
+            type: "email",
+            to: "",
+            subject: "",
+            body: "",
+          })
+        }
+        draggable
+      >
+        <div className="w-8 h-8 bg-yellow-900/50 rounded flex items-center justify-center text-yellow-200">
+          <Mail size={16} />
+        </div>
+        <div>
+          <div className="text-sm font-bold text-gray-200">Send Email</div>
+          <div className="text-[10px] text-gray-500">SMTP Notification</div>
         </div>
       </div>
     </aside>

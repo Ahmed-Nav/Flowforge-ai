@@ -5,6 +5,7 @@ import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";
 import fetch from "cross-fetch";
+import nodemailer from "nodemailer";
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 const adapter = new PrismaPg(pool);
@@ -208,6 +209,51 @@ export class WorkflowEngine {
         } catch (err: any) {
           console.error("   ❌ Discord Failed:", err.message);
           return { error: `Discord Failed: ${err.message}` };
+        }
+
+      case "EMAIL":
+        const toEmail = node.data.to;
+        const subject = node.data.subject || "Alert";
+        const bodyTemplate = node.data.body || "{{previous_step}}";
+
+        const emailInputEdge = (definition.edges || []).find(
+          (e) => e.target === node.id
+        );
+        const emailParent = emailInputEdge
+          ? context[emailInputEdge.source]
+          : {};
+        const emailInputVal =
+          emailParent?.result || JSON.stringify(emailParent) || "";
+
+        const finalBody = bodyTemplate.replace(
+          "{{previous_step}}",
+          emailInputVal
+        );
+
+        console.log(`   📧 Sending Email to ${toEmail}`);
+
+        if (!toEmail) return { error: "No Recipient Email provided" };
+
+        try {
+          const transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+              user: process.env.EMAIL_USER,
+              pass: process.env.EMAIL_PASS,
+            },
+          });
+
+          await transporter.sendMail({
+            from: process.env.EMAIL_USER,
+            to: toEmail,
+            subject: subject,
+            text: finalBody,
+          });
+
+          return { result: "Email Sent Successfully" };
+        } catch (err: any) {
+          console.error("   ❌ Email Failed:", err.message);
+          return { error: `Email Failed: ${err.message}` };
         }
 
       default:
