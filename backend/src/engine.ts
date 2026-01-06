@@ -224,15 +224,18 @@ export class WorkflowEngine {
           : {};
         const emailInputVal =
           emailParent?.result || JSON.stringify(emailParent) || "";
-
         const finalBody = bodyTemplate.replace(
           "{{previous_step}}",
           emailInputVal
         );
 
-        console.log(`   📧 Sending Email to ${toEmail}`);
+        console.log(`   📧 EMAIL START: Sending to ${toEmail}...`);
 
         if (!toEmail) return { error: "No Recipient Email provided" };
+        if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+          console.error("   ❌ EMAIL CONFIG MISSING");
+          return { error: "Server missing EMAIL_USER or EMAIL_PASS" };
+        }
 
         try {
           const transporter = nodemailer.createTransport({
@@ -243,16 +246,23 @@ export class WorkflowEngine {
             },
           });
 
-          await transporter.sendMail({
+          const timeoutPromise = new Promise((_, reject) =>
+            setTimeout(() => reject(new Error("Email Timed Out (10s)")), 10000)
+          );
+
+          const mailPromise = transporter.sendMail({
             from: process.env.EMAIL_USER,
             to: toEmail,
             subject: subject,
             text: finalBody,
           });
 
+          await Promise.race([mailPromise, timeoutPromise]);
+
+          console.log("   ✅ EMAIL SUCCESS");
           return { result: "Email Sent Successfully" };
         } catch (err: any) {
-          console.error("   ❌ Email Failed:", err.message);
+          console.error("   ❌ EMAIL FAILED:", err.message);
           return { error: `Email Failed: ${err.message}` };
         }
 
