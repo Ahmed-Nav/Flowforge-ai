@@ -239,7 +239,9 @@ export class WorkflowEngine {
 
         try {
           const transporter = nodemailer.createTransport({
-            service: "gmail",
+            host: "smtp.gmail.com",
+            port: 465, 
+            secure: true,
             auth: {
               user: process.env.EMAIL_USER,
               pass: process.env.EMAIL_PASS,
@@ -247,8 +249,11 @@ export class WorkflowEngine {
           });
 
           const timeoutPromise = new Promise((_, reject) =>
-            setTimeout(() => reject(new Error("Email Timed Out (10s)")), 10000)
+            setTimeout(() => reject(new Error("Email Timed Out (30s)")), 30000)
           );
+          console.log("   🔌 Connecting to Gmail...");
+          await transporter.verify();
+          console.log("   ✅ Connected to Gmail!");
 
           const mailPromise = transporter.sendMail({
             from: process.env.EMAIL_USER,
