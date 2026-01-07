@@ -238,22 +238,28 @@ export class WorkflowEngine {
         }
 
         try {
+          console.log("   🛠️ EMAIL DEBUG MODE v2 (Port 587) - Starting...");
+
           const transporter = nodemailer.createTransport({
             host: "smtp.gmail.com",
             port: 587,
-            secure: false,
+            secure: false, 
             auth: {
               user: process.env.EMAIL_USER,
               pass: process.env.EMAIL_PASS.replace(/\s/g, ""),
             },
+            logger: true,
+            debug: true,
           });
 
           const timeoutPromise = new Promise((_, reject) =>
             setTimeout(() => reject(new Error("Email Timed Out (30s)")), 30000)
           );
+
           console.log("   🔌 Connecting to Gmail...");
-          await transporter.verify();
-          console.log("   ✅ Connected to Gmail!");
+
+          await Promise.race([transporter.verify(), timeoutPromise]);
+          console.log("   ✅ Connected to Gmail! Sending mail now...");
 
           const mailPromise = transporter.sendMail({
             from: process.env.EMAIL_USER,
