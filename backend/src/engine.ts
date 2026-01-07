@@ -241,7 +241,9 @@ export class WorkflowEngine {
           console.log("   🛠️ EMAIL DEBUG MODE v2 (Port 587) - Starting...");
 
           const transporter = nodemailer.createTransport({
-            service: "gmail",
+            host: "smtp.gmail.com",
+            port: 587,
+            secure: false,
             auth: {
               user: process.env.EMAIL_USER,
               pass: process.env.EMAIL_PASS.replace(/\s/g, ""),
@@ -249,7 +251,7 @@ export class WorkflowEngine {
             family: 4,
             logger: true,
             debug: true,
-          });
+          } as any);
 
           const timeoutPromise = new Promise((_, reject) =>
             setTimeout(() => reject(new Error("Email Timed Out (30s)")), 30000)
