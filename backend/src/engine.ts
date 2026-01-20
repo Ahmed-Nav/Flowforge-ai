@@ -33,16 +33,16 @@ export class WorkflowEngine {
         if (node.type === "CONDITION") {
           const chosenHandle = output.result === "TRUE" ? "true" : "false";
           console.log(
-            `   🔀 Logic Decision: ${chosenHandle.toUpperCase()} path`
+            `   🔀 Logic Decision: ${chosenHandle.toUpperCase()} path`,
           );
 
           const nextEdge = (definition.edges || []).find(
-            (e) => e.source === node.id && e.sourceHandle === chosenHandle
+            (e) => e.source === node.id && e.sourceHandle === chosenHandle,
           );
           currentStepId = nextEdge ? nextEdge.target : null;
         } else {
           const nextEdge = (definition.edges || []).find(
-            (e) => e.source === node.id
+            (e) => e.source === node.id,
           );
           currentStepId = nextEdge ? nextEdge.target : null;
         }
@@ -72,7 +72,7 @@ export class WorkflowEngine {
   private async executeNode(
     node: WorkflowNode,
     context: any,
-    definition: WorkflowDefinition
+    definition: WorkflowDefinition,
   ) {
     switch (node.type) {
       case "TRIGGER":
@@ -111,7 +111,7 @@ export class WorkflowEngine {
         const promptTemplate =
           node.data.prompt || "Summarize this: {{previous_step}}";
         const incomingEdge = (definition.edges || []).find(
-          (e) => e.target === node.id
+          (e) => e.target === node.id,
         );
         const parentOutput = incomingEdge ? context[incomingEdge.source] : {};
         const previousText =
@@ -119,13 +119,16 @@ export class WorkflowEngine {
 
         const finalPrompt = promptTemplate.replace(
           "{{previous_step}}",
-          previousText
+          previousText,
         );
         console.log(`   🤖 AI START: Asking Gemini...`);
 
         try {
           const timeoutPromise = new Promise((_, reject) =>
-            setTimeout(() => reject(new Error("Gemini Timed Out (10s)")), 10000)
+            setTimeout(
+              () => reject(new Error("Gemini Timed Out (10s)")),
+              10000,
+            ),
           );
 
           const aiPromise = model.generateContent(finalPrompt);
@@ -149,7 +152,7 @@ export class WorkflowEngine {
         const conditionType = node.data.condition || "contains";
 
         const inputEdge = (definition.edges || []).find(
-          (e) => e.target === node.id
+          (e) => e.target === node.id,
         );
         const parentResult = inputEdge ? context[inputEdge.source] : {};
         const inputValue =
@@ -158,8 +161,8 @@ export class WorkflowEngine {
         console.log(
           `   ⚖️ Checking: "${inputValue.substring(
             0,
-            20
-          )}..." ${conditionType} "${targetValue}"`
+            20,
+          )}..." ${conditionType} "${targetValue}"`,
         );
 
         let isTrue = false;
@@ -178,7 +181,7 @@ export class WorkflowEngine {
         const msgTemplate = node.data.message || "Alert: {{previous_step}}";
 
         const discordInputEdge = (definition.edges || []).find(
-          (e) => e.target === node.id
+          (e) => e.target === node.id,
         );
         const discordParent = discordInputEdge
           ? context[discordInputEdge.source]
@@ -188,11 +191,11 @@ export class WorkflowEngine {
 
         const finalMessage = msgTemplate.replace(
           "{{previous_step}}",
-          discordInputVal
+          discordInputVal,
         );
 
         console.log(
-          `   📢 Sending to Discord: "${finalMessage.substring(0, 30)}..."`
+          `   📢 Sending to Discord: "${finalMessage.substring(0, 30)}..."`,
         );
 
         if (!webhookUrl) return { error: "No Webhook URL provided" };
@@ -217,7 +220,7 @@ export class WorkflowEngine {
         const bodyTemplate = node.data.body || "{{previous_step}}";
 
         const emailInputEdge = (definition.edges || []).find(
-          (e) => e.target === node.id
+          (e) => e.target === node.id,
         );
         const emailParent = emailInputEdge
           ? context[emailInputEdge.source]
@@ -226,7 +229,7 @@ export class WorkflowEngine {
           emailParent?.result || JSON.stringify(emailParent) || "";
         const finalBody = bodyTemplate.replace(
           "{{previous_step}}",
-          emailInputVal
+          emailInputVal,
         );
 
         console.log(`   📧 EMAIL START: Sending to ${toEmail}...`);
@@ -238,7 +241,7 @@ export class WorkflowEngine {
         }
 
         try {
-          console.log("   🛠️ EMAIL DEBUG MODE v2 (Port 587) - Starting...");
+          console.log("   🛠️ EMAIL DEBUG v5 (Force Update) - Starting...");
 
           const transporter = nodemailer.createTransport({
             host: "smtp.gmail.com",
@@ -254,12 +257,10 @@ export class WorkflowEngine {
           } as any);
 
           const timeoutPromise = new Promise((_, reject) =>
-            setTimeout(() => reject(new Error("Email Timed Out (30s)")), 30000)
+            setTimeout(() => reject(new Error("Email Timed Out (60s)")), 60000),
           );
 
           console.log("   🔌 Connecting to Gmail...");
-
-          await Promise.race([transporter.verify(), timeoutPromise]);
           console.log("   ✅ Connected to Gmail! Sending mail now...");
 
           const mailPromise = transporter.sendMail({
