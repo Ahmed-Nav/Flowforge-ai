@@ -242,11 +242,13 @@ export class WorkflowEngine {
 
         try {
           console.log(
-            "   🛠️ EMAIL DEBUG v7 (Service: Gmail + Relaxed TLS) - Starting...",
+            "   🛠️ EMAIL DEBUG v8 (IPv4 Force + Port 587) - Starting...",
           );
 
           const transporter = nodemailer.createTransport({
-            service: "gmail",
+            host: "smtp.gmail.com",
+            port: 587,
+            secure: false, // true for 465, false for other ports
             auth: {
               user: process.env.EMAIL_USER,
               pass: process.env.EMAIL_PASS.replace(/\s/g, ""),
@@ -254,8 +256,9 @@ export class WorkflowEngine {
             tls: {
               rejectUnauthorized: false,
             },
-            connectionTimeout: 10000,
-            greetingTimeout: 10000,
+            family: 4, // Force IPv4
+            connectionTimeout: 30000,
+            greetingTimeout: 30000,
             logger: true,
             debug: true,
           } as any);
