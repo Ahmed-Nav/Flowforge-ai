@@ -242,13 +242,13 @@ export class WorkflowEngine {
 
         try {
           console.log(
-            "   🛠️ EMAIL DEBUG v8 (IPv4 Force + Port 587) - Starting...",
+            "   🛠️ EMAIL DEBUG v9 (IPv4 Force + Port 465 Secure) - Starting...",
           );
 
           const transporter = nodemailer.createTransport({
             host: "smtp.gmail.com",
-            port: 587,
-            secure: false, // true for 465, false for other ports
+            port: 465,
+            secure: true, // true for 465, false for other ports
             auth: {
               user: process.env.EMAIL_USER,
               pass: process.env.EMAIL_PASS.replace(/\s/g, ""),
