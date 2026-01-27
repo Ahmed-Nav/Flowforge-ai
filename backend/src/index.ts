@@ -1,6 +1,6 @@
 // backend/src/index.ts
 import "dotenv/config";
-import express from "express"; 
+import express from "express";
 import cors from "cors";
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
@@ -22,7 +22,7 @@ app.use(
     origin: ["http://localhost:3000", "https://flowforge-ai-drab.vercel.app"],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
-  })
+  }),
 );
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
@@ -33,30 +33,33 @@ const connection = new IORedis(
   process.env.REDIS_URL || "redis://localhost:6379",
   {
     maxRetriesPerRequest: null,
-  }
+  },
 );
 
 const workflowQueue = new Queue("workflow-queue", { connection });
 
-app.post("/auth/register", async (req: express.Request, res: express.Response) => {
-  const { email, password } = req.body;
+app.post(
+  "/auth/register",
+  async (req: express.Request, res: express.Response) => {
+    const { email, password } = req.body;
 
-  const existingUser = await prisma.user.findUnique({ where: { email } });
-  if (existingUser) {
-    return res.status(400).json({ error: "User already exists" });
-  }
+    const existingUser = await prisma.user.findUnique({ where: { email } });
+    if (existingUser) {
+      return res.status(400).json({ error: "User already exists" });
+    }
 
-  const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-  const user = await prisma.user.create({
-    data: {
-      email,
-      password: hashedPassword,
-    },
-  });
+    const user = await prisma.user.create({
+      data: {
+        email,
+        password: hashedPassword,
+      },
+    });
 
-  res.json({ message: "User created successfully", userId: user.id });
-});
+    res.json({ message: "User created successfully", userId: user.id });
+  },
+);
 
 app.post("/auth/login", async (req: express.Request, res: express.Response) => {
   const { email, password } = req.body;
@@ -65,7 +68,8 @@ app.post("/auth/login", async (req: express.Request, res: express.Response) => {
   if (!user) return res.status(400).json({ error: "User not found" });
 
   const validPassword = await bcrypt.compare(password, user.password || "");
-  if (!validPassword) return res.status(400).json({ error: "Invalid password" });
+  if (!validPassword)
+    return res.status(400).json({ error: "Invalid password" });
 
   const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: "1h" });
 
@@ -74,14 +78,14 @@ app.post("/auth/login", async (req: express.Request, res: express.Response) => {
 
 app.post(
   "/workflows",
-  authenticateToken, 
+  authenticateToken,
   async (req: AuthRequest, res: express.Response) => {
     const { id, name, definition } = req.body;
-    
-    const userId = req.userId; 
+
+    const userId = req.userId;
 
     if (!userId) {
-        return res.status(401).json({ error: "Unauthorized" });
+      return res.status(401).json({ error: "Unauthorized" });
     }
 
     let workflow;
@@ -94,7 +98,7 @@ app.post(
       workflow = await prisma.workflow.create({
         data: {
           name: name || "Untitled Workflow",
-          userId: userId, 
+          userId: userId,
           triggerType: "webhook",
           status: "active",
           definition: definition,
@@ -103,7 +107,7 @@ app.post(
     }
 
     res.json(workflow);
-  }
+  },
 );
 
 app.post(
@@ -121,7 +125,7 @@ app.post(
       data: {
         workflowId: workflow.id,
         status: "PENDING",
-        triggerInput: body || {},
+        triggerInput: req.body || {},
         outputs: {},
       },
     });
@@ -134,7 +138,7 @@ app.post(
     console.log(`🚀 Job Added to Queue: ${run.id}`);
 
     res.json({ id: run.id, status: "QUEUED" });
-  }
+  },
 );
 
 app.get(
@@ -149,7 +153,7 @@ app.get(
     });
 
     res.json(runs);
-  }
+  },
 );
 
 app.post(
@@ -172,7 +176,7 @@ app.post(
     });
 
     res.json({ message: "Workflow triggered successfully!", status: "queued" });
-  }
+  },
 );
 
 app.get(
@@ -190,30 +194,36 @@ app.get(
       orderBy: { updatedAt: "desc" },
     });
     res.json(workflows);
-  }
+  },
 );
 
-app.delete("/workflows/:id", authenticateToken, async (req: AuthRequest, res: express.Response) => {
-  const { id } = req.params;
-  const userId = req.userId;
+app.delete(
+  "/workflows/:id",
+  authenticateToken,
+  async (req: AuthRequest, res: express.Response) => {
+    const { id } = req.params;
+    const userId = req.userId;
 
-  try {
-    const workflow = await prisma.workflow.findUnique({ where: { id } });
-    if (!workflow || workflow.userId !== userId) {
-      return res.status(403).json({ error: "Not authorized to delete this workflow" });
+    try {
+      const workflow = await prisma.workflow.findUnique({ where: { id } });
+      if (!workflow || workflow.userId !== userId) {
+        return res
+          .status(403)
+          .json({ error: "Not authorized to delete this workflow" });
+      }
+
+      await prisma.workflowRun.deleteMany({ where: { workflowId: id } });
+
+      await prisma.workflow.delete({
+        where: { id },
+      });
+
+      res.json({ message: "Workflow deleted successfully" });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to delete workflow" });
     }
-
-    await prisma.workflowRun.deleteMany({ where: { workflowId: id } });
-
-    await prisma.workflow.delete({
-      where: { id },
-    });
-    
-    res.json({ message: "Workflow deleted successfully" });
-  } catch (error) {
-    res.status(500).json({ error: "Failed to delete workflow" });
-  }
-});
+  },
+);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
