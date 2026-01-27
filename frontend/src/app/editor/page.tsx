@@ -152,7 +152,7 @@ function EditorPage() {
         else if (node.type === "conditionNode") backendType = "CONDITION";
         else if (node.type === "discordNode") backendType = "DISCORD";
         else if (node.type === "emailNode") backendType = "EMAIL";
-        else if (node.type === "scraperNode") backendType = "SCRAPE";
+        else if (node.type === "scraperNode") backendType = "SCRAPER";
 
         return {
           id: node.id,
