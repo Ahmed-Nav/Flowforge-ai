@@ -23,6 +23,7 @@ import HttpNode from "@/components/nodes/HttpNode";
 import ConditionNode from "@/components/nodes/ConditionNode";
 import DiscordNode from "@/components/nodes/DiscordNode";
 import EmailNode from "@/components/nodes/EmailNode";
+import ScraperNode from "@/components/nodes/ScraperNode";
 
 import { useAuth } from "@/context/AuthContext";
 
@@ -33,6 +34,7 @@ const nodeTypes: NodeTypes = {
   conditionNode: ConditionNode,
   discordNode: DiscordNode,
   emailNode: EmailNode,
+  scraperNode: ScraperNode,
 };
 
 const initialNodes = [
@@ -46,7 +48,7 @@ const initialNodes = [
       subline: "Listening for POST requests...",
     },
     deletable: false,
-  }
+  },
 ];
 
 const initialEdges: any[] = [];
@@ -78,7 +80,7 @@ function EditorPage() {
           `${process.env.NEXT_PUBLIC_API_URL}/workflows`,
           {
             headers: { Authorization: `Bearer ${token}` },
-          }
+          },
         );
 
         if (resList.ok) {
@@ -101,6 +103,7 @@ function EditorPage() {
                 if (n.type === "CONDITION") frontendType = "conditionNode";
                 if (n.type === "DISCORD") frontendType = "discordNode";
                 if (n.type === "EMAIL") frontendType = "emailNode";
+                if (n.type === "SCRAPE") frontendType = "scraperNode";
 
                 return {
                   ...n,
@@ -130,10 +133,10 @@ function EditorPage() {
             animated: true,
             style: { stroke: "#1D1D1D", strokeWidth: 2 },
           },
-          eds
-        )
+          eds,
+        ),
       ),
-    [setEdges]
+    [setEdges],
   );
 
   const handleDeploy = async () => {
@@ -149,6 +152,7 @@ function EditorPage() {
         else if (node.type === "conditionNode") backendType = "CONDITION";
         else if (node.type === "discordNode") backendType = "DISCORD";
         else if (node.type === "emailNode") backendType = "EMAIL";
+        else if (node.type === "scraperNode") backendType = "SCRAPE";
 
         return {
           id: node.id,
@@ -180,7 +184,7 @@ function EditorPage() {
 
       if (res.status === 401 || res.status === 403) {
         alert(
-          "Session Expired: The backend rejected your token. Redirecting to login..."
+          "Session Expired: The backend rejected your token. Redirecting to login...",
         );
         localStorage.removeItem("token");
         router.push("/login");
@@ -224,7 +228,7 @@ function EditorPage() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
 
     setRunStatus("EXECUTING_WORKFLOW... [WAITING_FOR_GEMINI]");
@@ -243,7 +247,7 @@ function EditorPage() {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
-          }
+          },
         );
 
         if (!res.ok) {
@@ -297,11 +301,10 @@ function EditorPage() {
 
       const data = JSON.parse(dataString);
 
-      
-      const position = { x: event.clientX - 300, y: event.clientY - 100 }; 
+      const position = { x: event.clientX - 300, y: event.clientY - 100 };
 
       const newNode = {
-        id: `node-${Date.now()}`, 
+        id: `node-${Date.now()}`,
         type,
         position,
         data: data,
@@ -309,7 +312,7 @@ function EditorPage() {
 
       setNodes((nds) => nds.concat(newNode));
     },
-    [setNodes]
+    [setNodes],
   );
 
   const deleteNode = useCallback(
@@ -318,7 +321,7 @@ function EditorPage() {
       setEdges((eds) => eds.filter((e) => e.source !== id && e.target !== id));
       setSelectedNodeId(null);
     },
-    [setNodes, setEdges]
+    [setNodes, setEdges],
   );
 
   if (loading)
@@ -364,8 +367,8 @@ function EditorPage() {
                 run.status === "COMPLETED"
                   ? "✅ MISSION_COMPLETED"
                   : run.status === "FAILED"
-                  ? "❌ MISSION_FAILED"
-                  : "⏳ RUN_PENDING"
+                    ? "❌ MISSION_FAILED"
+                    : "⏳ RUN_PENDING",
               );
               setLogs(run.outputs ? [run.outputs] : []);
             }}

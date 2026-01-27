@@ -9,20 +9,21 @@ export interface WorkflowNode {
     | "HTTP"
     | "CONDITION"
     | "DISCORD"
-    | "EMAIL";
+    | "EMAIL"
+    | "SCRAPER";
   data: any;
   nextStepId?: string | null;
 }
 
 export interface WorkflowDefinition {
   nodes: WorkflowNode[];
-  triggerId: string; 
+  triggerId: string;
   edges: any[];
 }
 
 export interface ExecutionState {
   workflowId: string;
   runId: string;
-  results: Record<string, any>; 
+  results: Record<string, any>;
   currentStepId: string | null;
 }
