@@ -1,6 +1,6 @@
 import { Handle, Position, useReactFlow } from "@xyflow/react";
 import { useState, useEffect } from "react";
-import { ScanSearch } from "lucide-react"; // Make sure you have this icon or use another
+import { ScanSearch } from "lucide-react";
 
 export default function ScraperNode({ data, id }: { data: any; id: string }) {
   const { updateNodeData } = useReactFlow();
@@ -18,12 +18,10 @@ export default function ScraperNode({ data, id }: { data: any; id: string }) {
 
   return (
     <div className="bg-gray-800 border-2 border-orange-500 rounded-lg p-4 shadow-xl w-64">
-      {/* Header */}
       <div className="bg-orange-600 -mx-4 -mt-4 mb-4 p-2 rounded-t-lg font-bold text-white text-xs tracking-widest flex items-center gap-2">
         <ScanSearch size={14} /> WEB_SCRAPER
       </div>
 
-      {/* URL Input */}
       <div className="mb-2">
         <label className="text-gray-400 text-[10px] uppercase font-bold">
           Website URL

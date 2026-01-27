@@ -103,7 +103,7 @@ function EditorPage() {
                 if (n.type === "CONDITION") frontendType = "conditionNode";
                 if (n.type === "DISCORD") frontendType = "discordNode";
                 if (n.type === "EMAIL") frontendType = "emailNode";
-                if (n.type === "SCRAPE") frontendType = "scraperNode";
+                if (n.type === "SCRAPER") frontendType = "scraperNode";
 
                 return {
                   ...n,
