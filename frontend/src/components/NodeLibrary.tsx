@@ -129,20 +129,20 @@ export default function NodeLibrary() {
           <div className="text-sm font-bold text-gray-200">Send Email</div>
           <div className="text-[10px] text-gray-500">SMTP Notification</div>
         </div>
-        <div
-          className="bg-gray-800 border border-orange-600 p-3 rounded cursor-grab hover:border-orange-400 transition shadow-lg flex items-center gap-3"
-          onDragStart={(event) =>
-            onDragStart(event, "scraperNode", { type: "scraper", url: "" })
-          }
-          draggable
-        >
-          <div className="w-8 h-8 bg-orange-900/50 rounded flex items-center justify-center text-orange-200">
-            <ScanSearch size={16} />
-          </div>
-          <div>
-            <div className="text-sm font-bold text-gray-200">Web Scraper</div>
-            <div className="text-[10px] text-gray-500">Read Website Text</div>
-          </div>
+      </div>
+      <div
+        className="bg-gray-800 border border-orange-600 p-3 rounded cursor-grab hover:border-orange-400 transition shadow-lg flex items-center gap-3"
+        onDragStart={(event) =>
+          onDragStart(event, "scraperNode", { type: "scraper", url: "" })
+        }
+        draggable
+      >
+        <div className="w-8 h-8 bg-orange-900/50 rounded flex items-center justify-center text-orange-200">
+          <ScanSearch size={16} />
+        </div>
+        <div>
+          <div className="text-sm font-bold text-gray-200">Web Scraper</div>
+          <div className="text-[10px] text-gray-500">Read Website Text</div>
         </div>
       </div>
     </aside>
