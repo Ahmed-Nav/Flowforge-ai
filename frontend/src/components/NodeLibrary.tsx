@@ -9,7 +9,7 @@ export default function NodeLibrary() {
   };
 
   return (
-    <aside className="w-64 bg-gray-900 border-r border-gray-800 p-4 flex flex-col gap-4 z-20">
+    <aside className="w-64 bg-gray-900 border-r border-gray-800 p-4 flex flex-col gap-4 z-20 h-full overflow-y-auto pb-24 shadow-2xl">
       <div className="text-gray-400 text-xs font-bold uppercase tracking-widest mb-2">
         Library
       </div>
