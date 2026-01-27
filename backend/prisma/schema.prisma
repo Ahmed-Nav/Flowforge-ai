@@ -36,6 +36,8 @@ model WorkflowRun {
   workflowId  String
   status      String   // "PENDING", "COMPLETED", "FAILED"
   outputs     Json?    // Store the final results here
+  triggerInput Json?
+  
   createdAt   DateTime @default(now())
   completedAt DateTime?
 

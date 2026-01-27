@@ -10,6 +10,8 @@ import IORedis from "ioredis";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { authenticateToken, AuthRequest } from "./middleware";
+import "./worker";
+import { workflowQueues } from "./queue";
 
 const JWT_SECRET = process.env.JWT_SECRET || "secret_JWT";
 
@@ -119,15 +121,19 @@ app.post(
       data: {
         workflowId: workflow.id,
         status: "PENDING",
+        triggerInput: body || {},
+        outputs: {},
       },
     });
 
-    await workflowQueue.add("run-flow", {
-      workflowId: id,
-      runId: run.id, 
+    await workflowQueue.add("execute-workflow", {
+      runId: run.id,
+      definition: workflow.definition,
     });
 
-    res.json({ message: "Run started", runId: run.id });
+    console.log(`🚀 Job Added to Queue: ${run.id}`);
+
+    res.json({ id: run.id, status: "QUEUED" });
   }
 );
 
