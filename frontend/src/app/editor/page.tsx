@@ -24,6 +24,7 @@ import ConditionNode from "@/components/nodes/ConditionNode";
 import DiscordNode from "@/components/nodes/DiscordNode";
 import EmailNode from "@/components/nodes/EmailNode";
 import ScraperNode from "@/components/nodes/ScraperNode";
+import ScheduleNode from "@/components/nodes/ScheduleNode";
 
 import { useAuth } from "@/context/AuthContext";
 
@@ -35,6 +36,7 @@ const nodeTypes: NodeTypes = {
   discordNode: DiscordNode,
   emailNode: EmailNode,
   scraperNode: ScraperNode,
+  scheduleNode: ScheduleNode,
 };
 
 const initialNodes = [
@@ -104,6 +106,7 @@ function EditorPage() {
                 if (n.type === "DISCORD") frontendType = "discordNode";
                 if (n.type === "EMAIL") frontendType = "emailNode";
                 if (n.type === "SCRAPER") frontendType = "scraperNode";
+                if (n.type === "SCHEDULE") frontendType = "scheduleNode";
 
                 return {
                   ...n,
@@ -153,6 +156,7 @@ function EditorPage() {
         else if (node.type === "discordNode") backendType = "DISCORD";
         else if (node.type === "emailNode") backendType = "EMAIL";
         else if (node.type === "scraperNode") backendType = "SCRAPER";
+        else if (node.type === "scheduleNode") backendType = "SCHEDULE";
 
         return {
           id: node.id,

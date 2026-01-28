@@ -10,7 +10,8 @@ export interface WorkflowNode {
     | "CONDITION"
     | "DISCORD"
     | "EMAIL"
-    | "SCRAPER";
+    | "SCRAPER"
+    | "SCHEDULE";
   data: any;
   nextStepId?: string | null;
 }

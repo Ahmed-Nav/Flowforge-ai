@@ -11,7 +11,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { authenticateToken, AuthRequest } from "./middleware";
 import "./worker";
-import { workflowQueues } from "./queue";
+import { workflowQueues, scheduleWorkflow } from "./queue";
 
 const JWT_SECRET = process.env.JWT_SECRET || "secret_JWT";
 
@@ -104,6 +104,17 @@ app.post(
           definition: definition,
         },
       });
+    }
+
+    if (definition && definition.nodes) {
+      const scheduleNode = definition.nodes.find(
+        (n: any) => n.type === "SCHEDULE",
+      );
+
+      if (scheduleNode && scheduleNode.data.cron) {
+        console.log(`📅 Schedule Node Detected for ${workflow.id}`);
+        await scheduleWorkflow(workflow.id, definition, scheduleNode.data.cron);
+      }
     }
 
     res.json(workflow);
