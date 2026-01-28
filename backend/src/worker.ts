@@ -20,6 +20,11 @@ export const worker = new Worker(
 
     let { runId, definition, workflowId } = job.data;
 
+    if (runId === "scheduled" && !workflowId) {
+      console.log("🧟 Ignoring old 'Zombie' job with missing Workflow ID.");
+      return { status: "SKIPPED", reason: "Missing Workflow ID" };
+    }
+
     if (runId === "scheduled") {
       try {
         console.log(`⏰ Creating Run Record for Workflow: ${workflowId}`);
