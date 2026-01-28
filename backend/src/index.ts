@@ -236,6 +236,19 @@ app.delete(
   },
 );
 
+app.delete("/debug/nuke-redis", async (req, res) => {
+  try {
+    console.log("☢️ NUKING REDIS QUEUE...");
+    // This removes ALL jobs (Active, Waiting, Delayed, Repeated)
+    await workflowQueue.obliterate({ force: true });
+    res.json({
+      message: "💥 Redis Queue has been obliterated. No more ghosts.",
+    });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`🚀 API Server running on ${PORT}`);
