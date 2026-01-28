@@ -29,7 +29,7 @@ export const scheduleWorkflow = async (
 
   await workflowQueues.add(
     "execute-workflow",
-    { runId: "scheduled", definition },
+    { runId: "scheduled", definition, workflowId },
     {
       jobId: `schedule-${workflowId}`,
       repeat: { pattern: cron },

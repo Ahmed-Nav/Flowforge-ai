@@ -17,7 +17,27 @@ export const worker = new Worker(
   "workflow-queue",
   async (job) => {
     console.log(`[Worker] Processing Job: ${job.id}`);
-    const { runId, definition } = job.data;
+
+    let { runId, definition, workflowId } = job.data;
+
+    if (runId === "scheduled") {
+      try {
+        console.log(`⏰ Creating Run Record for Workflow: ${workflowId}`);
+        const newRun = await prisma.workflowRun.create({
+          data: {
+            workflowId: workflowId,
+            status: "PENDING",
+            triggerInput: { type: "cron" },
+            outputs: {},
+          },
+        });
+        runId = newRun.id;
+        console.log(`✅ Created Scheduled Run ID: ${runId}`);
+      } catch (err) {
+        console.error("❌ Failed to create scheduled run record:", err);
+        return;
+      }
+    }
 
     try {
       await engine.runWorkflow(definition, runId);
