@@ -38,7 +38,14 @@ export const worker = new Worker(
         });
         runId = newRun.id;
         console.log(`✅ Created Scheduled Run ID: ${runId}`);
-      } catch (err) {
+      } catch (err: any) {
+        if (err.code === "P2003") {
+          console.warn(
+            `👻 Ghost Job detected: Workflow ${workflowId} no longer exists. Skipping.`,
+          );
+          return { status: "SKIPPED", reason: "Workflow Deleted" };
+        }
+
         console.error("❌ Failed to create scheduled run record:", err);
         return;
       }
