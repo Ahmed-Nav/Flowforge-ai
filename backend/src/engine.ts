@@ -345,6 +345,9 @@ export class WorkflowEngine {
           console.error("   ❌ SCRAPER FAILED:", err.message);
           return { error: `Scraper Failed: ${err.message}` };
         }
+      case "SCHEDULE":
+        console.log(`   ⏰ SCHEDULE START: ${node.data.time}`);
+        return { result: "Scheduled" };
 
       default:
         return { error: "Unknown Node Type" };
