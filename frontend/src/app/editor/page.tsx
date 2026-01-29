@@ -143,8 +143,19 @@ function EditorPage() {
   );
 
   const handleDeploy = async () => {
+    const startNode =
+      nodes.find((n) => n.type === "scheduleNode") ||
+      nodes.find((n) => n.data.type === "trigger");
+
+    if (!startNode) {
+      alert(
+        "⚠️ Invalid Workflow: You need a Start Node (Webhook or Scheduler).",
+      );
+      return null;
+    }
+
     const workflowDefinition = {
-      triggerId: nodes.find((n) => n.data.type === "trigger")?.id,
+      triggerId: startNode.id,
       nodes: nodes.map((node) => {
         const edge = edges.find((e) => e.source === node.id);
         let backendType = "ACTION";
