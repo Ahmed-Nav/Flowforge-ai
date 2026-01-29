@@ -24,9 +24,21 @@ export class WorkflowEngine {
     console.log(`🚀 Starting Run: ${runId}`);
 
     try {
+      console.log(
+        `🔍 DEBUG: Workflow has ${definition.nodes.length} nodes and ${definition.edges.length} edges.`,
+      );
+
       while (currentStepId) {
         const node = definition.nodes.find((n) => n.id === currentStepId);
-        if (!node) break;
+
+        if (!node) {
+          console.error(
+            `❌ CRITICAL: Could not find node with ID ${currentStepId}`,
+          );
+          break;
+        }
+
+        console.log(`📍 STEP: Executing Node ${node.type} (${node.id})`);
 
         const output = await this.executeNode(node, context, definition);
         context[node.id] = output;
@@ -45,7 +57,17 @@ export class WorkflowEngine {
           const nextEdge = (definition.edges || []).find(
             (e) => e.source === node.id,
           );
-          currentStepId = nextEdge ? nextEdge.target : null;
+
+          if (nextEdge) {
+            console.log(`   🔗 FOUND LINK: Going to ${nextEdge.target}`);
+            currentStepId = nextEdge.target;
+          } else {
+            console.log(
+              `   🛑 DEAD END: No edge found starting from ${node.id}`,
+            );
+            console.log(`   👀 DEBUG EDGES:`, JSON.stringify(definition.edges));
+            currentStepId = null;
+          }
         }
       }
 
