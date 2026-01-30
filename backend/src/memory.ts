@@ -7,17 +7,18 @@ const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
-const embeddings = new GoogleGenerativeAIEmbeddings({
-  model: "embedding-001",
-  apiKey: process.env.GEMINI_API_KEY,
-});
+function getEmbeddings() {
+  return new GoogleGenerativeAIEmbeddings({
+    model: "embedding-001",
+    apiKey: process.env.GEMINI_API_KEY,
+  });
+}
 
 export async function saveMemory(content: string, metadata: any = {}) {
   try {
     console.log(`🧠 Memorizing: "${content.substring(0, 30)}..."`);
 
-    const vector = await embeddings.embedQuery(content);
-
+    const vector = await getEmbeddings().embedQuery(content);
     const vectorString = `[${vector.join(",")}]`;
 
     await prisma.$executeRaw`
@@ -42,7 +43,7 @@ export async function recallMemory(query: string, limit = 3) {
     }
 
     console.log("🧠 [DEBUG] Generating Vector...");
-    const vector = await embeddings.embedQuery(query);
+    const vector = await getEmbeddings().embedQuery(query);
 
     console.log("🧠 [DEBUG] Vector Generated. Querying DB...");
     const vectorString = `[${vector.join(",")}]`;
