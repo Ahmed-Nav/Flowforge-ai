@@ -9,7 +9,7 @@ const prisma = new PrismaClient({ adapter });
 
 function getEmbeddings() {
   return new GoogleGenerativeAIEmbeddings({
-    model: "embedding-001",
+    model: "text-embedding-004",
     apiKey: process.env.GEMINI_API_KEY,
   });
 }
