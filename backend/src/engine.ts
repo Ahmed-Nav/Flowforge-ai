@@ -13,9 +13,6 @@ const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
-const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
-
 export class WorkflowEngine {
   async runWorkflow(workflowJson: any, runId: string) {
     try {
@@ -136,6 +133,8 @@ export class WorkflowEngine {
         }
 
       case "AI":
+        const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
+        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
         const promptTemplate =
           node.data.prompt || "Summarize this: {{previous_step}}";
         const incomingEdge = (definition.edges || []).find(
@@ -151,24 +150,33 @@ export class WorkflowEngine {
         );
         console.log(`   🤖 AI START: Asking Gemini...`);
 
-        const memories: any = await recallMemory(finalPrompt);
-
-        if (memories && memories.length > 0) {
-          console.log(
-            `   🧠 Brainwave! Found ${memories.length} relevant memories.`,
+        try {
+          const memories: any = await recallMemory(finalPrompt);
+          if (memories && memories.length > 0) {
+            console.log(
+              `   🧠 Brainwave! Found ${memories.length} relevant memories.`,
+            );
+            const contextBlock = memories
+              .map((m: any) => `- ${m.content}`)
+              .join("\n");
+            finalPrompt = `CONTEXT FROM LONG-TERM MEMORY:\n${contextBlock}\n\nUSER PROMPT:\n${finalPrompt}`;
+          }
+        } catch (memError) {
+          console.warn(
+            "   ⚠️ Memory recall failed (continuing without memory):",
+            memError,
           );
+        }
 
-          const contextBlock = memories
-            .map((m: any) => `- ${m.content}`)
-            .join("\n");
+        try {
+          const result = await model.generateContent(finalPrompt);
+          const responseText = result.response.text();
 
-          finalPrompt = `
-            CONTEXT FROM LONG-TERM MEMORY:
-            ${contextBlock}
-            
-            USER PROMPT:
-            ${finalPrompt}
-            `;
+          console.log("   ✅ AI SUCCESS");
+          return { result: responseText };
+        } catch (error: any) {
+          console.error("   ❌ AI FAILED:", error.message);
+          return { error: `AI Failed: ${error.message}` };
         }
 
         try {
