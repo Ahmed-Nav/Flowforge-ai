@@ -34,10 +34,17 @@ export async function saveMemory(content: string, metadata: any = {}) {
 }
 
 export async function recallMemory(query: string, limit = 3) {
-  try {
-    console.log(`🧠 Searching Memory for: "${query}"`);
+  console.log(`🧠 [DEBUG] Starting Recall for: "${query}"`);
 
+  try {
+    if (!process.env.GEMINI_API_KEY) {
+      throw new Error("CRITICAL: GEMINI_API_KEY is missing in Worker!");
+    }
+
+    console.log("🧠 [DEBUG] Generating Vector...");
     const vector = await embeddings.embedQuery(query);
+
+    console.log("🧠 [DEBUG] Vector Generated. Querying DB...");
     const vectorString = `[${vector.join(",")}]`;
 
     const results = await prisma.$queryRaw`
@@ -47,6 +54,9 @@ export async function recallMemory(query: string, limit = 3) {
       LIMIT ${limit};
     `;
 
+    console.log(
+      `🧠 [DEBUG] DB returned ${Array.isArray(results) ? results.length : 0} results`,
+    );
     return results;
   } catch (error) {
     console.error("❌ Memory Recall Failed:", error);
