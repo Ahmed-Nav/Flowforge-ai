@@ -7,6 +7,7 @@ import { Pool } from "pg";
 import fetch from "cross-fetch";
 import nodemailer from "nodemailer";
 import * as cheerio from "cheerio";
+import { recallMemory } from "./memory";
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 const adapter = new PrismaPg(pool);
@@ -140,11 +141,31 @@ export class WorkflowEngine {
         const previousText =
           parentOutput?.result || JSON.stringify(parentOutput) || "No input";
 
-        const finalPrompt = promptTemplate.replace(
+        let finalPrompt = promptTemplate.replace(
           "{{previous_step}}",
           previousText,
         );
         console.log(`   🤖 AI START: Asking Gemini...`);
+
+        const memories: any = await recallMemory(finalPrompt);
+
+        if (memories && memories.length > 0) {
+          console.log(
+            `   🧠 Brainwave! Found ${memories.length} relevant memories.`,
+          );
+
+          const contextBlock = memories
+            .map((m: any) => `- ${m.content}`)
+            .join("\n");
+
+          finalPrompt = `
+            CONTEXT FROM LONG-TERM MEMORY:
+            ${contextBlock}
+            
+            USER PROMPT:
+            ${finalPrompt}
+            `;
+        }
 
         try {
           const timeoutPromise = new Promise((_, reject) =>

@@ -12,6 +12,7 @@ import jwt from "jsonwebtoken";
 import { authenticateToken, AuthRequest } from "./middleware";
 import "./worker";
 import { workflowQueues, scheduleWorkflow } from "./queue";
+import { saveMemory } from "./memory";
 
 const JWT_SECRET = process.env.JWT_SECRET || "secret_JWT";
 
@@ -236,17 +237,10 @@ app.delete(
   },
 );
 
-app.delete("/debug/nuke-redis", async (req, res) => {
-  try {
-    console.log("☢️ NUKING REDIS QUEUE...");
-    // This removes ALL jobs (Active, Waiting, Delayed, Repeated)
-    await workflowQueue.obliterate({ force: true });
-    res.json({
-      message: "💥 Redis Queue has been obliterated. No more ghosts.",
-    });
-  } catch (error: any) {
-    res.status(500).json({ error: error.message });
-  }
+app.post("/debug/save-memory", async (req, res) => {
+  const { text } = req.body;
+  await saveMemory(text);
+  res.json({ message: "Saved to brain!" });
 });
 
 const PORT = process.env.PORT || 3001;

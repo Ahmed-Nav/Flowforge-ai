@@ -1,9 +1,11 @@
 datasource db {
-  provider = "postgresql"
+  provider   = "postgresql"
+  extensions = [vector]
 }
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
 }
 
 model User {
@@ -42,4 +44,16 @@ model WorkflowRun {
   completedAt DateTime?
 
   Workflow    Workflow @relation(fields: [workflowId], references: [id])
+}
+
+model Document {
+  id        String   @id @default(uuid())
+  content   String   // The text (e.g., "Ahmed likes Python")
+  metadata  Json?    // { "source": "user_input", "date": "2026-01-29" }
+
+  // The "Brain Fingerprint" (Vector)
+  // We use 768 dimensions because that is what Gemini uses.
+  embedding Unsupported("vector(768)")? 
+
+  createdAt DateTime @default(now())
 }
