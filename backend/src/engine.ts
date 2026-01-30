@@ -18,13 +18,17 @@ const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
 export class WorkflowEngine {
   async runWorkflow(workflowJson: any, runId: string) {
-    const definition = workflowJson as WorkflowDefinition;
-    let currentStepId: string | null = definition.triggerId;
-    const context: Record<string, any> = {};
-
-    console.log(`🚀 Starting Run: ${runId}`);
-
     try {
+      const definition = workflowJson as WorkflowDefinition;
+      let currentStepId: string | null = definition.triggerId;
+      const context: Record<string, any> = {};
+
+      console.log(`🚀 Starting Run: ${runId}`);
+
+      if (!definition || !currentStepId) {
+        throw new Error("Invalid Workflow Definition: Missing triggerId");
+      }
+
       console.log(
         `🔍 DEBUG: Workflow has ${definition.nodes.length} nodes and ${definition.edges.length} edges.`,
       );
