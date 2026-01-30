@@ -25,6 +25,7 @@ import DiscordNode from "@/components/nodes/DiscordNode";
 import EmailNode from "@/components/nodes/EmailNode";
 import ScraperNode from "@/components/nodes/ScraperNode";
 import ScheduleNode from "@/components/nodes/ScheduleNode";
+import SaveMemoryNode from "@/components/nodes/SaveMemoryNode";
 
 import { useAuth } from "@/context/AuthContext";
 
@@ -37,6 +38,7 @@ const nodeTypes: NodeTypes = {
   emailNode: EmailNode,
   scraperNode: ScraperNode,
   scheduleNode: ScheduleNode,
+  saveMemoryNode: SaveMemoryNode,
 };
 
 const initialNodes = [
@@ -107,6 +109,7 @@ function EditorPage() {
                 if (n.type === "EMAIL") frontendType = "emailNode";
                 if (n.type === "SCRAPER") frontendType = "scraperNode";
                 if (n.type === "SCHEDULE") frontendType = "scheduleNode";
+                if (n.type === "SAVE_MEMORY") frontendType = "saveMemoryNode";
 
                 return {
                   ...n,

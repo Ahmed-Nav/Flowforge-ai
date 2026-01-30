@@ -11,7 +11,8 @@ export interface WorkflowNode {
     | "DISCORD"
     | "EMAIL"
     | "SCRAPER"
-    | "SCHEDULE";
+    | "SCHEDULE"
+    | "SAVE_MEMORY";
   data: any;
   nextStepId?: string | null;
 }

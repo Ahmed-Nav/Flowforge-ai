@@ -7,7 +7,7 @@ import { Pool } from "pg";
 import fetch from "cross-fetch";
 import nodemailer from "nodemailer";
 import * as cheerio from "cheerio";
-import { recallMemory } from "./memory";
+import { recallMemory, saveMemory } from "./memory";
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 const adapter = new PrismaPg(pool);
@@ -381,6 +381,39 @@ export class WorkflowEngine {
       case "SCHEDULE":
         console.log(`   ⏰ SCHEDULE START: ${node.data.time}`);
         return { result: "Scheduled" };
+
+      case "SAVE_MEMORY":
+        const contentTemplate = node.data.content || "{{previous_step}}";
+
+        const saveInputEdge = (definition.edges || []).find(
+          (e) => e.target === node.id,
+        );
+        const saveParent = saveInputEdge ? context[saveInputEdge.source] : {};
+        const saveInputVal =
+          saveParent?.result || JSON.stringify(saveParent) || "";
+
+        const finalContent = contentTemplate.replace(
+          "{{previous_step}}",
+          saveInputVal,
+        );
+
+        console.log(
+          `   💾 MEMORY SAVE: Storing "${finalContent.substring(0, 30)}..."`,
+        );
+
+        if (!finalContent) return { error: "No content to save" };
+
+        try {
+          const saved = await saveMemory(finalContent, {
+            source: "workflow_node",
+          });
+
+          if (saved) return { result: "Memory Saved Successfully" };
+          else throw new Error("Database Write Failed");
+        } catch (err: any) {
+          console.error("   ❌ SAVE FAILED:", err.message);
+          return { error: `Save Failed: ${err.message}` };
+        }
 
       default:
         return { error: "Unknown Node Type" };

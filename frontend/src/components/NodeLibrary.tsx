@@ -1,4 +1,11 @@
-import { Clock, GitFork, Mail, MessageSquare, ScanSearch } from "lucide-react";
+import {
+  Clock,
+  GitFork,
+  Mail,
+  MessageSquare,
+  Save,
+  ScanSearch,
+} from "lucide-react";
 import React from "react";
 
 export default function NodeLibrary() {
@@ -161,6 +168,23 @@ export default function NodeLibrary() {
         <div>
           <div className="text-sm font-bold text-gray-200">Scheduler</div>
           <div className="text-[10px] text-gray-500">Run Cron Jobs</div>
+        </div>
+      </div>
+      <div
+        className="bg-gray-800 border border-emerald-600 p-3 rounded cursor-grab hover:border-emerald-400 transition shadow-lg flex items-center gap-3"
+        onDragStart={(event) =>
+          onDragStart(event, "saveMemoryNode", {
+            content: "{{previous_step}}",
+          })
+        }
+        draggable
+      >
+        <div className="w-8 h-8 bg-emerald-900/50 rounded flex items-center justify-center text-emerald-200">
+          <Save size={16} />
+        </div>
+        <div>
+          <div className="text-sm font-bold text-gray-200">Save Memory</div>
+          <div className="text-[10px] text-gray-500">Store in Long-Term DB</div>
         </div>
       </div>
     </aside>
