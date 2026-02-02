@@ -171,6 +171,7 @@ function EditorPage() {
         else if (node.type === "emailNode") backendType = "EMAIL";
         else if (node.type === "scraperNode") backendType = "SCRAPER";
         else if (node.type === "scheduleNode") backendType = "SCHEDULE";
+        else if (node.type === "saveMemoryNode") backendType = "SAVE_MEMORY";
 
         return {
           id: node.id,
