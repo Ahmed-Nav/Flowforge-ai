@@ -13,6 +13,15 @@ import {
   NodeTypes,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
+import {
+  Trash2,
+  Play,
+  Pause,
+  ChevronLeft,
+  ChevronRight,
+  Minus,
+  Square,
+} from "lucide-react";
 import Navbar from "@/components/Navbar";
 import RetroNode from "@/components/nodes/RetroNode";
 import ConfigPanel from "@/components/ConfigPanel";
@@ -68,6 +77,8 @@ function EditorPage() {
   const [logs, setLogs] = useState<any[]>([]);
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isTerminalOpen, setIsTerminalOpen] = useState(true);
 
   useEffect(() => {
     if (!loading && !isAuthenticated) {
@@ -355,9 +366,36 @@ function EditorPage() {
       <Navbar />
 
       <div className="flex-1 flex overflow-hidden border-t-4 border-retro-dark relative">
-        <NodeLibrary />
+        <div
+          className={`${
+            isSidebarOpen ? "w-64" : "w-12"
+          } bg-gray-900 border-r border-gray-800 transition-all duration-300 ease-in-out relative z-30 flex flex-col`}
+        >
+          <button
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            className="absolute -right-3 top-4 bg-red-600 text-white rounded-full p-1 border-2 border-gray-900 hover:bg-red-500 z-50 shadow-lg"
+          >
+            {isSidebarOpen ? (
+              <ChevronLeft size={12} />
+            ) : (
+              <ChevronRight size={12} />
+            )}
+          </button>
 
-        <div className="flex-1 relative h-full ">
+          <div
+            className={`flex-1 overflow-hidden ${!isSidebarOpen && "opacity-0 pointer-events-none"}`}
+          >
+            <NodeLibrary />
+          </div>
+
+          {!isSidebarOpen && (
+            <div className="absolute top-12 left-0 right-0 flex flex-col items-center gap-4 text-gray-500">
+              <span title="Library">📚</span>
+            </div>
+          )}
+        </div>
+
+        <div className="flex-1 relative h-full flex flex-col">
           <ReactFlow
             nodes={nodes}
             edges={edges}
@@ -371,10 +409,9 @@ function EditorPage() {
             fitView
           >
             <Background color="#1D1D1D" gap={30} size={2} />
-
             <Controls
               className="bg-retro-bg border-2 border-retro-dark shadow-pixel text-retro-dark"
-              position="bottom-left"
+              position="top-right"
             />
           </ReactFlow>
 
@@ -390,6 +427,7 @@ function EditorPage() {
                     : "⏳ RUN_PENDING",
               );
               setLogs(run.outputs ? [run.outputs] : []);
+              setIsTerminalOpen(true);
             }}
           />
 
@@ -401,27 +439,51 @@ function EditorPage() {
             onDelete={deleteNode}
           />
 
-          <div className="absolute bottom-4 left-4 right-4 h-48 bg-black border-4 border-retro-dark p-4 font-pixel text-green-400 overflow-y-auto shadow-pixel z-20 opacity-90">
-            <div className="flex justify-between border-b-2 border-green-800 mb-2 pb-1">
-              <span>TERMINAL_OUTPUT</span>
-              <button
-                onClick={runWorkflow}
-                className="hover:text-white hover:underline"
-              >
-                [ EXECUTE_RUN ]
-              </button>
+          <div
+            className={`absolute bottom-4 left-4 right-4 bg-black border-4 border-retro-dark font-pixel text-green-400 shadow-pixel z-20 opacity-90 transition-all duration-300 ease-in-out flex flex-col ${
+              isTerminalOpen ? "h-48" : "h-10"
+            }`}
+          >
+            <div className="flex justify-between items-center bg-retro-dark/20 p-2 border-b-2 border-green-800 h-10 shrink-0">
+              <div className="flex items-center gap-4">
+                <span className="text-xs uppercase tracking-widest">
+                  {isTerminalOpen ? "TERMINAL_OUTPUT" : "TERMINAL_MINIMIZED"}
+                </span>
+                <span className="text-xs text-green-600">
+                  [{runStatus || "IDLE"}]
+                </span>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={runWorkflow}
+                  className="hover:text-white hover:underline text-xs bg-green-900/30 px-2 py-1 rounded"
+                >
+                  [ EXECUTE_RUN ]
+                </button>
+
+                <button
+                  onClick={() => setIsTerminalOpen(!isTerminalOpen)}
+                  className="hover:text-white p-1"
+                >
+                  {isTerminalOpen ? <Minus size={14} /> : <Square size={12} />}
+                </button>
+              </div>
             </div>
 
-            <div>{runStatus || "READY_TO_DEPLOY..."}</div>
-
-            {logs.map((log, i) => (
-              <pre
-                key={i}
-                className="whitespace-pre-wrap mt-2 text-sm text-retro-bg"
-              >
-                {JSON.stringify(log, null, 2)}
-              </pre>
-            ))}
+            {isTerminalOpen && (
+              <div className="overflow-y-auto p-4 flex-1">
+                <div>{runStatus || "READY_TO_DEPLOY..."}</div>
+                {logs.map((log, i) => (
+                  <pre
+                    key={i}
+                    className="whitespace-pre-wrap mt-2 text-sm text-retro-bg"
+                  >
+                    {JSON.stringify(log, null, 2)}
+                  </pre>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>

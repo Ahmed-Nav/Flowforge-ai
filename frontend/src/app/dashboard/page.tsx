@@ -4,17 +4,18 @@ import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
-import { Trash2 } from "lucide-react";
+import { Trash2, Play, Pause } from "lucide-react";
 
 interface Workflow {
   id: string;
   name: string;
   status: string;
+  isActive: boolean;
   createdAt: string;
 }
 
 export default function Dashboard() {
-  const { token, logout, isAuthenticated, loading: authLoading } = useAuth();
+  const { token, isAuthenticated, loading: authLoading } = useAuth();
   const [workflows, setWorkflows] = useState<Workflow[]>([]);
   const [dataLoading, setDataLoading] = useState(true);
   const router = useRouter();
@@ -35,7 +36,7 @@ export default function Dashboard() {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-          }
+          },
         );
         if (res.ok) {
           const data = await res.json();
@@ -55,7 +56,7 @@ export default function Dashboard() {
     e.stopPropagation();
     if (
       !confirm(
-        "Are you sure you want to delete this agent? This cannot be undone."
+        "Are you sure you want to delete this agent? This cannot be undone.",
       )
     )
       return;
@@ -66,7 +67,7 @@ export default function Dashboard() {
         {
           method: "DELETE",
           headers: { Authorization: `Bearer ${token}` },
-        }
+        },
       );
 
       if (res.ok) {
@@ -76,6 +77,32 @@ export default function Dashboard() {
       }
     } catch (err) {
       console.error(err);
+    }
+  };
+
+  const toggleWorkflow = async (id: string, currentStatus: boolean) => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/workflows/${id}/toggle`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ isActive: !currentStatus }),
+        },
+      );
+
+      if (res.ok) {
+        setWorkflows((prev) =>
+          prev.map((w) =>
+            w.id === id ? { ...w, isActive: !currentStatus } : w,
+          ),
+        );
+      }
+    } catch (err) {
+      alert("Failed to toggle workflow");
     }
   };
 
@@ -110,42 +137,60 @@ export default function Dashboard() {
             workflows.map((wf) => (
               <div
                 key={wf.id}
-                className="relative group bg-gray-800 border border-gray-700 p-6 rounded-lg hover:border-red-500 transition shadow-lg"
+                className={`relative group bg-gray-800 border p-6 rounded-lg transition shadow-lg cursor-pointer ${
+                  wf.isActive
+                    ? "border-green-900 hover:border-green-500"
+                    : "border-gray-700 opacity-75 hover:border-gray-500"
+                }`}
+                onClick={() => router.push(`/editor?id=${wf.id}`)}
               >
                 <div className="flex justify-between items-start mb-4">
-                  <h2 className="text-xl font-bold text-white truncate">
+                  <h2 className="text-xl font-bold text-white truncate max-w-[70%]">
                     {wf.name}
                   </h2>
-                  <span
-                    className={`px-2 py-1 text-xs rounded ${
-                      wf.status === "active"
-                        ? "bg-green-900 text-green-300"
-                        : "bg-yellow-900 text-yellow-300"
+
+                  {/* 🆕 NEW: Toggle Button */}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleWorkflow(wf.id, wf.isActive);
+                    }}
+                    className={`flex items-center gap-1 px-2 py-1 text-xs rounded font-bold border ${
+                      wf.isActive
+                        ? "bg-green-900/50 border-green-500 text-green-300 hover:bg-green-900"
+                        : "bg-yellow-900/50 border-yellow-500 text-yellow-300 hover:bg-yellow-900"
                     }`}
                   >
-                    {wf.status}
-                  </span>
+                    {wf.isActive ? (
+                      <>
+                        <Pause size={12} /> RUNNING
+                      </>
+                    ) : (
+                      <>
+                        <Play size={12} /> PAUSED
+                      </>
+                    )}
+                  </button>
                 </div>
+
                 <p className="text-gray-400 text-xs mb-6">
                   ID: {wf.id.slice(0, 8)}...
                 </p>
+
                 <div className="flex justify-between items-center">
                   <span className="text-gray-500 text-xs">
                     {new Date(wf.createdAt).toLocaleDateString()}
                   </span>
-                  <button
-                    onClick={(e) => handleDelete(e, wf.id)}
-                    className="absolute top-4 right-4 text-gray-500 hover:text-red-500 transition-all opacity-0 group-hover:opacity-100 z-20 p-2 bg-gray-900/50 rounded-full"
-                    title="Delete Agent"
-                  >
-                    <Trash2 size={18} />
-                  </button>
-                  <Link
-                    href={`/editor?id=${wf.id}`}
-                    className="text-red-400 hover:text-red-300 text-sm hover:underline"
-                  >
-                    Open Console &rarr;
-                  </Link>
+
+                  <div className="flex gap-2">
+                    <button
+                      onClick={(e) => handleDelete(e, wf.id)}
+                      className="text-gray-500 hover:text-red-500 transition-all p-2 bg-gray-900/50 rounded-full z-20"
+                      title="Delete Agent"
+                    >
+                      <Trash2 size={18} />
+                    </button>
+                  </div>
                 </div>
               </div>
             ))

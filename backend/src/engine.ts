@@ -135,63 +135,70 @@ export class WorkflowEngine {
       case "AI":
         const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
         const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
-        const promptTemplate =
-          node.data.prompt || "Summarize this: {{previous_step}}";
+
+        const userPrompt = node.data.prompt || "Summarize this";
         const incomingEdge = (definition.edges || []).find(
           (e) => e.target === node.id,
         );
         const parentOutput = incomingEdge ? context[incomingEdge.source] : {};
-        const previousText =
-          parentOutput?.result || JSON.stringify(parentOutput) || "No input";
+        const previousData =
+          parentOutput?.result || JSON.stringify(parentOutput) || "";
 
-        let finalPrompt = promptTemplate.replace(
-          "{{previous_step}}",
-          previousText,
-        );
-        console.log(`   🤖 AI START: Asking Gemini...`);
+        let finalPrompt = userPrompt;
+        let memoryBlock = "";
 
         try {
-          const memories: any = await recallMemory(finalPrompt);
+          const memories: any = await recallMemory(userPrompt);
           if (memories && memories.length > 0) {
-            console.log(
-              `   🧠 Brainwave! Found ${memories.length} relevant memories.`,
-            );
-            const contextBlock = memories
-              .map((m: any) => `- ${m.content}`)
-              .join("\n");
-            finalPrompt = `CONTEXT FROM LONG-TERM MEMORY:\n${contextBlock}\n\nUSER PROMPT:\n${finalPrompt}`;
+            console.log(`   🧠 Brainwave! Found ${memories.length} memories.`);
+            memoryBlock = memories.map((m: any) => `- ${m.content}`).join("\n");
           }
         } catch (memError) {
-          console.warn(
-            "   ⚠️ Memory recall failed (continuing without memory):",
-            memError,
-          );
+          console.warn("   ⚠️ Memory recall failed");
         }
+
+        const hasVariable = userPrompt.includes("{{previous_step}}");
+
+        if (hasVariable) {
+          finalPrompt = `
+            MY LONG-TERM MEMORY (Background Info):
+            ${memoryBlock}
+            
+            ----------------
+            
+            TASK:
+            ${userPrompt.replace("{{previous_step}}", previousData)}
+          `;
+        } else {
+          finalPrompt = `
+            You are an autonomous AI agent. Here is your context:
+
+            ----------------
+            1. LONG-TERM MEMORY (Things you learned in the past):
+            ${memoryBlock || "(No relevant memories found)"}
+
+            ----------------
+            2. IMMEDIATE CONTEXT (Data passed from the previous step):
+            ${previousData ? previousData.substring(0, 10000) : "(No input data provided)"}
+
+            ----------------
+            3. YOUR TASK (User Instruction):
+            ${userPrompt}
+            
+            INSTRUCTIONS:
+            - Use the "Immediate Context" as your primary source.
+            - Use "Long-Term Memory" to verify or add background context.
+            - Answer the User Instruction directly.
+          `;
+        }
+
+        console.log(`   🤖 AI START: Sending Prompt...`);
 
         try {
           const result = await model.generateContent(finalPrompt);
           const responseText = result.response.text();
-
           console.log("   ✅ AI SUCCESS");
           return { result: responseText };
-        } catch (error: any) {
-          console.error("   ❌ AI FAILED:", error.message);
-          return { error: `AI Failed: ${error.message}` };
-        }
-
-        try {
-          const timeoutPromise = new Promise((_, reject) =>
-            setTimeout(
-              () => reject(new Error("Gemini Timed Out (10s)")),
-              10000,
-            ),
-          );
-
-          const aiPromise = model.generateContent(finalPrompt);
-          const result: any = await Promise.race([aiPromise, timeoutPromise]);
-
-          console.log("   ✅ AI SUCCESS");
-          return { result: result.response.text() };
         } catch (error: any) {
           console.error("   ❌ AI FAILED:", error.message);
           return { error: `AI Failed: ${error.message}` };

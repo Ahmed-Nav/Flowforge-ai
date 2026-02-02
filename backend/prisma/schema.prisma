@@ -21,9 +21,8 @@ model Workflow {
   userId      String
   triggerType String   // e.g., "webhook"
   status      String   // "active" or "draft"
+  isActive    Boolean  @default(true)
   
-  // This JSON field stores the entire graph (nodes & edges)
-  // We do NOT normalize nodes into separate tables for flexibility.
   definition  Json 
   
   createdAt   DateTime @default(now())

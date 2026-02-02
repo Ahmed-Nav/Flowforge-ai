@@ -11,7 +11,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { authenticateToken, AuthRequest } from "./middleware";
 import "./worker";
-import { workflowQueues, scheduleWorkflow } from "./queue";
+import { scheduleWorkflow } from "./queue";
 import { saveMemory } from "./memory";
 
 const JWT_SECRET = process.env.JWT_SECRET || "secret_JWT";
@@ -168,6 +168,21 @@ app.get(
   },
 );
 
+app.patch("/workflows/:id/toggle", authenticateToken, async (req: any, res) => {
+  const { id } = req.params;
+  const { isActive } = req.body;
+
+  try {
+    const updated = await prisma.workflow.update({
+      where: { id, userId: req.user.userId },
+      data: { isActive },
+    });
+    res.json(updated);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to update workflow status" });
+  }
+});
+
 app.post(
   "/hooks/catch/:workflowId",
   async (req: express.Request, res: express.Response) => {
@@ -180,6 +195,10 @@ app.post(
     if (!workflow) {
       res.status(404).json({ error: "Workflow not found" });
       return;
+    }
+
+    if (workflow.isActive === false) {
+      return res.status(400).json({ error: "Workflow is paused" });
     }
 
     await workflowQueue.add("run-flow", {
@@ -230,18 +249,22 @@ app.delete(
         where: { id },
       });
 
-      res.json({ message: "Workflow deleted successfully" });
+      const repeatableJobs = await workflowQueue.getRepeatableJobs();
+      const zombieJob = repeatableJobs.find(
+        (job) => job.key.includes(id) || job.id?.includes(id),
+      );
+
+      if (zombieJob) {
+        await workflowQueue.removeRepeatableByKey(zombieJob.key);
+        console.log(`🧹 Cleaned up Redis schedule for workflow ${id}`);
+      }
+
+      res.json({ message: "Workflow deleted and schedule removed" });
     } catch (error) {
       res.status(500).json({ error: "Failed to delete workflow" });
     }
   },
 );
-
-app.post("/debug/save-memory", async (req, res) => {
-  const { text } = req.body;
-  await saveMemory(text);
-  res.json({ message: "Saved to brain!" });
-});
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {

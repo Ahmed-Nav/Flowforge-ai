@@ -26,6 +26,24 @@ export const worker = new Worker(
     }
 
     if (runId === "scheduled") {
+      const workflow = await prisma.workflow.findUnique({
+        where: { id: workflowId },
+      });
+
+      if (!workflow) {
+        console.warn(
+          `👻 Ghost Job detected: Workflow ${workflowId} not found. Skipping.`,
+        );
+        return { status: "SKIPPED", reason: "Workflow Deleted" };
+      }
+
+      if (workflow.isActive === false) {
+        console.log(
+          `⏸️ Paused Job detected: Workflow ${workflowId} is paused. Skipping.`,
+        );
+        return { status: "SKIPPED", reason: "Workflow Paused" };
+      }
+
       try {
         console.log(`⏰ Creating Run Record for Workflow: ${workflowId}`);
         const newRun = await prisma.workflowRun.create({
