@@ -427,7 +427,6 @@ function EditorPage() {
                     : "⏳ RUN_PENDING",
               );
               setLogs(run.outputs ? [run.outputs] : []);
-              setIsTerminalOpen(true);
             }}
           />
 

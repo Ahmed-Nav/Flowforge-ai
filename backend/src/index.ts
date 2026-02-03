@@ -21,7 +21,7 @@ app.use(express.json());
 app.use(
   cors({
     origin: ["http://localhost:3000", "https://flowforge-ai-drab.vercel.app"],
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   }),
 );
