@@ -35,6 +35,7 @@ import EmailNode from "@/components/nodes/EmailNode";
 import ScraperNode from "@/components/nodes/ScraperNode";
 import ScheduleNode from "@/components/nodes/ScheduleNode";
 import SaveMemoryNode from "@/components/nodes/SaveMemoryNode";
+import DocumentNode from "@/components/nodes/DocumentNode";
 
 import { useAuth } from "@/context/AuthContext";
 
@@ -48,6 +49,7 @@ const nodeTypes: NodeTypes = {
   scraperNode: ScraperNode,
   scheduleNode: ScheduleNode,
   saveMemoryNode: SaveMemoryNode,
+  documentNode: DocumentNode,
 };
 
 const initialNodes = [

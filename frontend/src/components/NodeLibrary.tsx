@@ -1,5 +1,6 @@
 import {
   Clock,
+  FileText,
   GitFork,
   Mail,
   MessageSquare,
@@ -185,6 +186,23 @@ export default function NodeLibrary() {
         <div>
           <div className="text-sm font-bold text-gray-200">Save Memory</div>
           <div className="text-[10px] text-gray-500">Store in Long-Term DB</div>
+        </div>
+      </div>
+      <div
+        className="bg-slate-800 p-3 rounded cursor-move hover:bg-slate-700 border border-slate-600 transition flex items-center gap-3"
+        onDragStart={(event) =>
+          onDragStart(event, "documentNode", "PDF Reader")
+        }
+        draggable
+      >
+        <div className="bg-blue-900 p-2 rounded text-blue-200">
+          <FileText size={20} />
+        </div>
+        <div>
+          <div className="font-bold text-sm text-blue-100">PDF Reader</div>
+          <div className="text-[10px] text-gray-400">
+            Extract text from docs
+          </div>
         </div>
       </div>
     </aside>

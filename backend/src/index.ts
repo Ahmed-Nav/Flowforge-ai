@@ -13,6 +13,8 @@ import { authenticateToken, AuthRequest } from "./middleware";
 import "./worker";
 import { scheduleWorkflow } from "./queue";
 import { saveMemory } from "./memory";
+import multer from "multer";
+const pdf = require("pdf-parse");
 
 const JWT_SECRET = process.env.JWT_SECRET || "secret_JWT";
 
@@ -38,6 +40,28 @@ const connection = new IORedis(
 );
 
 const workflowQueue = new Queue("workflow-queue", { connection });
+
+const upload = multer({ storage: multer.memoryStorage() });
+
+app.post("/tools/parse-pdf", upload.single("file"), async (req: any, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: "No file uploaded" });
+  }
+
+  try {
+    const data = await pdf(req.file.buffer);
+    const text = data.text;
+
+    res.json({
+      text: text.trim(),
+      info: data.info,
+      pages: data.numpages,
+    });
+  } catch (error) {
+    console.error("PDF Parse Error:", error);
+    res.status(500).json({ error: "Failed to parse PDF" });
+  }
+});
 
 app.post(
   "/auth/register",
