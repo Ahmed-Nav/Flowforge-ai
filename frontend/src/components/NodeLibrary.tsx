@@ -12,7 +12,10 @@ import React from "react";
 export default function NodeLibrary() {
   const onDragStart = (event: React.DragEvent, nodeType: string, data: any) => {
     event.dataTransfer.setData("application/reactflow", nodeType);
-    event.dataTransfer.setData("application/nodedata", JSON.stringify(data));
+
+    const payload = typeof data === "string" ? { label: data } : data;
+
+    event.dataTransfer.setData("application/nodedata", JSON.stringify(payload));
     event.dataTransfer.effectAllowed = "move";
   };
 
@@ -61,6 +64,7 @@ export default function NodeLibrary() {
           </div>
         </div>
       </div>
+
       <div
         className="bg-gray-800 border border-blue-600 p-3 rounded cursor-grab hover:border-blue-400 transition shadow-lg flex items-center gap-3"
         onDragStart={(event) =>
@@ -80,6 +84,7 @@ export default function NodeLibrary() {
           <div className="text-[10px] text-gray-500">Fetch API Data</div>
         </div>
       </div>
+
       <div
         className="bg-gray-800 border border-purple-600 p-3 rounded cursor-grab hover:border-purple-400 transition shadow-lg flex items-center gap-3"
         onDragStart={(event) =>
@@ -99,6 +104,7 @@ export default function NodeLibrary() {
           <div className="text-[10px] text-gray-500">If / Else Branching</div>
         </div>
       </div>
+
       <div
         className="bg-gray-800 border border-indigo-600 p-3 rounded cursor-grab hover:border-indigo-400 transition shadow-lg flex items-center gap-3"
         onDragStart={(event) =>
@@ -118,6 +124,7 @@ export default function NodeLibrary() {
           <div className="text-[10px] text-gray-500">Send Notification</div>
         </div>
       </div>
+
       <div
         className="bg-gray-800 border border-yellow-600 p-3 rounded cursor-grab hover:border-yellow-400 transition shadow-lg flex items-center gap-3"
         onDragStart={(event) =>
@@ -138,6 +145,7 @@ export default function NodeLibrary() {
           <div className="text-[10px] text-gray-500">SMTP Notification</div>
         </div>
       </div>
+
       <div
         className="bg-gray-800 border border-orange-600 p-3 rounded cursor-grab hover:border-orange-400 transition shadow-lg flex items-center gap-3"
         onDragStart={(event) =>
@@ -153,6 +161,7 @@ export default function NodeLibrary() {
           <div className="text-[10px] text-gray-500">Read Website Text</div>
         </div>
       </div>
+
       <div
         className="bg-gray-800 border border-purple-500 p-3 rounded cursor-grab hover:border-purple-400 transition shadow-lg flex items-center gap-3"
         onDragStart={(event) =>
@@ -171,6 +180,7 @@ export default function NodeLibrary() {
           <div className="text-[10px] text-gray-500">Run Cron Jobs</div>
         </div>
       </div>
+
       <div
         className="bg-gray-800 border border-emerald-600 p-3 rounded cursor-grab hover:border-emerald-400 transition shadow-lg flex items-center gap-3"
         onDragStart={(event) =>
@@ -188,10 +198,11 @@ export default function NodeLibrary() {
           <div className="text-[10px] text-gray-500">Store in Long-Term DB</div>
         </div>
       </div>
+
       <div
         className="bg-slate-800 p-3 rounded cursor-move hover:bg-slate-700 border border-slate-600 transition flex items-center gap-3"
         onDragStart={(event) =>
-          onDragStart(event, "documentNode", "PDF Reader")
+          onDragStart(event, "documentNode", { label: "PDF Reader" })
         }
         draggable
       >
