@@ -174,7 +174,7 @@ app.patch("/workflows/:id/toggle", authenticateToken, async (req: any, res) => {
 
   try {
     const updated = await prisma.workflow.update({
-      where: { id, userId: req.user.userId },
+      where: { id, userId: req.userId },
       data: { isActive },
     });
     res.json(updated);
