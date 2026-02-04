@@ -31,15 +31,19 @@ export default function DocumentNode({ data }: any) {
         },
       );
 
-      if (!res.ok) throw new Error("Parse failed");
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.details || errorData.error || "Parse failed");
+      }
 
       const result = await res.json();
 
       data.result = result.text;
       data.fileName = file.name;
       setFileName(file.name);
-    } catch (err) {
-      setError("Upload failed. Try again.");
+    } catch (err: any) {
+      console.error("Upload error:", err);
+      setError(err.message || "Upload failed. Try again.");
     } finally {
       setUploading(false);
     }

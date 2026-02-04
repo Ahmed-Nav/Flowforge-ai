@@ -45,21 +45,30 @@ const upload = multer({ storage: multer.memoryStorage() });
 
 app.post("/tools/parse-pdf", upload.single("file"), async (req: any, res) => {
   if (!req.file) {
+    console.warn("PDF Parse Request: No file uploaded");
     return res.status(400).json({ error: "No file uploaded" });
   }
+
+  console.log(
+    `Received PDF parse request: ${req.file.originalname}, size: ${req.file.size} bytes`,
+  );
 
   try {
     const data = await pdf(req.file.buffer);
     const text = data.text;
 
+    console.log("PDF parsed successfully");
     res.json({
       text: text.trim(),
       info: data.info,
       pages: data.numpages,
     });
-  } catch (error) {
-    console.error("PDF Parse Error:", error);
-    res.status(500).json({ error: "Failed to parse PDF" });
+  } catch (error: any) {
+    console.error("PDF Parse Error Details:", error);
+    res.status(500).json({
+      error: "Failed to parse PDF",
+      details: error.message,
+    });
   }
 });
 
