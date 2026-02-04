@@ -10,7 +10,6 @@ import IORedis from "ioredis";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { authenticateToken, AuthRequest } from "./middleware";
-import "./worker";
 import { scheduleWorkflow } from "./queue";
 import { saveMemory } from "./memory";
 import multer from "multer";
