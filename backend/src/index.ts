@@ -14,7 +14,6 @@ import "./worker";
 import { scheduleWorkflow } from "./queue";
 import { saveMemory } from "./memory";
 import multer from "multer";
-const pdf = require("pdf-parse");
 
 const JWT_SECRET = process.env.JWT_SECRET || "secret_JWT";
 
@@ -53,24 +52,24 @@ app.post("/tools/parse-pdf", upload.single("file"), async (req: any, res) => {
     `Received PDF parse request: ${req.file.originalname}, size: ${req.file.size} bytes`,
   );
 
+  let parser;
   try {
-    // Handle potential ESM/CommonJS interop issues
-    const parse = typeof pdf === "function" ? pdf : (pdf as any).default;
+    const { PDFParse } = require("pdf-parse"); // Import PDFParse class from v2
 
-    if (typeof parse !== "function") {
-      throw new Error(
-        `pdf-parse import failed: resolved to type ${typeof pdf}`,
-      );
-    }
+    // Initialize parser with the file buffer
+    parser = new PDFParse({ data: req.file.buffer });
 
-    const data = await parse(req.file.buffer);
-    const text = data.text;
+    // Extract text
+    const textResult = await parser.getText();
+
+    // Get info if needed (optional, depends on what frontend expects)
+    // const infoResult = await parser.getInfo();
 
     console.log("PDF parsed successfully");
     res.json({
-      text: text.trim(),
-      info: data.info,
-      pages: data.numpages,
+      text: textResult.text ? textResult.text.trim() : "",
+      // info: infoResult.info, // You can add this back if needed
+      // pages: infoResult.total,
     });
   } catch (error: any) {
     console.error("PDF Parse Error Details:", error);
@@ -78,6 +77,11 @@ app.post("/tools/parse-pdf", upload.single("file"), async (req: any, res) => {
       error: "Failed to parse PDF",
       details: error.message,
     });
+  } finally {
+    // Always destroy the parser instance to free memory
+    if (parser) {
+      await parser.destroy();
+    }
   }
 });
 
