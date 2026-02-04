@@ -422,6 +422,15 @@ export class WorkflowEngine {
           return { error: `Save Failed: ${err.message}` };
         }
 
+      case "DOCUMENT":
+        const docText = node.data.result || "";
+        console.log(`   📄 DOCUMENT PASSTHROUGH: ${docText.length} chars`);
+
+        if (!docText)
+          return { error: "No document text found. Did you upload a PDF?" };
+
+        return { result: docText };
+
       default:
         return { error: "Unknown Node Type" };
     }

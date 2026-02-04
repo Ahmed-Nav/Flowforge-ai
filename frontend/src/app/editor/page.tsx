@@ -123,6 +123,7 @@ function EditorPage() {
                 if (n.type === "SCRAPER") frontendType = "scraperNode";
                 if (n.type === "SCHEDULE") frontendType = "scheduleNode";
                 if (n.type === "SAVE_MEMORY") frontendType = "saveMemoryNode";
+                if (n.type === "DOCUMENT") frontendType = "documentNode";
 
                 return {
                   ...n,
@@ -185,6 +186,7 @@ function EditorPage() {
         else if (node.type === "scraperNode") backendType = "SCRAPER";
         else if (node.type === "scheduleNode") backendType = "SCHEDULE";
         else if (node.type === "saveMemoryNode") backendType = "SAVE_MEMORY";
+        else if (node.type === "documentNode") backendType = "DOCUMENT";
 
         return {
           id: node.id,
