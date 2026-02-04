@@ -54,7 +54,16 @@ app.post("/tools/parse-pdf", upload.single("file"), async (req: any, res) => {
   );
 
   try {
-    const data = await pdf(req.file.buffer);
+    // Handle potential ESM/CommonJS interop issues
+    const parse = typeof pdf === "function" ? pdf : (pdf as any).default;
+
+    if (typeof parse !== "function") {
+      throw new Error(
+        `pdf-parse import failed: resolved to type ${typeof pdf}`,
+      );
+    }
+
+    const data = await parse(req.file.buffer);
     const text = data.text;
 
     console.log("PDF parsed successfully");
