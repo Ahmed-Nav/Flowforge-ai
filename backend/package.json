@@ -6,7 +6,7 @@
   "scripts": {
     "build": "npm install && npx prisma generate && npx prisma db push && npx tsc",
     "start": "node dist/index.js",
-    "start:worker": "node dist/queue_test.js",
+    "start:worker": "node dist/worker.js",
     "start:api": "ts-node src/index.ts",
     "dev": "ts-node src/index.ts"
   },

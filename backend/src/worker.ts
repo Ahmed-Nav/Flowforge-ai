@@ -1,9 +1,17 @@
+// backend/src/worker.ts
+import "dotenv/config";
 import { Worker } from "bullmq";
-import { workerConnection } from "./redis";
-import { WorkflowEngine } from "./engine";
+import IORedis from "ioredis";
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";
+import { WorkflowEngine } from "./engine";
+import express from "express";
+
+const redisUrl = process.env.REDIS_URL || "redis://localhost:6379";
+const connection = new IORedis(redisUrl, {
+  maxRetriesPerRequest: null,
+});
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 const adapter = new PrismaPg(pool);
@@ -11,7 +19,7 @@ const prisma = new PrismaClient({ adapter });
 
 const engine = new WorkflowEngine();
 
-console.log("👷 Worker is listening for jobs...");
+console.log("👷 WORKER STARTED: Listening for jobs...");
 
 export const worker = new Worker(
   "workflow-queue",
@@ -20,27 +28,18 @@ export const worker = new Worker(
 
     let { runId, definition, workflowId } = job.data;
 
-    if (runId === "scheduled" && !workflowId) {
-      console.log("🧟 Ignoring old 'Zombie' job with missing Workflow ID.");
-      return { status: "SKIPPED", reason: "Missing Workflow ID" };
-    }
-
     if (runId === "scheduled") {
       const workflow = await prisma.workflow.findUnique({
         where: { id: workflowId },
       });
 
       if (!workflow) {
-        console.warn(
-          `👻 Ghost Job detected: Workflow ${workflowId} not found. Skipping.`,
-        );
+        console.warn(`👻 Ghost Job: Workflow ${workflowId} not found.`);
         return { status: "SKIPPED", reason: "Workflow Deleted" };
       }
 
       if (workflow.isActive === false) {
-        console.log(
-          `⏸️ Paused Job detected: Workflow ${workflowId} is paused. Skipping.`,
-        );
+        console.log(`⏸️ Paused Job: Workflow ${workflowId} is paused.`);
         return { status: "SKIPPED", reason: "Workflow Paused" };
       }
 
@@ -57,14 +56,7 @@ export const worker = new Worker(
         runId = newRun.id;
         console.log(`✅ Created Scheduled Run ID: ${runId}`);
       } catch (err: any) {
-        if (err.code === "P2003") {
-          console.warn(
-            `👻 Ghost Job detected: Workflow ${workflowId} no longer exists. Skipping.`,
-          );
-          return { status: "SKIPPED", reason: "Workflow Deleted" };
-        }
-
-        console.error("❌ Failed to create scheduled run record:", err);
+        console.error("❌ Failed to create run record:", err);
         return;
       }
     }
@@ -77,8 +69,14 @@ export const worker = new Worker(
       throw error;
     }
   },
-  {
-    connection: workerConnection,
-    concurrency: 5,
-  },
+  { connection },
 );
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.get("/health", (req, res) => res.send("Worker is alive!"));
+
+app.listen(PORT, () => {
+  console.log(`❤️ Health check server running on port ${PORT}`);
+});
