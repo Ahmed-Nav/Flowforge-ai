@@ -8,6 +8,8 @@ import fetch from "cross-fetch";
 import nodemailer from "nodemailer";
 import * as cheerio from "cheerio";
 import { recallMemory, saveMemory } from "./memory";
+import { google } from "googleapis";
+import path from "path";
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 const adapter = new PrismaPg(pool);
@@ -430,6 +432,48 @@ export class WorkflowEngine {
           return { error: "No document text found. Did you upload a PDF?" };
 
         return { result: docText };
+
+      case "SHEETS":
+        const sheetId = node.data.sheetId;
+        const range = node.data.range || "Sheet1!A:A";
+        const sheetInputEdge = (definition.edges || []).find(
+          (e) => e.target === node.id,
+        );
+        const sheetParent = sheetInputEdge
+          ? context[sheetInputEdge.source]
+          : {};
+        const rawValue =
+          sheetParent?.result || JSON.stringify(sheetParent) || "";
+
+        const values = [[new Date().toISOString(), rawValue]];
+
+        console.log(`   📊 SHEETS START: Writing to ${sheetId}...`);
+
+        if (!sheetId) return { error: "No Sheet ID provided" };
+
+        try {
+          const auth = new google.auth.GoogleAuth({
+            keyFile: path.join(__dirname, "../google-secrets.json"),
+            scopes: ["https://www.googleapis.com/auth/spreadsheets"],
+          });
+
+          const sheets = google.sheets({ version: "v4", auth });
+
+          await sheets.spreadsheets.values.append({
+            spreadsheetId: sheetId,
+            range: range,
+            valueInputOption: "USER_ENTERED",
+            requestBody: {
+              values: values,
+            },
+          });
+
+          console.log("   ✅ SHEETS SUCCESS: Row Added");
+          return { result: "Row Added to Sheet" };
+        } catch (err: any) {
+          console.error("   ❌ SHEETS FAILED:", err.message);
+          return { error: `Sheets Error: ${err.message}` };
+        }
 
       default:
         return { error: "Unknown Node Type" };

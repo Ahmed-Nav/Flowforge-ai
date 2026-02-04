@@ -36,6 +36,7 @@ import ScraperNode from "@/components/nodes/ScraperNode";
 import ScheduleNode from "@/components/nodes/ScheduleNode";
 import SaveMemoryNode from "@/components/nodes/SaveMemoryNode";
 import DocumentNode from "@/components/nodes/DocumentNode";
+import GoogleSheetsNode from "@/components/nodes/GoogleSheetsNode";
 
 import { useAuth } from "@/context/AuthContext";
 
@@ -50,6 +51,7 @@ const nodeTypes: NodeTypes = {
   scheduleNode: ScheduleNode,
   saveMemoryNode: SaveMemoryNode,
   documentNode: DocumentNode,
+  sheetsNode: GoogleSheetsNode,
 };
 
 const initialNodes = [
@@ -124,6 +126,7 @@ function EditorPage() {
                 if (n.type === "SCHEDULE") frontendType = "scheduleNode";
                 if (n.type === "SAVE_MEMORY") frontendType = "saveMemoryNode";
                 if (n.type === "DOCUMENT") frontendType = "documentNode";
+                if (n.type === "SHEETS") frontendType = "sheetsNode";
 
                 return {
                   ...n,
@@ -187,6 +190,7 @@ function EditorPage() {
         else if (node.type === "scheduleNode") backendType = "SCHEDULE";
         else if (node.type === "saveMemoryNode") backendType = "SAVE_MEMORY";
         else if (node.type === "documentNode") backendType = "DOCUMENT";
+        else if (node.type === "sheetsNode") backendType = "SHEETS";
 
         return {
           id: node.id,

@@ -6,6 +6,7 @@ import {
   MessageSquare,
   Save,
   ScanSearch,
+  Table,
 } from "lucide-react";
 import React from "react";
 
@@ -214,6 +215,25 @@ export default function NodeLibrary() {
           <div className="text-[10px] text-gray-400">
             Extract text from docs
           </div>
+        </div>
+      </div>
+      <div
+        className="bg-green-900 border border-green-500 p-3 rounded cursor-grab flex items-center gap-3"
+        onDragStart={(event) =>
+          onDragStart(event, "sheetsNode", {
+            type: "sheets",
+            sheetId: "",
+            range: "Sheet1!A:A",
+          })
+        }
+        draggable
+      >
+        <div className="w-8 h-8 bg-green-800 rounded flex items-center justify-center text-green-200">
+          <Table size={16} />
+        </div>
+        <div>
+          <div className="text-sm font-bold text-green-100">Google Sheets</div>
+          <div className="text-[10px] text-green-400">Add Row</div>
         </div>
       </div>
     </aside>

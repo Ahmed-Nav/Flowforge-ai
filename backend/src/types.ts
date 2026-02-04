@@ -13,7 +13,8 @@ export interface WorkflowNode {
     | "SCRAPER"
     | "SCHEDULE"
     | "SAVE_MEMORY"
-    | "DOCUMENT";
+    | "DOCUMENT"
+    | "SHEETS";
   data: any;
   nextStepId?: string | null;
 }
