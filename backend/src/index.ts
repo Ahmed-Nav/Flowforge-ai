@@ -13,6 +13,7 @@ import { authenticateToken, AuthRequest } from "./middleware";
 import { scheduleWorkflow } from "./queue";
 import { saveMemory } from "./memory";
 import multer from "multer";
+import { startGmailPolling } from "./polling";
 
 const JWT_SECRET = process.env.JWT_SECRET || "secret_JWT";
 
@@ -53,22 +54,15 @@ app.post("/tools/parse-pdf", upload.single("file"), async (req: any, res) => {
 
   let parser;
   try {
-    const { PDFParse } = require("pdf-parse"); // Import PDFParse class from v2
+    const { PDFParse } = require("pdf-parse");
 
-    // Initialize parser with the file buffer
     parser = new PDFParse({ data: req.file.buffer });
 
-    // Extract text
     const textResult = await parser.getText();
-
-    // Get info if needed (optional, depends on what frontend expects)
-    // const infoResult = await parser.getInfo();
 
     console.log("PDF parsed successfully");
     res.json({
       text: textResult.text ? textResult.text.trim() : "",
-      // info: infoResult.info, // You can add this back if needed
-      // pages: infoResult.total,
     });
   } catch (error: any) {
     console.error("PDF Parse Error Details:", error);
@@ -77,7 +71,6 @@ app.post("/tools/parse-pdf", upload.single("file"), async (req: any, res) => {
       details: error.message,
     });
   } finally {
-    // Always destroy the parser instance to free memory
     if (parser) {
       await parser.destroy();
     }
@@ -310,6 +303,8 @@ app.delete(
     }
   },
 );
+
+startGmailPolling();
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {

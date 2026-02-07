@@ -26,7 +26,7 @@ export const worker = new Worker(
   async (job) => {
     console.log(`[Worker] Processing Job: ${job.id}`);
 
-    let { runId, definition, workflowId } = job.data;
+    let { runId, definition, workflowId, triggerData } = job.data;
 
     if (runId === "scheduled") {
       const workflow = await prisma.workflow.findUnique({
@@ -58,6 +58,18 @@ export const worker = new Worker(
       } catch (err: any) {
         console.error("❌ Failed to create run record:", err);
         return;
+      }
+    }
+
+    if (triggerData) {
+      console.log(`   📧 Injecting Email Data into Workflow Start Node...`);
+
+      const triggerNode = definition.nodes.find(
+        (n: any) => n.id === definition.triggerId,
+      );
+
+      if (triggerNode) {
+        triggerNode.data.initialPayload = triggerData;
       }
     }
 

@@ -4,6 +4,7 @@ export interface WorkflowNode {
   id: string;
   type:
     | "TRIGGER"
+    | "GMAIL_TRIGGER"
     | "ACTION"
     | "AI"
     | "HTTP"

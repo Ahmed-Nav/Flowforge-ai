@@ -236,6 +236,24 @@ export default function NodeLibrary() {
           <div className="text-[10px] text-green-400">Add Row</div>
         </div>
       </div>
+      <div
+        className="bg-red-900 border border-red-500 p-3 rounded cursor-grab flex items-center gap-3"
+        onDragStart={(event) =>
+          onDragStart(event, "gmailTrigger", {
+            type: "gmailTrigger",
+            searchQuery: "UNSEEN",
+          })
+        }
+        draggable
+      >
+        <div className="w-8 h-8 bg-red-800 rounded flex items-center justify-center text-red-200">
+          <Mail size={16} />
+        </div>
+        <div>
+          <div className="text-sm font-bold text-red-100">Gmail Watcher</div>
+          <div className="text-[10px] text-red-400">Triggers on Email</div>
+        </div>
+      </div>
     </aside>
   );
 }

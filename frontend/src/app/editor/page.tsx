@@ -37,6 +37,7 @@ import ScheduleNode from "@/components/nodes/ScheduleNode";
 import SaveMemoryNode from "@/components/nodes/SaveMemoryNode";
 import DocumentNode from "@/components/nodes/DocumentNode";
 import GoogleSheetsNode from "@/components/nodes/GoogleSheetsNode";
+import GmailTriggerNode from "@/components/nodes/GmailTriggerNode";
 
 import { useAuth } from "@/context/AuthContext";
 
@@ -52,6 +53,7 @@ const nodeTypes: NodeTypes = {
   saveMemoryNode: SaveMemoryNode,
   documentNode: DocumentNode,
   sheetsNode: GoogleSheetsNode,
+  gmailTrigger: GmailTriggerNode,
 };
 
 const initialNodes = [
@@ -127,6 +129,8 @@ function EditorPage() {
                 if (n.type === "SAVE_MEMORY") frontendType = "saveMemoryNode";
                 if (n.type === "DOCUMENT") frontendType = "documentNode";
                 if (n.type === "SHEETS") frontendType = "sheetsNode";
+                if (n.type === "GMAIL_TRIGGER")
+                  frontendType = "gmailTriggerNode";
 
                 return {
                   ...n,
@@ -191,6 +195,8 @@ function EditorPage() {
         else if (node.type === "saveMemoryNode") backendType = "SAVE_MEMORY";
         else if (node.type === "documentNode") backendType = "DOCUMENT";
         else if (node.type === "sheetsNode") backendType = "SHEETS";
+        else if (node.type === "gmailTriggerNode")
+          backendType = "GMAIL_TRIGGER";
 
         return {
           id: node.id,

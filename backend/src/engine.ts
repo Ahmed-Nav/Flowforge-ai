@@ -103,7 +103,11 @@ export class WorkflowEngine {
   ) {
     switch (node.type) {
       case "TRIGGER":
-        return { message: "Webhook received!" };
+      case "GMAIL_TRIGGER":
+        return {
+          message: "Workflow Triggered",
+          ...(node.data.initialPayload || {}),
+        };
 
       case "HTTP":
         const url = node.data.url;
@@ -317,7 +321,7 @@ export class WorkflowEngine {
           const transporter = nodemailer.createTransport({
             host: "smtp.gmail.com",
             port: 465,
-            secure: true, // true for 465, false for other ports
+            secure: true,
             auth: {
               user: process.env.EMAIL_USER,
               pass: process.env.EMAIL_PASS.replace(/\s/g, ""),
@@ -325,7 +329,7 @@ export class WorkflowEngine {
             tls: {
               rejectUnauthorized: false,
             },
-            family: 4, // Force IPv4
+            family: 4,
             connectionTimeout: 30000,
             greetingTimeout: 30000,
             logger: true,
