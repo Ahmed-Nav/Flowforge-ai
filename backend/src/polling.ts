@@ -2,8 +2,13 @@ import imaps from "imap-simple";
 import { simpleParser } from "mailparser";
 import { PrismaClient } from "@prisma/client";
 import { Queue } from "bullmq";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { Pool } from "pg";
 
-const prisma = new PrismaClient();
+const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+const adapter = new PrismaPg(pool);
+const prisma = new PrismaClient({ adapter });
+
 const jobQueue = new Queue("workflow-queue", {
   connection: {
     host: process.env.REDIS_HOST || "127.0.0.1",
