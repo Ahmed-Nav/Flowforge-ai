@@ -136,9 +136,16 @@ export class WorkflowEngine {
 
       case "AI":
         const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
-        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
-        const userPrompt = node.data.prompt || "Summarize this";
+        const model = genAI.getGenerativeModel({
+          model: "gemini-2.5-flash",
+          generationConfig: {
+            temperature: 0.9,
+            maxOutputTokens: 2000,
+          },
+        });
+
+        const userPrompt = node.data.prompt || "Analyze this";
         const incomingEdge = (definition.edges || []).find(
           (e) => e.target === node.id,
         );
@@ -146,55 +153,52 @@ export class WorkflowEngine {
         const previousData =
           parentOutput?.result || JSON.stringify(parentOutput) || "";
 
-        let finalPrompt = userPrompt;
         let memoryBlock = "";
-
         try {
           const memories: any = await recallMemory(userPrompt);
           if (memories && memories.length > 0) {
-            console.log(`   🧠 Brainwave! Found ${memories.length} memories.`);
+            console.log(
+              `   🧠 Brainwave! Accessing ${memories.length} memories...`,
+            );
             memoryBlock = memories.map((m: any) => `- ${m.content}`).join("\n");
           }
         } catch (memError) {
-          console.warn("   ⚠️ Memory recall failed");
+          /* ignore */
         }
 
-        const hasVariable = userPrompt.includes("{{previous_step}}");
+        let finalPrompt = `
+            ROLE: You are an expert AI Automation Agent. Your job is to process data intelligently for the user.
 
-        if (hasVariable) {
-          finalPrompt = `
-            MY LONG-TERM MEMORY (Background Info):
-            ${memoryBlock}
-            
-            ----------------
-            
-            TASK:
-            ${userPrompt.replace("{{previous_step}}", previousData)}
-          `;
-        } else {
-          finalPrompt = `
-            You are an autonomous AI agent. Here is your context:
+            YOUR CORE PHILOSOPHY:
+            1. BRIDGE THE GAP: Users often give vague or "half-baked" instructions. You must use the INPUT CONTEXT to figure out what they actually want.
+            2. NEVER GIVE UP: Do not refuse to answer. If the data is missing, make a best-guess effort or explain clearly what is missing.
+            3. BE ADAPTIVE: 
+               - If the user asks for a specific format (JSON, CSV, List), obey strictly.
+               - If the user asks a question, answer it using the Context.
+               - If the user gives a generic label (e.g. "Summary", "Email", "Flowforge"), assume they want you to EXTRACT or FORMAT that specific information from the Context.
 
             ----------------
-            1. LONG-TERM MEMORY (Things you learned in the past):
+            1. INPUT CONTEXT (The Raw Data):
+            ${previousData ? previousData.substring(0, 10000) : "(No input data)"}
+
+            2. LONG-TERM MEMORY (Learned Information):
             ${memoryBlock || "(No relevant memories found)"}
 
+            3. USER INSTRUCTION:
+            "${userPrompt}"
             ----------------
-            2. IMMEDIATE CONTEXT (Data passed from the previous step):
-            ${previousData ? previousData.substring(0, 10000) : "(No input data provided)"}
 
-            ----------------
-            3. YOUR TASK (User Instruction):
-            ${userPrompt}
-            
-            INSTRUCTIONS:
-            - Use the "Immediate Context" as your primary source.
-            - Use "Long-Term Memory" to verify or add background context.
-            - Answer the User Instruction directly.
-          `;
+            GOAL:
+            Execute the USER INSTRUCTION using the INPUT CONTEXT and MEMORY. 
+            If the instruction is vague, interpret it in the most helpful way possible based on the data provided.
+        `;
+
+        if (userPrompt.includes("{{previous_step}}")) {
+          finalPrompt = userPrompt.replace("{{previous_step}}", previousData);
+          finalPrompt += `\n\n(Context from Memory: ${memoryBlock})`;
         }
 
-        console.log(`   🤖 AI START: Sending Prompt...`);
+        console.log(`   🤖 AI START: Thinking...`);
 
         try {
           const result = await model.generateContent(finalPrompt);
