@@ -131,8 +131,7 @@ function EditorPage() {
                 if (n.type === "SAVE_MEMORY") frontendType = "saveMemoryNode";
                 if (n.type === "DOCUMENT") frontendType = "documentNode";
                 if (n.type === "SHEETS") frontendType = "sheetsNode";
-                if (n.type === "GMAIL_TRIGGER")
-                  frontendType = "gmailTriggerNode";
+                if (n.type === "GMAIL_TRIGGER") frontendType = "gmailTrigger";
                 if (n.type === "SLACK") frontendType = "slackNode";
 
                 return {
@@ -172,7 +171,8 @@ function EditorPage() {
   const handleDeploy = async () => {
     const startNode =
       nodes.find((n) => n.type === "scheduleNode") ||
-      nodes.find((n) => n.data.type === "trigger");
+      nodes.find((n) => n.data.type === "trigger") ||
+      nodes.find((n) => n.data.type === "gmailTrigger");
 
     if (!startNode) {
       alert(
@@ -198,8 +198,7 @@ function EditorPage() {
         else if (node.type === "saveMemoryNode") backendType = "SAVE_MEMORY";
         else if (node.type === "documentNode") backendType = "DOCUMENT";
         else if (node.type === "sheetsNode") backendType = "SHEETS";
-        else if (node.type === "gmailTriggerNode")
-          backendType = "GMAIL_TRIGGER";
+        else if (node.type === "gmailTrigger") backendType = "GMAIL_TRIGGER";
         else if (node.type === "slackNode") backendType = "SLACK";
 
         return {
