@@ -483,6 +483,47 @@ export class WorkflowEngine {
           return { error: `Sheets Error: ${err.message}` };
         }
 
+      case "SLACK":
+        const slackUrl = node.data.url;
+        const slackTemplate = node.data.message || "Update: {{previous_step}}";
+
+        const slackInputEdge = (definition.edges || []).find(
+          (e) => e.target === node.id,
+        );
+        const slackParent = slackInputEdge
+          ? context[slackInputEdge.source]
+          : {};
+        const slackInputVal =
+          slackParent?.result || JSON.stringify(slackParent) || "";
+
+        const finalSlackMessage = slackTemplate.replace(
+          "{{previous_step}}",
+          slackInputVal,
+        );
+
+        console.log(
+          `   📢 Sending to Slack: "${finalSlackMessage.substring(0, 30)}..."`,
+        );
+
+        if (!slackUrl) return { error: "No Slack Webhook URL provided" };
+
+        try {
+          const res = await fetch(slackUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ text: finalSlackMessage }),
+          });
+
+          const responseText = await res.text();
+          if (responseText !== "ok")
+            throw new Error(`Slack Error: ${responseText}`);
+
+          return { result: "Slack Message Sent" };
+        } catch (err: any) {
+          console.error("   ❌ Slack Failed:", err.message);
+          return { error: `Slack Failed: ${err.message}` };
+        }
+
       default:
         return { error: "Unknown Node Type" };
     }

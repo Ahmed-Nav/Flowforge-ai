@@ -2,6 +2,7 @@ import {
   Clock,
   FileText,
   GitFork,
+  Hash,
   Mail,
   MessageSquare,
   Save,
@@ -252,6 +253,25 @@ export default function NodeLibrary() {
         <div>
           <div className="text-sm font-bold text-red-100">Gmail Watcher</div>
           <div className="text-[10px] text-red-400">Triggers on Email</div>
+        </div>
+      </div>
+      <div
+        className="bg-fuchsia-900 border border-fuchsia-500 p-3 rounded cursor-grab flex items-center gap-3"
+        onDragStart={(event) =>
+          onDragStart(event, "slackNode", {
+            type: "slackNode",
+            url: "",
+            message: "New Alert: {{previous_step}}",
+          })
+        }
+        draggable
+      >
+        <div className="w-8 h-8 bg-fuchsia-800 rounded flex items-center justify-center text-fuchsia-200">
+          <Hash size={16} />
+        </div>
+        <div>
+          <div className="text-sm font-bold text-fuchsia-100">Slack Bot</div>
+          <div className="text-[10px] text-fuchsia-400">Send Channel Msg</div>
         </div>
       </div>
     </aside>
