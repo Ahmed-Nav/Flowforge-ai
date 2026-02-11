@@ -51,8 +51,10 @@ async function checkGmailTriggers() {
       password: process.env.EMAIL_PASS || "",
       host: "imap.gmail.com",
       port: 993,
+      tls: true,
       tlsOptions: { rejectUnauthorized: false },
-      authTimeout: 3000,
+      authTimeout: 20000,
+      connTimeout: 20000,
     },
   };
 
