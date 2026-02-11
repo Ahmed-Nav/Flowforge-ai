@@ -16,7 +16,8 @@ export interface WorkflowNode {
     | "SAVE_MEMORY"
     | "DOCUMENT"
     | "SHEETS"
-    | "SLACK";
+    | "SLACK"
+    | "NOTION";
   data: any;
   nextStepId?: string | null;
 }

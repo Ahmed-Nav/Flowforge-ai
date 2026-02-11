@@ -274,6 +274,25 @@ export default function NodeLibrary() {
           <div className="text-[10px] text-fuchsia-400">Send Channel Msg</div>
         </div>
       </div>
+      <div
+        className="bg-white border border-gray-400 p-3 rounded cursor-grab flex items-center gap-3 shadow-sm"
+        onDragStart={(event) =>
+          onDragStart(event, "notionNode", {
+            type: "notionNode",
+            databaseId: "",
+            content: "{{previous_step}}",
+          })
+        }
+        draggable
+      >
+        <div className="w-8 h-8 bg-black rounded flex items-center justify-center text-white">
+          <FileText size={16} />
+        </div>
+        <div>
+          <div className="text-sm font-bold text-black">Notion Page</div>
+          <div className="text-[10px] text-gray-500">Add to Database</div>
+        </div>
+      </div>
     </aside>
   );
 }

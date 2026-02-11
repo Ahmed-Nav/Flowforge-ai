@@ -524,6 +524,61 @@ export class WorkflowEngine {
           return { error: `Slack Failed: ${err.message}` };
         }
 
+      case "NOTION":
+        const { Client } = require("@notionhq/client");
+        const notion = new Client({ auth: process.env.NOTION_API_KEY });
+
+        const dbId = node.data.databaseId;
+        const noteContent = node.data.content || "{{previous_step}}";
+
+        const notionInputEdge = (definition.edges || []).find(
+          (e) => e.target === node.id,
+        );
+        const notionParent = notionInputEdge
+          ? context[notionInputEdge.source]
+          : {};
+        const notionInputVal =
+          notionParent?.result || JSON.stringify(notionParent) || "";
+
+        const finalContents = noteContent.replace(
+          "{{previous_step}}",
+          notionInputVal,
+        );
+
+        console.log(`   📝 NOTION START: Writing to DB ${dbId}...`);
+
+        if (!process.env.NOTION_API_KEY)
+          return { error: "Server missing NOTION_API_KEY" };
+        if (!dbId) return { error: "No Database ID provided" };
+
+        try {
+          const response = await notion.pages.create({
+            parent: { database_id: dbId },
+            properties: {
+              Name: {
+                title: [{ text: { content: "FlowForge Auto-Entry" } }],
+              },
+            },
+            children: [
+              {
+                object: "block",
+                type: "paragraph",
+                paragraph: {
+                  rich_text: [
+                    { type: "text", text: { content: finalContents } },
+                  ],
+                },
+              },
+            ],
+          });
+
+          console.log("   ✅ NOTION SUCCESS");
+          return { result: `Page Created: ${response.url}` };
+        } catch (err: any) {
+          console.error("   ❌ NOTION FAILED:", err.message);
+          return { error: `Notion Failed: ${err.message}` };
+        }
+
       default:
         return { error: "Unknown Node Type" };
     }

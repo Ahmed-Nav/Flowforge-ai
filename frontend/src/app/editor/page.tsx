@@ -39,6 +39,7 @@ import DocumentNode from "@/components/nodes/DocumentNode";
 import GoogleSheetsNode from "@/components/nodes/GoogleSheetsNode";
 import GmailTriggerNode from "@/components/nodes/GmailTriggerNode";
 import SlackNode from "@/components/nodes/SlackNode";
+import NotionNode from "@/components/nodes/NotionNode";
 
 import { useAuth } from "@/context/AuthContext";
 
@@ -56,6 +57,7 @@ const nodeTypes: NodeTypes = {
   sheetsNode: GoogleSheetsNode,
   gmailTrigger: GmailTriggerNode,
   slackNode: SlackNode,
+  notionNode: NotionNode,
 };
 
 const initialNodes = [
@@ -133,6 +135,7 @@ function EditorPage() {
                 if (n.type === "SHEETS") frontendType = "sheetsNode";
                 if (n.type === "GMAIL_TRIGGER") frontendType = "gmailTrigger";
                 if (n.type === "SLACK") frontendType = "slackNode";
+                if (n.type === "NOTION") frontendType = "notionNode";
 
                 return {
                   ...n,
@@ -200,6 +203,7 @@ function EditorPage() {
         else if (node.type === "sheetsNode") backendType = "SHEETS";
         else if (node.type === "gmailTrigger") backendType = "GMAIL_TRIGGER";
         else if (node.type === "slackNode") backendType = "SLACK";
+        else if (node.type === "notionNode") backendType = "NOTION";
 
         return {
           id: node.id,
