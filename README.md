@@ -1,162 +1,127 @@
-# 🤖 FlowForge AI
+# FlowForge AI 🚀
 
-**The Autonomous AI Agent Orchestration Platform.**
+**The Autonomous AI Agent Builder**
 
-FlowForge AI is a full-stack visual platform for building, scheduling, and deploying autonomous AI agents. It combines a drag-and-drop workflow builder with a robust backend engine, allowing users to create self-learning agents that can browse the web, retain long-term memory (RAG), and execute complex tasks without writing code.
+FlowForge AI is a visual, drag-and-drop platform for building autonomous AI agents. It allows users to chain together triggers (like Gmail or Webhooks), intelligence (Google Gemini), and actions (Slack, Notion, Discord) to automate complex real-world workflows.
 
-![FlowForge Dashboard Screenshot](https://via.placeholder.com/1200x600?text=FlowForge+AI+Dashboard) ---
+Unlike simple automation tools, FlowForge agents allow for **Logic**, **Memory (RAG)**, and **Context Awareness**.
 
-## 🚀 Key Capabilities
+---
 
-### 🧠 **Self-Learning "Brain" (RAG Architecture)**
+## ⚡ Features
 
-Unlike standard chatbots, FlowForge agents have **Long-Term Memory**.
-
-- **Save Memory Node:** Agents can vectorize and store any data (scraped text, user inputs) into a `pgvector` database.
-- **Automatic Recall:** When asking questions, the AI automatically retrieves relevant past memories to answer accurately, enabling true persistent context.
-- **Invisible Context Logic:** The engine dynamically constructs a "Prompt Sandwich"—layering Long-Term Memory, Immediate Context (Scraper data), and User Instructions—so users don't need complex prompt engineering.
-
-### ⚡ **Visual Workflow Builder**
-
-- **Drag-and-Drop Interface:** Built on React Flow for intuitive agent design.
-- **Smart Nodes:**
-  - **Web Scraper:** Autonomous browsing and text extraction.
-  - **AI Logic:** Powered by Google Gemini (`gemini-2.5-flash`) for high-speed reasoning.
-  - **Scheduler:** "Natural Language" Cron builder (e.g., "Weekly on Mondays at 9:00 AM").
-  - **Integrations:** Discord Webhooks, SMTP Email, and HTTP Requests.
-
-### 🛡️ **Enterprise-Grade Reliability**
-
-- **BullMQ & Redis Architecture:** Asynchronous job queues ensure no task is ever lost, even under load.
-- **Gatekeeper Protocol:** "Pause/Resume" functionality allows users to instantly halt active schedules without deleting workflows.
-- **Zombie Cleanup:** Automated "Exorcist" logic removes stale cron jobs from Redis upon workflow deletion.
+- **🧠 Visual Workflow Builder:** Drag-and-drop interface based on React Flow.
+- **👀 Autonomous Triggers:** Real-time monitoring of Gmail (IMAP) and Webhooks.
+- **🤖 AI-Powered Logic:** Integrated with Google Gemini Pro for intelligent decision-making and summarization.
+- **💾 Long-Term Memory:** Vector-based memory (RAG) allows agents to "remember" past interactions.
+- **⚡ High-Performance Engine:** Asynchronous job processing using BullMQ & Redis ensures zero-blocking execution.
+- **🔌 Enterprise Integrations:** Native support for Slack, Notion, Discord, Google Sheets, and Email.
 
 ---
 
 ## 🛠️ Tech Stack
 
-### **Frontend**
-
-- **Framework:** Next.js 14 (App Router)
-- **UI Library:** React Flow, Tailwind CSS, Lucide React
-- **State Management:** React Hooks for real-time node configuration
-- **Theme:** "Retro/Cyberpunk" Aesthetic with collapsible panels for maximum workspace.
-
-### **Backend**
-
-- **Runtime:** Node.js & Express
-- **Database:** PostgreSQL (Neon DB) with `pgvector` extension.
-- **ORM:** Prisma
-- **Queue System:** BullMQ (powered by Upstash/IORedis)
-- **AI Provider:** Google Gemini API (`text-embedding-004` for vectors).
+- **Frontend:** Next.js 14, Tailwind CSS, React Flow.
+- **Backend:** Node.js, Express, TypeScript.
+- **Database:** PostgreSQL (via NeonDB), Prisma ORM.
+- **Queue/Cache:** Redis (via Render), BullMQ.
+- **AI:** Google Gemini Pro (`gemini-2.5-flash`), LangChain.
 
 ---
 
-## 🏗️ Architecture Overview
+## 📚 Node Reference Guide
 
-The system operates on a **Decoupled Client-Server** model:
+### **Triggers (The "Eyes")**
 
-1.  **The Designer (Frontend):** Users build JSON definitions of workflows.
-2.  **The Orchestrator (API):** Receives the definition and schedules the trigger (Webhook or Cron).
-3.  **The Nervous System (Redis):** Manages the job queue, handling retries and scheduling.
-4.  **The Worker (Engine):** A background process that:
-    - Wakes up on trigger.
-    - Executes nodes sequentially.
-    - Performs Vector Search for memory recall.
-    - Dispatches actions (Emails, Discord alerts).
+| Node                | Description                                                                                     | Configuration                                                                   |
+| :------------------ | :---------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------ |
+| **Gmail Watcher**   | Actively polls your Gmail Inbox for new emails. It filters by "Unseen" status to prevent loops. | **Search Query:** `UNSEEN` (Default). <br> **Note:** Scans every 60s.           |
+| **Webhook Trigger** | Generates a unique URL. Any data sent to this URL (POST request) starts the workflow.           | Copy the URL provided in the node. Send JSON data via Postman or external apps. |
+| **Scheduler**       | Runs the workflow automatically at specific time intervals (CRON).                              | **Interval:** Choose from "Every Minute", "Hourly", "Daily", etc.               |
+
+### **Processors (The "Brain")**
+
+| Node           | Description                                                                                 | Configuration                                                                                                         |
+| :------------- | :------------------------------------------------------------------------------------------ | :-------------------------------------------------------------------------------------------------------------------- |
+| **AI Logic**   | The core intelligence. Sends data to Google Gemini to summarize, extract, or generate text. | **Prompt:** Write your instruction. <br> **Variable:** Use `{{previous_step}}` to insert data from the previous node. |
+| **Logic Gate** | Adds conditional branching (If/Else). Routes the workflow to different paths based on data. | **Condition:** `Contains` or `Equals`. <br> **Value:** The keyword to look for (e.g., "Urgent").                      |
+| **PDF Reader** | Extracts raw text from PDF files.                                                           | **Input:** Accepts a file URL or binary data from a Webhook.                                                          |
+| **Scraper**    | Visits a website, strips ads/scripts, and returns clean text.                               | **URL:** The website link you want the AI to read.                                                                    |
+
+### **Actions (The "Hands")**
+
+| Node              | Description                                                        | Configuration                                                                                     |
+| :---------------- | :----------------------------------------------------------------- | :------------------------------------------------------------------------------------------------ |
+| **Slack Bot**     | Sends a formatted message to a specific Slack Channel via Webhook. | **Webhook URL:** Your Slack App Incoming Webhook. <br> **Message:** Supports `{{previous_step}}`. |
+| **Notion Page**   | Creates a new page inside a specific Notion Database.              | **Database ID:** The 32-char ID of your Notion Database. <br> **Content:** The text to write.     |
+| **Discord Bot**   | Sends a notification to a Discord Channel.                         | **Webhook URL:** Your Discord Webhook.                                                            |
+| **Google Sheets** | Appends a new row to a Google Sheet.                               | **Sheet ID:** The long ID from the Sheet URL. <br> **Range:** `Sheet1!A:A` (Default).             |
+| **Send Email**    | Sends an email via SMTP (Gmail).                                   | **To:** Recipient email. <br> **Subject/Body:** Supports variables.                               |
 
 ---
 
-## ⚡ Getting Started
+## 🚀 Getting Started
 
-### Prerequisites
+### **1. Prerequisites**
 
 - Node.js v18+
-- PostgreSQL Database (supporting `vector` extension)
-- Redis Instance
+- PostgreSQL Database (Neon Recommended)
+- Redis Instance (Render Recommended)
 - Google Gemini API Key
 
-### 1. Clone the Repository
+### **2. Installation**
 
 ```bash
-git clone [https://github.com/your-username/flowforge-ai.git](https://github.com/your-username/flowforge-ai.git)
+# Clone the repository
+git clone [https://github.com/yourusername/flowforge-ai.git](https://github.com/yourusername/flowforge-ai.git)
 cd flowforge-ai
-```
 
-### 2. Backend Setup
-
-cd backend
-npm install
-
-# Setup Environment Variables
-
-cp .env.example .env
-
-# Fill in DATABASE_URL, REDIS_URL, GEMINI_API_KEY, JWT_SECRET, EMAIL_USER/PASS
-
-# Push Database Schema
-
-npx prisma db push
-
-# Start the Server & Worker
-
-npm run dev
-
-### 3. Frontend Setup
-
+# Install Frontend
 cd frontend
 npm install
 
-# Setup Environment Variables
+# Install Backend
+cd ../backend
+npm install
 
-echo "NEXT_PUBLIC_API_URL=http://localhost:3001" > .env.local
+```
 
-# Start the UI
+### **3. Environment Setup**
 
+```bash
+DATABASE_URL="postgresql://user:pass@ep-url.neon.tech/neondb"
+REDIS_URL="rediss://default:pass@redis-url.render.com:6379"
+GEMINI_API_KEY="AIzaSy..."
+JWT_SECRET="your-secret-key"
+
+# Integrations
+EMAIL_USER="your-bot@gmail.com"
+EMAIL_PASS="your-app-password"
+NOTION_API_KEY="secret_..."
+
+```
+
+### **4. Running Locally**
+
+```bash
+# Terminal 1 (Backend API)
+cd backend
+npx prisma generate
+npm run start
+
+# Terminal 2 (Worker)
+cd backend
+npm run worker
+
+# Terminal 3 (Frontend)
+cd frontend
 npm run dev
+```
 
-Visit http://localhost:3000 to access Mission Control.
+### 🤝 Contributing
 
-📖 **Usage Guide:** Building a Self-Learning Agent
-Goal: Create an agent that reads Tech News every morning and remembers interesting stories.
+**Contributions are welcome! Please open an issue or submit a pull request for any bugs or feature enhancements.**
 
-**Trigger:** Drag a Scheduler Node. Set it to "Daily at 09:00 AM".
+### 📄 License
 
-**Input:** Drag a Web Scraper Node. Connect it to the Scheduler. Set URL to https://news.ycombinator.com.
-
-**Processing:** Drag an AI Node.
-
-**Prompt:** "Summarize the top story in one sentence."
-
-**Memory:** Drag a Save Memory Node.
-
-**Input:** {{previous_step}} (or leave blank for auto-context).
-
-**Deploy:** Click "Deploy". The agent is now alive and learning.
-
-You can later query the agent: "What was the top news story last Tuesday?" and it will answer from its database memory.
-
-🔒 **Security**
-Authentication: JWT-based protection for all API routes.
-
-Password Hashing: Bcrypt for secure user credential storage.
-
-CORS Policy: Strict origin control for API access.
-
-🤝 Contributing
-Contributions are welcome! Please fork the repository and submit a Pull Request.
-
-### Fork the Project
-
-### Create your Feature Branch (git checkout -b feat/AmazingFeature)
-
-### Commit your Changes (git commit -m 'Add some AmazingFeature')
-
-### Push to the Branch (git push origin feat/AmazingFeature)
-
-### Open a Pull Request
-
-📄 License
-Distributed under the MIT License. See LICENSE for more information.
-
-**Built by NAVEED AHMED M 🚀 Empowering the future of autonomous workflows.**
+**This project is licensed under the MIT License.**

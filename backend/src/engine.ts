@@ -10,6 +10,7 @@ import * as cheerio from "cheerio";
 import { recallMemory, saveMemory } from "./memory";
 import { google } from "googleapis";
 import path from "path";
+import Groq from "groq-sdk";
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 const adapter = new PrismaPg(pool);
@@ -139,23 +140,22 @@ export class WorkflowEngine {
         }
 
       case "AI":
-        const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
-
-        const model = genAI.getGenerativeModel({
-          model: "gemini-2.5-flash",
-          generationConfig: {
-            temperature: 0.9,
-            maxOutputTokens: 2000,
-          },
-        });
+        const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
         const userPrompt = node.data.prompt || "Analyze this";
         const incomingEdge = (definition.edges || []).find(
           (e) => e.target === node.id,
         );
         const parentOutput = incomingEdge ? context[incomingEdge.source] : {};
-        const previousData =
-          parentOutput?.result || JSON.stringify(parentOutput) || "";
+
+        let previousData = "";
+        if (typeof parentOutput === "string") {
+          previousData = parentOutput;
+        } else if (parentOutput?.result) {
+          previousData = parentOutput.result;
+        } else {
+          previousData = JSON.stringify(parentOutput);
+        }
 
         let memoryBlock = "";
         try {
@@ -167,51 +167,53 @@ export class WorkflowEngine {
             memoryBlock = memories.map((m: any) => `- ${m.content}`).join("\n");
           }
         } catch (memError) {
-          /* ignore */
+          /* ignore memory errors to keep workflow running */
         }
 
-        let finalPrompt = `
-            ROLE: You are an expert AI Automation Agent. Your job is to process data intelligently for the user.
-
-            YOUR CORE PHILOSOPHY:
-            1. BRIDGE THE GAP: Users often give vague or "half-baked" instructions. You must use the INPUT CONTEXT to figure out what they actually want.
-            2. NEVER GIVE UP: Do not refuse to answer. If the data is missing, make a best-guess effort or explain clearly what is missing.
-            3. BE ADAPTIVE: 
-               - If the user asks for a specific format (JSON, CSV, List), obey strictly.
-               - If the user asks a question, answer it using the Context.
-               - If the user gives a generic label (e.g. "Summary", "Email", "Flowforge"), assume they want you to EXTRACT or FORMAT that specific information from the Context.
-
-            ----------------
-            1. INPUT CONTEXT (The Raw Data):
+        let finalContext = `
+            INPUT CONTEXT:
             ${previousData ? previousData.substring(0, 10000) : "(No input data)"}
 
-            2. LONG-TERM MEMORY (Learned Information):
+            LONG-TERM MEMORY:
             ${memoryBlock || "(No relevant memories found)"}
-
-            3. USER INSTRUCTION:
-            "${userPrompt}"
-            ----------------
-
-            GOAL:
-            Execute the USER INSTRUCTION using the INPUT CONTEXT and MEMORY. 
-            If the instruction is vague, interpret it in the most helpful way possible based on the data provided.
         `;
 
         if (userPrompt.includes("{{previous_step}}")) {
-          finalPrompt = userPrompt.replace("{{previous_step}}", previousData);
-          finalPrompt += `\n\n(Context from Memory: ${memoryBlock})`;
+          finalContext = userPrompt.replace("{{previous_step}}", previousData);
+          if (memoryBlock)
+            finalContext += `\n\n(Relevant Memory: ${memoryBlock})`;
         }
 
-        console.log(`   🤖 AI START: Thinking...`);
+        console.log(`   🤖 GROQ START: Thinking...`);
 
         try {
-          const result = await model.generateContent(finalPrompt);
-          const responseText = result.response.text();
-          console.log("   ✅ AI SUCCESS");
+          const completion = await groq.chat.completions.create({
+            messages: [
+              {
+                role: "system",
+                content:
+                  "You are an expert AI Automation Agent. Execute the user's instruction using the provided context. Return only the result, no conversational filler.",
+              },
+              {
+                role: "user",
+                content: `CONTEXT:\n${finalContext}\n\nINSTRUCTION:\n${userPrompt}`,
+              },
+            ],
+            model: "llama-3.3-70b-versatile",
+            temperature: 0.7,
+            max_completion_tokens: 1024,
+          });
+
+          const responseText = completion.choices[0]?.message?.content || "";
+          console.log("   ✅ GROQ SUCCESS");
           return { result: responseText };
         } catch (error: any) {
-          console.error("   ❌ AI FAILED:", error.message);
-          return { error: `AI Failed: ${error.message}` };
+          console.error("   ❌ GROQ FAILED:", error.message);
+
+          if (error.status === 429) {
+            return { error: "Rate Limit Hit (Groq). Try adding a delay node." };
+          }
+          return { error: `Groq Failed: ${error.message}` };
         }
 
       case "ACTION":

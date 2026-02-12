@@ -46,6 +46,7 @@
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "googleapis": "^171.2.0",
+    "groq-sdk": "^0.37.0",
     "imap-simple": "^5.1.0",
     "ioredis": "^5.9.2",
     "jsonwebtoken": "^9.0.3",

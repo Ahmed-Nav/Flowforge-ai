@@ -34,12 +34,10 @@ export const worker = new Worker(
       });
 
       if (!workflow) {
-        console.warn(`👻 Ghost Job: Workflow ${workflowId} not found.`);
         return { status: "SKIPPED", reason: "Workflow Deleted" };
       }
 
       if (workflow.isActive === false) {
-        console.log(`⏸️ Paused Job: Workflow ${workflowId} is paused.`);
         return { status: "SKIPPED", reason: "Workflow Paused" };
       }
 
