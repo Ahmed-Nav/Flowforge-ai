@@ -17,7 +17,7 @@ const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
 export class WorkflowEngine {
-  async runWorkflow(workflowJson: any, runId: string) {
+  async runWorkflow(workflowJson: any, runId: string, initialData: any = {}) {
     try {
       const definition = workflowJson as WorkflowDefinition;
       let currentStepId: string | null = definition.triggerId;
@@ -45,7 +45,12 @@ export class WorkflowEngine {
 
         console.log(`📍 STEP: Executing Node ${node.type} (${node.id})`);
 
-        const output = await this.executeNode(node, context, definition);
+        const output = await this.executeNode(
+          node,
+          context,
+          definition,
+          initialData,
+        );
         context[node.id] = output;
 
         if (node.type === "CONDITION") {
@@ -101,13 +106,16 @@ export class WorkflowEngine {
     node: WorkflowNode,
     context: any,
     definition: WorkflowDefinition,
+    initialData: any = {},
   ) {
     switch (node.type) {
       case "TRIGGER":
       case "GMAIL_TRIGGER":
+        console.log("   🚀 TRIGGER EXECUTION: Injecting Email Data...");
         return {
           message: "Workflow Triggered",
           ...(node.data.initialPayload || {}),
+          ...initialData,
         };
 
       case "HTTP":
