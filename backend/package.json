@@ -65,7 +65,8 @@
     "zod": "^4.3.6"
   },
   "overrides": {
-    "dotenv": "$dotenv",
-    "zod": "$zod"
+    "dotenv": "^17.2.3",
+    "zod": "^4.3.6",
+    "@langchain/core": "^1.1.39"
   }
 }
