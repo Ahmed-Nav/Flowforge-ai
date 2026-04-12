@@ -1,8 +1,9 @@
-import { Handle, Position } from "@xyflow/react";
+import { Handle, Position, useReactFlow } from "@xyflow/react";
 import { FileText, Upload, CheckCircle, AlertCircle } from "lucide-react";
 import { useState } from "react";
 
-export default function DocumentNode({ data }: any) {
+export default function DocumentNode({ data, id }: { data: any; id: string }) {
+  const { updateNodeData } = useReactFlow();
   const [uploading, setUploading] = useState(false);
   const [fileName, setFileName] = useState(data.fileName || "");
   const [error, setError] = useState("");
@@ -34,8 +35,10 @@ export default function DocumentNode({ data }: any) {
       if (!res.ok) throw new Error("Parse failed");
 
       const result = await res.json();
-      data.result = result.text;
-      data.fileName = file.name;
+      updateNodeData(id, {
+        result: result.text,
+        fileName: file.name
+      });
       setFileName(file.name);
     } catch (err) {
       setError("Upload failed. Try again.");

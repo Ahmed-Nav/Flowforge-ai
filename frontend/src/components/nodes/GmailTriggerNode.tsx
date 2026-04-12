@@ -1,7 +1,19 @@
-import { Handle, Position } from "@xyflow/react";
+import { Handle, Position, useReactFlow } from "@xyflow/react";
 import { Mail, RefreshCw } from "lucide-react";
+import { useState, useEffect } from "react";
 
-export default function GmailTriggerNode({ data }: any) {
+export default function GmailTriggerNode({ data, id }: { data: any; id: string }) {
+  const { updateNodeData } = useReactFlow();
+  const [searchQuery, setSearchQuery] = useState(data.searchQuery || "UNSEEN");
+
+  useEffect(() => {
+    if (data.searchQuery !== undefined) setSearchQuery(data.searchQuery);
+  }, [data.searchQuery]);
+
+  const handleChange = (val: string) => {
+    setSearchQuery(val);
+    updateNodeData(id, { searchQuery: val });
+  };
   return (
     <div className="bg-red-900 border-2 border-red-600 shadow-xl p-4 w-72 rounded-lg font-mono text-white relative">
       <div className="flex items-center gap-2 mb-3 border-b border-red-700 pb-2">
@@ -21,8 +33,8 @@ export default function GmailTriggerNode({ data }: any) {
             type="text"
             className="w-full bg-black/50 border border-red-700 rounded p-1 text-xs text-red-100 focus:outline-none focus:border-red-400"
             placeholder="UNSEEN SUBJECT 'Invoice'"
-            defaultValue={data.searchQuery || "UNSEEN"}
-            onChange={(e) => (data.searchQuery = e.target.value)}
+            value={searchQuery}
+            onChange={(e) => handleChange(e.target.value)}
           />
           <div className="text-[9px] text-gray-400 mt-1">
             Example:{" "}

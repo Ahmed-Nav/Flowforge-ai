@@ -24,7 +24,7 @@ import {
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import RetroNode from "@/components/nodes/RetroNode";
-import ConfigPanel from "@/components/ConfigPanel";
+import AIConfigPanel from "@/components/AIConfigPanel";
 import RunHistory from "@/components/RunHistory";
 import PromptNode from "@/components/nodes/PromptNode";
 import NodeLibrary from "@/components/NodeLibrary";
@@ -40,8 +40,14 @@ import GoogleSheetsNode from "@/components/nodes/GoogleSheetsNode";
 import GmailTriggerNode from "@/components/nodes/GmailTriggerNode";
 import SlackNode from "@/components/nodes/SlackNode";
 import NotionNode from "@/components/nodes/NotionNode";
+import NLCompileBar from "@/components/NLCompileBar";
+
 
 import { useAuth } from "@/context/AuthContext";
+import {
+  BACKEND_TO_FRONTEND_TYPE,
+  FRONTEND_TO_BACKEND_TYPE,
+} from "@/lib/nodeTypes";
 
 const nodeTypes: NodeTypes = {
   retro: RetroNode,
@@ -120,22 +126,8 @@ function EditorPage() {
 
             if (graph.nodes) {
               const restoredNodes = graph.nodes.map((n: any) => {
-                let frontendType = "retro";
-
-                if (n.type === "AI") frontendType = "promptNode";
-                if (n.type === "TRIGGER") frontendType = "retro";
-                if (n.type === "HTTP") frontendType = "httpNode";
-                if (n.type === "CONDITION") frontendType = "conditionNode";
-                if (n.type === "DISCORD") frontendType = "discordNode";
-                if (n.type === "EMAIL") frontendType = "emailNode";
-                if (n.type === "SCRAPER") frontendType = "scraperNode";
-                if (n.type === "SCHEDULE") frontendType = "scheduleNode";
-                if (n.type === "SAVE_MEMORY") frontendType = "saveMemoryNode";
-                if (n.type === "DOCUMENT") frontendType = "documentNode";
-                if (n.type === "SHEETS") frontendType = "sheetsNode";
-                if (n.type === "GMAIL_TRIGGER") frontendType = "gmailTrigger";
-                if (n.type === "SLACK") frontendType = "slackNode";
-                if (n.type === "NOTION") frontendType = "notionNode";
+                const frontendType =
+                  BACKEND_TO_FRONTEND_TYPE[n.type] ?? "retro";
 
                 return {
                   ...n,
@@ -145,7 +137,14 @@ function EditorPage() {
               setNodes(restoredNodes);
             }
 
-            if (graph.edges) setEdges(graph.edges);
+            if (graph.edges) {
+              setEdges(
+                graph.edges.map((e: any, idx: number) => ({
+                  ...e,
+                  id: e.id || `edge-${idx}-${Date.now()}`,
+                })),
+              );
+            }
           }
         }
       } catch (err) {
@@ -171,6 +170,39 @@ function EditorPage() {
     [setEdges],
   );
 
+  const handleCompiledGraph = useCallback(
+    (graph: any) => {
+      const frontendNodes = graph.nodes.map((n: any) => {
+        const typeMap: Record<string, string> = {
+          AI: "promptNode",
+          TRIGGER: "retro",
+          HTTP: "httpNode",
+          CONDITION: "conditionNode",
+          DISCORD: "discordNode",
+          EMAIL: "emailNode",
+          SCRAPER: "scraperNode",
+          SCHEDULE: "scheduleNode",
+          SAVE_MEMORY: "saveMemoryNode",
+          SHEETS: "sheetsNode",
+          GMAIL_TRIGGER: "gmailTrigger",
+          SLACK: "slackNode",
+          NOTION: "notionNode",
+        };
+        return { ...n, type: typeMap[n.type] ?? "retro" };
+      });
+      setNodes(frontendNodes);
+      setEdges(
+        graph.edges.map((e: any, idx: number) => ({
+          ...e,
+          id: e.id || `edge-compiled-${idx}`,
+          animated: true,
+          style: { stroke: "#1D1D1D", strokeWidth: 2 },
+        })),
+      );
+    },
+    [setNodes, setEdges],
+  );
+
   const handleDeploy = async () => {
     const startNode =
       nodes.find((n) => n.type === "scheduleNode") ||
@@ -188,22 +220,17 @@ function EditorPage() {
       triggerId: startNode.id,
       nodes: nodes.map((node) => {
         const edge = edges.find((e) => e.source === node.id);
-        let backendType = "ACTION";
-        if (node.data.type === "trigger") backendType = "TRIGGER";
-        else if (node.data.type === "ai" || node.type === "promptNode")
+
+        // data.type overrides take priority for legacy node formats
+        let backendType: string;
+        if (node.data.type === "trigger") {
+          backendType = "TRIGGER";
+        } else if (node.data.type === "ai" || node.type === "promptNode") {
           backendType = "AI";
-        else if (node.type === "httpNode") backendType = "HTTP";
-        else if (node.type === "conditionNode") backendType = "CONDITION";
-        else if (node.type === "discordNode") backendType = "DISCORD";
-        else if (node.type === "emailNode") backendType = "EMAIL";
-        else if (node.type === "scraperNode") backendType = "SCRAPER";
-        else if (node.type === "scheduleNode") backendType = "SCHEDULE";
-        else if (node.type === "saveMemoryNode") backendType = "SAVE_MEMORY";
-        else if (node.type === "documentNode") backendType = "DOCUMENT";
-        else if (node.type === "sheetsNode") backendType = "SHEETS";
-        else if (node.type === "gmailTrigger") backendType = "GMAIL_TRIGGER";
-        else if (node.type === "slackNode") backendType = "SLACK";
-        else if (node.type === "notionNode") backendType = "NOTION";
+        } else {
+          backendType =
+            FRONTEND_TO_BACKEND_TYPE[node.type] ?? "ACTION";
+        }
 
         return {
           id: node.id,
@@ -417,6 +444,7 @@ function EditorPage() {
         </div>
 
         <div className="flex-1 relative h-full flex flex-col">
+          <NLCompileBar token={token!} onGraph={handleCompiledGraph} />
           <ReactFlow
             nodes={nodes}
             edges={edges}
@@ -451,7 +479,7 @@ function EditorPage() {
             }}
           />
 
-          <ConfigPanel
+          <AIConfigPanel
             selectedNodeId={selectedNodeId}
             nodes={nodes}
             setNodes={setNodes}

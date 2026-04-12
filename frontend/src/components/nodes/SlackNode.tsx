@@ -1,7 +1,22 @@
-import { Handle, Position } from "@xyflow/react";
+import { Handle, Position, useReactFlow } from "@xyflow/react";
 import { Hash, MessageSquare } from "lucide-react";
+import { useState, useEffect } from "react";
 
-export default function SlackNode({ data }: any) {
+export default function SlackNode({ data, id }: { data: any; id: string }) {
+  const { updateNodeData } = useReactFlow();
+  const [url, setUrl] = useState(data.url || "");
+  const [message, setMessage] = useState(data.message || "");
+
+  useEffect(() => {
+    if (data.url !== undefined) setUrl(data.url);
+    if (data.message !== undefined) setMessage(data.message);
+  }, [data.url, data.message]);
+
+  const handleChange = (key: string, val: string) => {
+    if (key === "url") setUrl(val);
+    if (key === "message") setMessage(val);
+    updateNodeData(id, { [key]: val });
+  };
   return (
     <div className="bg-fuchsia-900 border-2 border-fuchsia-600 shadow-xl p-4 w-72 rounded-lg font-mono text-white relative">
       <Handle
@@ -26,8 +41,8 @@ export default function SlackNode({ data }: any) {
             type="text"
             className="w-full bg-black/50 border border-fuchsia-700 rounded p-1 text-xs text-fuchsia-100 focus:outline-none focus:border-fuchsia-400"
             placeholder="https://hooks.slack.com/..."
-            defaultValue={data.url}
-            onChange={(e) => (data.url = e.target.value)}
+            value={url}
+            onChange={(e) => handleChange("url", e.target.value)}
           />
         </div>
 
@@ -38,8 +53,8 @@ export default function SlackNode({ data }: any) {
           <textarea
             className="w-full bg-black/50 border border-fuchsia-700 rounded p-1 text-xs text-fuchsia-100 focus:outline-none focus:border-fuchsia-400 h-16 resize-none"
             placeholder="Alert: {{previous_step}}"
-            defaultValue={data.message}
-            onChange={(e) => (data.message = e.target.value)}
+            value={message}
+            onChange={(e) => handleChange("message", e.target.value)}
           />
           <div className="text-[9px] text-gray-400 mt-1">
             Supports{" "}

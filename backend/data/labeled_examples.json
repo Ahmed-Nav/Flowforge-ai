@@ -1,0 +1,5265 @@
+[
+  {
+    "wf_id": "242299f9-d4f2-4281-9138-e5ccea799221",
+    "nl_hint": "My Visual Workflow",
+    "nodes": [
+      {
+        "id": "1",
+        "data": {
+          "type": "trigger",
+          "label": "Webhook Trigger",
+          "subline": "Listening for POST requests..."
+        },
+        "type": "TRIGGER",
+        "nextStepId": "2"
+      },
+      {
+        "id": "2",
+        "data": {
+          "type": "ai",
+          "label": "GPT-4 Brain",
+          "prompt": "tell me a one line joke",
+          "subline": "Summarizing input..."
+        },
+        "type": "AI",
+        "nextStepId": "3"
+      },
+      {
+        "id": "3",
+        "data": {
+          "type": "action",
+          "label": "Email Action",
+          "subline": "Sending to user@example.com"
+        },
+        "type": "ACTION",
+        "nextStepId": null
+      }
+    ],
+    "edges": [],
+    "trigger_id": "1",
+    "nl_description": "The workflow starts with a Webhook Trigger that listens for POST requests. When a request is received, it triggers the GPT-4 Brain, which generates a response to the prompt \"tell me a one line joke\". The output from the GPT-4 Brain is then sent to the Email Action, which sends the response to the user at user@example.com."
+  },
+  {
+    "wf_id": "28153a5b-580a-4deb-bb33-1267abb61afc",
+    "nl_hint": "My Visual Workflow",
+    "nodes": [
+      {
+        "id": "1",
+        "data": {
+          "type": "trigger",
+          "label": "Webhook Trigger",
+          "subline": "Listening for POST requests..."
+        },
+        "type": "TRIGGER",
+        "nextStepId": "2"
+      },
+      {
+        "id": "2",
+        "data": {
+          "type": "ai",
+          "label": "GPT-4 Brain",
+          "prompt": "tell me a one line joke",
+          "subline": "Summarizing input..."
+        },
+        "type": "AI",
+        "nextStepId": null
+      },
+      {
+        "id": "3",
+        "data": {
+          "type": "action",
+          "label": "Email Action",
+          "subline": "Sending to user@example.com"
+        },
+        "type": "ACTION",
+        "nextStepId": null
+      }
+    ],
+    "edges": [],
+    "trigger_id": "1",
+    "nl_description": "This workflow starts with a Webhook Trigger, which then proceeds to a GPT-4 Brain AI step that generates a one-line joke. However, there are no edges defined, so the flow ends there without any further actions, including the Email Action that is defined but not connected."
+  },
+  {
+    "wf_id": "9584c671-15f8-467c-87e4-449b1cba4210",
+    "nl_hint": "My Visual Workflow",
+    "nodes": [
+      {
+        "id": "1",
+        "data": {
+          "type": "trigger",
+          "label": "Webhook Trigger",
+          "subline": "Listening for POST requests..."
+        },
+        "type": "TRIGGER",
+        "position": {
+          "x": 100,
+          "y": 100
+        },
+        "nextStepId": "node-1767799673884"
+      },
+      {
+        "id": "node-1767799673884",
+        "data": {
+          "to": "nuzhathfathima40@gmail.com",
+          "body": "success",
+          "type": "email",
+          "subject": "update"
+        },
+        "type": "EMAIL",
+        "position": {
+          "x": 278,
+          "y": 213
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__1-node-1767799673884",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "1",
+        "target": "node-1767799673884",
+        "animated": true
+      }
+    ],
+    "trigger_id": "1",
+    "nl_description": "The workflow consists of two nodes: a Webhook Trigger and an Email node. The Webhook Trigger is set up to listen for POST requests and is positioned at (100, 100). When triggered, it sends an email to nuzhathfathima40@gmail.com with the subject \"update\" and the body \"success\". The Email node is positioned at (278, 213). The nodes are connected by a single edge, indicating the flow of the workflow from the trigger to the email node."
+  },
+  {
+    "wf_id": "b595331a-d450-45e6-9007-3053dc4ceee6",
+    "nl_hint": "My Visual Workflow",
+    "nodes": [
+      {
+        "id": "1",
+        "data": {
+          "type": "trigger",
+          "label": "Webhook Trigger",
+          "subline": "Listening for POST requests..."
+        },
+        "type": "TRIGGER",
+        "position": {
+          "x": -108.7953221415177,
+          "y": -30.26367409465684
+        },
+        "nextStepId": null
+      },
+      {
+        "id": "node-1774276083207",
+        "data": {
+          "type": "ai",
+          "prompt": "update me on jobs from google company for SDE Roles"
+        },
+        "type": "AI",
+        "position": {
+          "x": 454.4749975831134,
+          "y": 179.8037190051436
+        },
+        "nextStepId": "node-1774276479928"
+      },
+      {
+        "id": "node-1774276132673",
+        "data": {
+          "cron": "* * * * *",
+          "type": "schedule"
+        },
+        "type": "SCHEDULE",
+        "position": {
+          "x": 104.4163696103346,
+          "y": 234.9775397185968
+        },
+        "nextStepId": "node-1774276083207"
+      },
+      {
+        "id": "node-1774276479928",
+        "data": {
+          "url": "https://www.linkedin.com/",
+          "type": "scraper"
+        },
+        "type": "SCRAPER",
+        "position": {
+          "x": 775.9109847697349,
+          "y": 228.6743395906992
+        },
+        "nextStepId": "node-1774276506357"
+      },
+      {
+        "id": "node-1774276506357",
+        "data": {
+          "type": "sheets",
+          "range": "Sheet1!A:A",
+          "sheetId": "1x_IHNERNwRLwDA7G6oht82tvUQxPfGUvieG4V8uc0HU"
+        },
+        "type": "SHEETS",
+        "position": {
+          "x": 1096.952598001392,
+          "y": 208.9357645175866
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__node-1774276132673-node-1774276083207",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1774276132673",
+        "target": "node-1774276083207",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1774276083207-node-1774276479928",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1774276083207",
+        "target": "node-1774276479928",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1774276479928-node-1774276506357",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1774276479928",
+        "target": "node-1774276506357",
+        "animated": true
+      }
+    ],
+    "trigger_id": "node-1774276132673",
+    "nl_description": "This workflow is designed to update a Google Sheet with job openings for SDE roles at Google, retrieved from LinkedIn. It begins with a schedule trigger that runs every minute, which then activates an AI node to search for the specified job openings. The search results are then scraped from LinkedIn using a web scraper node, and finally, the data is written to a Google Sheet using a sheets node."
+  },
+  {
+    "wf_id": "7042afa8-c5b1-43fe-a1df-a6835ad3c301",
+    "nl_hint": "My Visual Workflow",
+    "nodes": [
+      {
+        "id": "1",
+        "data": {
+          "type": "trigger",
+          "label": "Webhook Trigger",
+          "subline": "Listening for POST requests..."
+        },
+        "type": "TRIGGER",
+        "position": {
+          "x": 279.1752125136985,
+          "y": 66.66507674163749
+        },
+        "nextStepId": "node-1774536350942"
+      },
+      {
+        "id": "node-1774535935954",
+        "data": {
+          "type": "notionNode",
+          "content": "New Alert: {{previous_step}}",
+          "databaseId": "304fe241b4018052b9c2d3f113256154"
+        },
+        "type": "NOTION",
+        "position": {
+          "x": 689.2500291302173,
+          "y": 282.874927174457
+        },
+        "nextStepId": null
+      },
+      {
+        "id": "node-1774536350942",
+        "data": {
+          "type": "ai",
+          "prompt": "generate me a one line poem"
+        },
+        "type": "AI",
+        "position": {
+          "x": 384.392869627236,
+          "y": 272.1427239761498
+        },
+        "nextStepId": "node-1774535935954"
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__1-node-1774536350942",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "1",
+        "target": "node-1774536350942",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1774536350942-node-1774535935954",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1774536350942",
+        "target": "node-1774535935954",
+        "animated": true
+      }
+    ],
+    "trigger_id": "1",
+    "nl_description": "The given nodes and edges represent a workflow that starts with a Webhook Trigger, which listens for POST requests. When a request is received, it triggers the next step, an AI node that generates a one-line poem. The output of the AI node is then passed to a Notion node, which creates a new alert with the poem as its content. The alert is stored in a Notion database with the ID 304fe241b4018052b9c2d3f113256154."
+  },
+  {
+    "wf_id": "fa67d1fd-313f-41d5-8134-978fb97cdaae",
+    "nl_hint": "My Visual Workflow",
+    "nodes": [
+      {
+        "id": "node-1774270554773",
+        "data": {
+          "cron": "* * * * *",
+          "type": "schedule"
+        },
+        "type": "SCHEDULE",
+        "position": {
+          "x": -180,
+          "y": 327
+        },
+        "nextStepId": "node-1774270586920"
+      },
+      {
+        "id": "node-1774270586920",
+        "data": {
+          "type": "ai",
+          "prompt": "Brainstorm me one leetcode problem that will help me improve my DSA skill and problem solving skill"
+        },
+        "type": "AI",
+        "position": {
+          "x": 230,
+          "y": 338
+        },
+        "nextStepId": "node-1774270725315"
+      },
+      {
+        "id": "node-1774270725315",
+        "data": {
+          "url": "https://discord.com/api/webhooks/1485624905364934807/XXR5TGb5aGSUxGw5XIh1EI9EtwQijP3phiIc7UJhPssvsm7lkYZBrGtUX2XeUf2JwFUX",
+          "type": "discord",
+          "message": "Your Leetcode Problem : {{previous_step}}"
+        },
+        "type": "DISCORD",
+        "position": {
+          "x": 564.3465844565378,
+          "y": 330.8355361759777
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__node-1774270554773-node-1774270586920",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1774270554773",
+        "target": "node-1774270586920",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1774270586920-node-1774270725315",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1774270586920",
+        "target": "node-1774270725315",
+        "animated": true
+      }
+    ],
+    "trigger_id": "node-1774270554773",
+    "nl_description": "The given workflow consists of three nodes and two edges. The first node is a schedule node that triggers every minute, as indicated by the cron expression \"* * * * *\". This node is connected to the second node, which is an AI node that generates a Leetcode problem to help improve DSA skills and problem-solving skills. The AI node is then connected to the third node, which is a Discord node that sends a message with the generated Leetcode problem to a specific Discord webhook. The workflow is designed to automatically generate and share a Leetcode problem at regular intervals."
+  },
+  {
+    "nodes": [
+      {
+        "id": "trigger-1678901234",
+        "data": {
+          "type": "trigger",
+          "label": "Webhook Trigger",
+          "subline": "Listening for POST requests..."
+        },
+        "type": "TRIGGER",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "nextStepId": "node-1678901235"
+      },
+      {
+        "id": "node-1678901235",
+        "data": {
+          "to": "newuser@example.com",
+          "body": "Welcome to our platform!",
+          "type": "email",
+          "subject": "Welcome!"
+        },
+        "type": "EMAIL",
+        "position": {
+          "x": 300,
+          "y": 0
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__trigger-1678901234-node-1678901235",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "trigger-1678901234",
+        "target": "node-1678901235",
+        "animated": true
+      }
+    ],
+    "trigger_id": "trigger-1678901234",
+    "nl_description": "When a webhook is triggered, this workflow sends a welcome email to the new user with a greeting and introduction to the platform.",
+    "wf_id": "3bc267d9-8e1d-4ba8-aa1b-e6d1a86d88fd",
+    "nl_hint": "When a webhook fires, send a welcome email to the "
+  },
+  {
+    "nodes": [
+      {
+        "id": "node-1679773831",
+        "data": {
+          "cron": "0 * * * *",
+          "type": "schedule"
+        },
+        "type": "SCHEDULE",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "nextStepId": "node-1679773832"
+      },
+      {
+        "id": "node-1679773832",
+        "data": {
+          "url": "https://news.ycombinator.com/",
+          "type": "scraper"
+        },
+        "type": "SCRAPER",
+        "position": {
+          "x": 300,
+          "y": 0
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__node-1679773831-node-1679773832",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1679773831",
+        "target": "node-1679773832",
+        "animated": true
+      }
+    ],
+    "trigger_id": "node-1679773831",
+    "nl_description": "This workflow scrapes the front page of Hacker News every hour, using a cron schedule to trigger the scraper node.",
+    "wf_id": "ae76804c-9a69-436b-9a32-056f07c57f54",
+    "nl_hint": "On a cron schedule every hour, scrape the front pa"
+  },
+  {
+    "nodes": [
+      {
+        "id": "node-1678901234",
+        "data": {
+          "type": "trigger",
+          "label": "Webhook Trigger",
+          "subline": "Listening for POST requests..."
+        },
+        "type": "TRIGGER",
+        "position": {
+          "x": 0,
+          "y": 100
+        },
+        "nextStepId": "node-1678901235"
+      },
+      {
+        "id": "node-1678901235",
+        "data": {
+          "type": "sheets",
+          "range": "Sheet1!A:A",
+          "sheetId": "some_sheet_id"
+        },
+        "type": "SHEETS",
+        "position": {
+          "x": 300,
+          "y": 100
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__node-1678901234-node-1678901235",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678901234",
+        "target": "node-1678901235",
+        "animated": true
+      }
+    ],
+    "trigger_id": "node-1678901234",
+    "nl_description": "This workflow logs the payload of incoming webhooks to a Google Sheet, allowing for easy tracking and analysis of webhook data.",
+    "wf_id": "c8b27bd0-6669-4c52-8073-a340d6859ae4",
+    "nl_hint": "When a webhook is received, log the payload to a G"
+  },
+  {
+    "nodes": [
+      {
+        "id": "node-1678901234",
+        "data": {
+          "cron": "0 0 * * *",
+          "type": "schedule"
+        },
+        "type": "SCHEDULE",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "nextStepId": "node-1678901235"
+      },
+      {
+        "id": "node-1678901235",
+        "data": {
+          "type": "ai",
+          "prompt": "Generate a motivational quote"
+        },
+        "type": "AI",
+        "position": {
+          "x": 300,
+          "y": 0
+        },
+        "nextStepId": "node-1678901236"
+      },
+      {
+        "id": "node-1678901236",
+        "data": {
+          "url": "https://discord.com/api/webhooks/1234567890",
+          "type": "discord",
+          "message": "{{previous_step}}"
+        },
+        "type": "DISCORD",
+        "position": {
+          "x": 600,
+          "y": 0
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__node-1678901234-node-1678901235",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678901234",
+        "target": "node-1678901235",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678901235-node-1678901236",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678901235",
+        "target": "node-1678901236",
+        "animated": true
+      }
+    ],
+    "trigger_id": "node-1678901234",
+    "nl_description": "This workflow generates a motivational quote daily using AI and posts it to Discord. The quote is generated based on a predefined prompt and is sent to a Discord channel via a webhook. The workflow runs automatically every day at midnight.",
+    "wf_id": "5485526a-a113-4d94-bd92-f5a4d8797a96",
+    "nl_hint": "On a daily schedule, generate a motivational quote"
+  },
+  {
+    "nodes": [
+      {
+        "id": "node-1678901234",
+        "data": {
+          "type": "trigger",
+          "label": "Webhook Trigger",
+          "subline": "Listening for POST requests..."
+        },
+        "type": "TRIGGER",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "nextStepId": "node-1678901235"
+      },
+      {
+        "id": "node-1678901235",
+        "data": {
+          "url": "https://discord.com/api/webhooks/...",
+          "type": "discord",
+          "message": "Webhook received: {{previous_step}}"
+        },
+        "type": "DISCORD",
+        "position": {
+          "x": 300,
+          "y": 0
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__node-1678901234-node-1678901235",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678901234",
+        "target": "node-1678901235",
+        "animated": true
+      }
+    ],
+    "trigger_id": "node-1678901234",
+    "nl_description": "This workflow sends a Slack-style notification via Discord when a webhook fires, including the details of the received webhook in the message.",
+    "wf_id": "36ec4aad-cd93-408c-982a-83fc20fb816e",
+    "nl_hint": "When a webhook fires, send a Slack-style notificat"
+  },
+  {
+    "nodes": [
+      {
+        "id": "node-1678901234",
+        "data": {
+          "cron": "0 0 * * 0",
+          "type": "schedule"
+        },
+        "type": "SCHEDULE",
+        "position": {
+          "x": 0,
+          "y": 100
+        },
+        "nextStepId": "node-1678901235"
+      },
+      {
+        "id": "node-1678901235",
+        "data": {
+          "type": "ai",
+          "prompt": "Summarize top GitHub trending repos"
+        },
+        "type": "AI",
+        "position": {
+          "x": 300,
+          "y": 100
+        },
+        "nextStepId": "node-1678901236"
+      },
+      {
+        "id": "node-1678901236",
+        "data": {
+          "url": "https://discord.com/api/webhooks/1234567890",
+          "type": "discord",
+          "message": "Top GitHub trending repos: {{previous_step}}"
+        },
+        "type": "DISCORD",
+        "position": {
+          "x": 600,
+          "y": 100
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__node-1678901234-node-1678901235",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678901234",
+        "target": "node-1678901235",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678901235-node-1678901236",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678901235",
+        "target": "node-1678901236",
+        "animated": true
+      }
+    ],
+    "trigger_id": "node-1678901234",
+    "nl_description": "This workflow summarizes the top GitHub trending repositories on a weekly schedule and posts the summary to Discord. The AI node generates a summary based on the prompt, and the Discord node sends the summary as a message. The workflow runs automatically every week.",
+    "wf_id": "beaa4c6c-e66d-4638-9226-5f4e77bc5d39",
+    "nl_hint": "On a weekly schedule, use AI to summarize top GitH"
+  },
+  {
+    "nodes": [
+      {
+        "id": "trigger-1678901234",
+        "data": {
+          "type": "trigger",
+          "label": "Webhook Trigger",
+          "subline": "Listening for POST requests..."
+        },
+        "type": "TRIGGER",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "nextStepId": "node-1678901235"
+      },
+      {
+        "id": "node-1678901235",
+        "data": {
+          "type": "ai",
+          "prompt": "Classify the incoming text as positive or negative"
+        },
+        "type": "AI",
+        "position": {
+          "x": 300,
+          "y": 0
+        },
+        "nextStepId": "node-1678901236"
+      },
+      {
+        "id": "node-1678901236",
+        "data": {
+          "type": "sheets",
+          "range": "Sheet1!A:A",
+          "sheetId": "some_sheet_id"
+        },
+        "type": "SHEETS",
+        "position": {
+          "x": 600,
+          "y": 0
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__trigger-1678901234-node-1678901235",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "trigger-1678901234",
+        "target": "node-1678901235",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678901235-node-1678901236",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678901235",
+        "target": "node-1678901236",
+        "animated": true
+      }
+    ],
+    "trigger_id": "trigger-1678901234",
+    "nl_description": "This workflow is triggered by a webhook and uses AI to classify the incoming text as positive or negative, then writes the result to Google Sheets.",
+    "wf_id": "68270d1b-094b-45f6-8c41-21aa346cbdb2",
+    "nl_hint": "When a webhook fires, use AI to classify the incom"
+  },
+  {
+    "nodes": [
+      {
+        "id": "node-1678901234",
+        "data": {
+          "cron": "*/5 * * * *",
+          "type": "schedule"
+        },
+        "type": "SCHEDULE",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "nextStepId": "node-1678901235"
+      },
+      {
+        "id": "node-1678901235",
+        "data": {
+          "url": "https://finance.yahoo.com/",
+          "type": "scraper"
+        },
+        "type": "SCRAPER",
+        "position": {
+          "x": 300,
+          "y": 0
+        },
+        "nextStepId": "node-1678901236"
+      },
+      {
+        "id": "node-1678901236",
+        "data": {
+          "type": "sheets",
+          "range": "Sheet1!A:A",
+          "sheetId": "some_sheet_id"
+        },
+        "type": "SHEETS",
+        "position": {
+          "x": 600,
+          "y": 0
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__node-1678901234-node-1678901235",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678901234",
+        "target": "node-1678901235",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678901235-node-1678901236",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678901235",
+        "target": "node-1678901236",
+        "animated": true
+      }
+    ],
+    "trigger_id": "node-1678901234",
+    "nl_description": "This workflow scrapes stock prices from Yahoo Finance every 5 minutes and saves them to a Google Sheet, allowing for real-time tracking of market trends.",
+    "wf_id": "40395e25-3e8f-4b8e-ad69-76e1551443ef",
+    "nl_hint": "Every 5 minutes, scrape stock prices from Yahoo Fi"
+  },
+  {
+    "nodes": [
+      {
+        "id": "node-1678901234",
+        "data": {
+          "type": "trigger",
+          "label": "Webhook Trigger",
+          "subline": "Listening for POST requests..."
+        },
+        "type": "TRIGGER",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "nextStepId": "node-1678901235"
+      },
+      {
+        "id": "node-1678901235",
+        "data": {
+          "type": "ai",
+          "prompt": "Translate {{previous_step}} to Spanish"
+        },
+        "type": "AI",
+        "position": {
+          "x": 300,
+          "y": 0
+        },
+        "nextStepId": "node-1678901236"
+      },
+      {
+        "id": "node-1678901236",
+        "data": {
+          "to": "example@example.com",
+          "body": "Translation: {{previous_step}}",
+          "type": "email",
+          "subject": "Webhook Translation"
+        },
+        "type": "EMAIL",
+        "position": {
+          "x": 600,
+          "y": 0
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__node-1678901234-node-1678901235",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678901234",
+        "target": "node-1678901235",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678901235-node-1678901236",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678901235",
+        "target": "node-1678901236",
+        "animated": true
+      }
+    ],
+    "trigger_id": "node-1678901234",
+    "nl_description": "This workflow listens for POST requests from a webhook, uses AI to translate the message to Spanish, and then sends the translation via email to the specified recipient.",
+    "wf_id": "14806a61-1ec8-45a5-aced-9132d5d57fbb",
+    "nl_hint": "When a webhook fires, use AI to translate the mess"
+  },
+  {
+    "nodes": [
+      {
+        "id": "node-1679811559",
+        "data": {
+          "cron": "0 0 * * *",
+          "type": "schedule"
+        },
+        "type": "SCHEDULE",
+        "position": {
+          "x": 0,
+          "y": 100
+        },
+        "nextStepId": "node-1679811560"
+      },
+      {
+        "id": "node-1679811560",
+        "data": {
+          "type": "ai",
+          "prompt": "Draft a blog post outline"
+        },
+        "type": "AI",
+        "position": {
+          "x": 300,
+          "y": 100
+        },
+        "nextStepId": "node-1679811561"
+      },
+      {
+        "id": "node-1679811561",
+        "data": {
+          "type": "notionNode",
+          "content": "Blog post outline: {{previous_step}}",
+          "databaseId": "some_notion_db_id"
+        },
+        "type": "NOTION",
+        "position": {
+          "x": 600,
+          "y": 100
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__node-1679811559-node-1679811560",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1679811559",
+        "target": "node-1679811560",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1679811560-node-1679811561",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1679811560",
+        "target": "node-1679811561",
+        "animated": true
+      }
+    ],
+    "trigger_id": "node-1679811559",
+    "nl_description": "This workflow uses AI to draft a blog post outline on a daily schedule and saves it to Notion. The AI generates the outline based on a prompt, and the result is then stored in a Notion database for future reference.",
+    "wf_id": "65f30787-f8b8-468a-acad-f05a312efedd",
+    "nl_hint": "On a daily schedule, use AI to draft a blog post o"
+  },
+  {
+    "nodes": [
+      {
+        "id": "trigger-1",
+        "data": {
+          "type": "trigger",
+          "label": "Webhook Trigger",
+          "subline": "Listening for POST requests..."
+        },
+        "type": "TRIGGER",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "nextStepId": "node-1678211111"
+      },
+      {
+        "id": "node-1678211111",
+        "data": {
+          "url": "{{payload.url}}",
+          "type": "scraper"
+        },
+        "type": "SCRAPER",
+        "position": {
+          "x": 300,
+          "y": 0
+        },
+        "nextStepId": "node-1678211112"
+      },
+      {
+        "id": "node-1678211112",
+        "data": {
+          "to": "admin@example.com",
+          "body": "{{previous_step}}",
+          "type": "email",
+          "subject": "Scraped Content"
+        },
+        "type": "EMAIL",
+        "position": {
+          "x": 600,
+          "y": 0
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__trigger-1-node-1678211111",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "trigger-1",
+        "target": "node-1678211111",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678211111-node-1678211112",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678211111",
+        "target": "node-1678211112",
+        "animated": true
+      }
+    ],
+    "trigger_id": "trigger-1",
+    "nl_description": "This workflow triggers on a webhook, scrapes the provided URL, and emails the scraped content to the admin. The scraped data is sent as the body of the email. This allows for automated monitoring and notification of website changes.",
+    "wf_id": "2aadd7bc-631a-419e-81b5-5b66023a05e2",
+    "nl_hint": "When a webhook fires, scrape the URL in the payloa"
+  },
+  {
+    "nodes": [
+      {
+        "id": "node-1678673433",
+        "data": {
+          "cron": "0 * * * *",
+          "type": "schedule"
+        },
+        "type": "SCHEDULE",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "nextStepId": "node-1678673444"
+      },
+      {
+        "id": "node-1678673444",
+        "data": {
+          "type": "ai",
+          "prompt": "Generate a trivia question"
+        },
+        "type": "AI",
+        "position": {
+          "x": 300,
+          "y": 0
+        },
+        "nextStepId": "node-1678673455"
+      },
+      {
+        "id": "node-1678673455",
+        "data": {
+          "url": "https://discord.com/api/webhooks/1234567890",
+          "type": "discord",
+          "message": "Here's your hourly trivia question: {{previous_step}}"
+        },
+        "type": "DISCORD",
+        "position": {
+          "x": 600,
+          "y": 0
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__node-1678673433-node-1678673444",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678673433",
+        "target": "node-1678673444",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678673444-node-1678673455",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678673444",
+        "target": "node-1678673455",
+        "animated": true
+      }
+    ],
+    "trigger_id": "node-1678673433",
+    "nl_description": "This workflow generates a trivia question every hour using AI, then posts it to a Discord channel for users to solve. The question is generated based on a predefined prompt and the result is sent to the Discord channel via a webhook.",
+    "wf_id": "2eae7270-b96e-4c92-9e94-48abe6ab071b",
+    "nl_hint": "Every hour, use AI to generate a trivia question, "
+  },
+  {
+    "nodes": [
+      {
+        "id": "trigger-1643723400",
+        "data": {
+          "type": "trigger",
+          "label": "Webhook Trigger",
+          "subline": "Listening for POST requests..."
+        },
+        "type": "TRIGGER",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "nextStepId": "node-1643723401"
+      },
+      {
+        "id": "node-1643723401",
+        "data": {
+          "type": "ai",
+          "prompt": "Extract keywords from the webhook payload"
+        },
+        "type": "AI",
+        "position": {
+          "x": 300,
+          "y": 0
+        },
+        "nextStepId": "node-1643723402"
+      },
+      {
+        "id": "node-1643723402",
+        "data": {
+          "type": "sheets",
+          "range": "Sheet1!A:A",
+          "sheetId": "some_sheet_id"
+        },
+        "type": "SHEETS",
+        "position": {
+          "x": 600,
+          "y": 0
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__trigger-1643723400-node-1643723401",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "trigger-1643723400",
+        "target": "node-1643723401",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1643723401-node-1643723402",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1643723401",
+        "target": "node-1643723402",
+        "animated": true
+      }
+    ],
+    "trigger_id": "trigger-1643723400",
+    "nl_description": "This workflow is triggered by a webhook, uses AI to extract keywords from the payload, and logs them to Google Sheets for further analysis.",
+    "wf_id": "2c45cda7-38c7-4ca5-b483-04e06b707022",
+    "nl_hint": "When a webhook arrives, use AI to extract keywords"
+  },
+  {
+    "nodes": [
+      {
+        "id": "node-1678901234",
+        "data": {
+          "cron": "*/30 * * * *",
+          "type": "schedule"
+        },
+        "type": "SCHEDULE",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "nextStepId": "node-1678901235"
+      },
+      {
+        "id": "node-1678901235",
+        "data": {
+          "url": "https://www.example.com/weather",
+          "type": "scraper"
+        },
+        "type": "SCRAPER",
+        "position": {
+          "x": 300,
+          "y": 0
+        },
+        "nextStepId": "node-1678901236"
+      },
+      {
+        "id": "node-1678901236",
+        "data": {
+          "to": "user@example.com",
+          "body": "Weather update: {{previous_step}}",
+          "type": "email",
+          "subject": "Weather Digest"
+        },
+        "type": "EMAIL",
+        "position": {
+          "x": 600,
+          "y": 0
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__node-1678901234-node-1678901235",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678901234",
+        "target": "node-1678901235",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678901235-node-1678901236",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678901235",
+        "target": "node-1678901236",
+        "animated": true
+      }
+    ],
+    "trigger_id": "node-1678901234",
+    "nl_description": "This workflow scrapes weather data every 30 minutes and sends a digest email with the latest updates.",
+    "wf_id": "ad2ae14e-f248-47ea-9d5e-7418eb5044cc",
+    "nl_hint": "On a schedule every 30 minutes, scrape weather dat"
+  },
+  {
+    "nodes": [
+      {
+        "id": "trigger-1",
+        "data": {
+          "type": "trigger",
+          "label": "Webhook Trigger",
+          "subline": "Listening for POST requests..."
+        },
+        "type": "TRIGGER",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "nextStepId": "node-1678987340563"
+      },
+      {
+        "id": "node-1678987340563",
+        "data": {
+          "type": "ai",
+          "prompt": "Summarize the request body"
+        },
+        "type": "AI",
+        "position": {
+          "x": 300,
+          "y": 0
+        },
+        "nextStepId": "node-1678987340564"
+      },
+      {
+        "id": "node-1678987340564",
+        "data": {
+          "type": "notionNode",
+          "content": "Summary: {{previous_step}}",
+          "databaseId": "your-notion-db-id"
+        },
+        "type": "NOTION",
+        "position": {
+          "x": 600,
+          "y": 0
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__trigger-1-node-1678987340563",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "trigger-1",
+        "target": "node-1678987340563",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678987340563-node-1678987340564",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678987340563",
+        "target": "node-1678987340564",
+        "animated": true
+      }
+    ],
+    "trigger_id": "trigger-1",
+    "nl_description": "This workflow generates an AI summary of the request body when a webhook fires, then creates a new Notion page with the summary.",
+    "wf_id": "631233aa-4926-45cd-a4df-e0608d06b871",
+    "nl_hint": "When a webhook fires, generate an AI summary of th"
+  },
+  {
+    "nodes": [
+      {
+        "id": "node-1679814908",
+        "data": {
+          "type": "schedule",
+          "cron": "0 0 * * *"
+        },
+        "type": "SCHEDULE",
+        "position": {
+          "x": 0,
+          "y": 100
+        },
+        "nextStepId": "node-1679814910"
+      },
+      {
+        "id": "node-1679814910",
+        "data": {
+          "url": "https://news.example.com/headlines",
+          "type": "scraper"
+        },
+        "type": "SCRAPER",
+        "position": {
+          "x": 300,
+          "y": 100
+        },
+        "nextStepId": "node-1679814912"
+      },
+      {
+        "id": "node-1679814912",
+        "data": {
+          "type": "ai",
+          "prompt": "Summarize the following text: {{previous_step}}"
+        },
+        "type": "AI",
+        "position": {
+          "x": 600,
+          "y": 100
+        },
+        "nextStepId": "node-1679814914"
+      },
+      {
+        "id": "node-1679814914",
+        "data": {
+          "url": "https://discord.example.com/webhook",
+          "type": "discord",
+          "message": "Daily news summary: {{previous_step}}"
+        },
+        "type": "DISCORD",
+        "position": {
+          "x": 900,
+          "y": 100
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__node-1679814908-node-1679814910",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1679814908",
+        "target": "node-1679814910",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1679814910-node-1679814912",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1679814910",
+        "target": "node-1679814912",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1679814912-node-1679814914",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1679814912",
+        "target": "node-1679814914",
+        "animated": true
+      }
+    ],
+    "trigger_id": "node-1679814908",
+    "nl_description": "This workflow runs daily, scraping news headlines, using AI to summarize them, and posting the summary to Discord. It provides a concise overview of current events. The workflow automates the process of staying informed about the latest news.",
+    "wf_id": "3cdeff18-1518-4237-9c95-5d7fe923d417",
+    "nl_hint": "On a daily schedule, scrape news headlines, use AI"
+  },
+  {
+    "nodes": [
+      {
+        "id": "trigger-1",
+        "data": {
+          "type": "trigger",
+          "label": "Webhook Trigger",
+          "subline": "Listening for POST requests..."
+        },
+        "type": "TRIGGER",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "nextStepId": "node-1678986543"
+      },
+      {
+        "id": "node-1678986543",
+        "data": {
+          "type": "ai",
+          "prompt": "Analyze sentiment of the incoming webhook data"
+        },
+        "type": "AI",
+        "position": {
+          "x": 300,
+          "y": 0
+        },
+        "nextStepId": "node-1678986544"
+      },
+      {
+        "id": "node-1678986544",
+        "data": {
+          "type": "sheets",
+          "range": "Sheet1!A:A",
+          "sheetId": "some_sheet_id"
+        },
+        "type": "SHEETS",
+        "position": {
+          "x": 600,
+          "y": 0
+        },
+        "nextStepId": "node-1678986545"
+      },
+      {
+        "id": "node-1678986545",
+        "data": {
+          "to": "example@example.com",
+          "body": "The sentiment analysis result has been written to Sheets",
+          "type": "email",
+          "subject": "Sentiment Analysis Result"
+        },
+        "type": "EMAIL",
+        "position": {
+          "x": 900,
+          "y": 0
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__trigger-1-node-1678986543",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "trigger-1",
+        "target": "node-1678986543",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678986543-node-1678986544",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678986543",
+        "target": "node-1678986544",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678986544-node-1678986545",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678986544",
+        "target": "node-1678986545",
+        "animated": true
+      }
+    ],
+    "trigger_id": "trigger-1",
+    "nl_description": "This workflow analyzes the sentiment of incoming webhook data using AI, writes the result to a Google Sheets document, and sends a confirmation email.",
+    "wf_id": "c4744ceb-473c-47fa-a0dd-c2b40c44b72c",
+    "nl_hint": "When a webhook fires, use AI to analyze sentiment,"
+  },
+  {
+    "nodes": [
+      {
+        "id": "node-1678671217",
+        "data": {
+          "type": "schedule",
+          "cron": "0 * * * *"
+        },
+        "type": "SCHEDULE",
+        "position": {
+          "x": 0,
+          "y": 100
+        },
+        "nextStepId": "node-1678671218"
+      },
+      {
+        "id": "node-1678671218",
+        "data": {
+          "type": "scraper",
+          "url": "https://example.com/prices"
+        },
+        "type": "SCRAPER",
+        "position": {
+          "x": 300,
+          "y": 100
+        },
+        "nextStepId": "node-1678671219"
+      },
+      {
+        "id": "node-1678671219",
+        "data": {
+          "type": "ai",
+          "prompt": "Compare prices with previous prices and return dropped prices"
+        },
+        "type": "AI",
+        "position": {
+          "x": 600,
+          "y": 100
+        },
+        "nextStepId": "node-1678671220"
+      },
+      {
+        "id": "node-1678671220",
+        "data": {
+          "url": "https://discord.com/api/webhooks/example",
+          "type": "discord",
+          "message": "Price drop alert: {{previous_step}}"
+        },
+        "type": "DISCORD",
+        "position": {
+          "x": 900,
+          "y": 100
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__node-1678671217-node-1678671218",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678671217",
+        "target": "node-1678671218",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678671218-node-1678671219",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678671218",
+        "target": "node-1678671219",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678671219-node-1678671220",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678671219",
+        "target": "node-1678671220",
+        "animated": true
+      }
+    ],
+    "trigger_id": "node-1678671217",
+    "nl_description": "This workflow scrapes product prices every hour, uses AI to compare them with previous prices, and sends a Discord alert if any prices have dropped.",
+    "wf_id": "acc43ce9-6087-4984-a7b6-7d7683d583f7",
+    "nl_hint": "Every hour, scrape product prices, use AI to compa"
+  },
+  {
+    "nodes": [
+      {
+        "id": "schedule-1",
+        "data": {
+          "cron": "0 0 * * 0",
+          "type": "schedule"
+        },
+        "type": "SCHEDULE",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "nextStepId": "node-1678901234"
+      },
+      {
+        "id": "node-1678901234",
+        "data": {
+          "type": "ai",
+          "prompt": "Generate a newsletter draft"
+        },
+        "type": "AI",
+        "position": {
+          "x": 300,
+          "y": 0
+        },
+        "nextStepId": "node-1678901235"
+      },
+      {
+        "id": "node-1678901235",
+        "data": {
+          "type": "notionNode",
+          "content": "{{previous_step}}",
+          "databaseId": "some_notion_db_id"
+        },
+        "type": "NOTION",
+        "position": {
+          "x": 600,
+          "y": 0
+        },
+        "nextStepId": "node-1678901236"
+      },
+      {
+        "id": "node-1678901236",
+        "data": {
+          "to": "subscribers@example.com",
+          "body": "{{previous_step}}",
+          "type": "email",
+          "subject": "Weekly Newsletter"
+        },
+        "type": "EMAIL",
+        "position": {
+          "x": 900,
+          "y": 0
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__schedule-1-node-1678901234",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "schedule-1",
+        "target": "node-1678901234",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678901234-node-1678901235",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678901234",
+        "target": "node-1678901235",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678901235-node-1678901236",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678901235",
+        "target": "node-1678901236",
+        "animated": true
+      }
+    ],
+    "trigger_id": "schedule-1",
+    "nl_description": "This workflow generates a newsletter draft using AI on a weekly schedule, saves it to Notion, and then emails it to subscribers. The AI model is prompted to create a draft, which is then stored in a Notion database and sent to subscribers via email.",
+    "wf_id": "323a113a-d667-4d94-abbb-2d374b2719e7",
+    "nl_hint": "On a weekly schedule, use AI to generate a newslet"
+  },
+  {
+    "nodes": [
+      {
+        "id": "trigger-1",
+        "data": {
+          "type": "trigger",
+          "label": "Webhook Trigger",
+          "subline": "Listening for POST requests..."
+        },
+        "type": "TRIGGER",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "nextStepId": "node-1678901234"
+      },
+      {
+        "id": "node-1678901234",
+        "data": {
+          "url": "{{previous_step.body.article_url}}",
+          "type": "scraper"
+        },
+        "type": "SCRAPER",
+        "position": {
+          "x": 300,
+          "y": 0
+        },
+        "nextStepId": "node-1678901235"
+      },
+      {
+        "id": "node-1678901235",
+        "data": {
+          "type": "ai",
+          "prompt": "Summarize the article: {{previous_step.body.text}}"
+        },
+        "type": "AI",
+        "position": {
+          "x": 600,
+          "y": 0
+        },
+        "nextStepId": "node-1678901236"
+      },
+      {
+        "id": "node-1678901236",
+        "data": {
+          "type": "sheets",
+          "range": "Sheet1!A:A",
+          "sheetId": "some_sheet_id"
+        },
+        "type": "SHEETS",
+        "position": {
+          "x": 900,
+          "y": 0
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__trigger-1-node-1678901234",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "trigger-1",
+        "target": "node-1678901234",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678901234-node-1678901235",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678901234",
+        "target": "node-1678901235",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678901235-node-1678901236",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678901235",
+        "target": "node-1678901236",
+        "animated": true
+      }
+    ],
+    "trigger_id": "trigger-1",
+    "nl_description": "This workflow is triggered by a webhook, scrapes the linked article, uses AI to summarize it, and logs the summary to a Google Sheets document.",
+    "wf_id": "31744855-0c4e-42e5-9c17-eb7d5251c650",
+    "nl_hint": "When a webhook fires, scrape the linked article, u"
+  },
+  {
+    "nodes": [
+      {
+        "id": "node-1678901234",
+        "data": {
+          "cron": "0 0 * * *",
+          "type": "schedule"
+        },
+        "type": "SCHEDULE",
+        "position": {
+          "x": 0,
+          "y": 100
+        },
+        "nextStepId": "node-1678901235"
+      },
+      {
+        "id": "node-1678901235",
+        "data": {
+          "type": "ai",
+          "prompt": "Generate startup ideas"
+        },
+        "type": "AI",
+        "position": {
+          "x": 300,
+          "y": 100
+        },
+        "nextStepId": "node-1678901236"
+      },
+      {
+        "id": "node-1678901236",
+        "data": {
+          "type": "notionNode",
+          "content": "New startup idea: {{previous_step}}",
+          "databaseId": "some_notion_db_id"
+        },
+        "type": "NOTION",
+        "position": {
+          "x": 600,
+          "y": 100
+        },
+        "nextStepId": "node-1678901237"
+      },
+      {
+        "id": "node-1678901237",
+        "data": {
+          "url": "https://discord.com/api/webhooks/some_discord_webhook_url",
+          "type": "discord",
+          "message": "Best startup idea of the day: {{previous_step}}"
+        },
+        "type": "DISCORD",
+        "position": {
+          "x": 900,
+          "y": 100
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__node-1678901234-node-1678901235",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678901234",
+        "target": "node-1678901235",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678901235-node-1678901236",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678901235",
+        "target": "node-1678901236",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678901236-node-1678901237",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678901236",
+        "target": "node-1678901237",
+        "animated": true
+      }
+    ],
+    "trigger_id": "node-1678901234",
+    "nl_description": "This workflow generates startup ideas daily using AI, saves them to Notion, and posts the best one to Discord. The AI model is prompted to come up with new ideas, which are then stored in a Notion database and shared with a Discord community. The workflow runs automatically every day, providing a constant stream of innovative ideas.",
+    "wf_id": "8f891e82-3027-4d0f-8ce5-4fdd7b4c82e6",
+    "nl_hint": "On a daily schedule, use AI to brainstorm startup "
+  },
+  {
+    "nodes": [
+      {
+        "id": "node-1678293958",
+        "data": {
+          "type": "trigger",
+          "label": "Webhook Trigger",
+          "subline": "Listening for POST requests..."
+        },
+        "type": "TRIGGER",
+        "position": {
+          "x": 0,
+          "y": 100
+        },
+        "nextStepId": "node-1678293960"
+      },
+      {
+        "id": "node-1678293960",
+        "data": {
+          "type": "ai",
+          "prompt": "Generate a response to the incoming webhook"
+        },
+        "type": "AI",
+        "position": {
+          "x": 300,
+          "y": 100
+        },
+        "nextStepId": "node-1678293962"
+      },
+      {
+        "id": "node-1678293962",
+        "data": {
+          "to": "recipient@example.com",
+          "body": "Response: {{node-1678293960}}",
+          "type": "email",
+          "subject": "Automated Response"
+        },
+        "type": "EMAIL",
+        "position": {
+          "x": 600,
+          "y": 100
+        },
+        "nextStepId": "node-1678293964"
+      },
+      {
+        "id": "node-1678293964",
+        "data": {
+          "type": "sheets",
+          "range": "Sheet1!A:A",
+          "sheetId": "some_sheet_id"
+        },
+        "type": "SHEETS",
+        "position": {
+          "x": 900,
+          "y": 100
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__node-1678293958-node-1678293960",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678293958",
+        "target": "node-1678293960",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678293960-node-1678293962",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678293960",
+        "target": "node-1678293962",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678293962-node-1678293964",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678293962",
+        "target": "node-1678293964",
+        "animated": true
+      }
+    ],
+    "trigger_id": "node-1678293958",
+    "nl_description": "This workflow is triggered by a webhook and uses AI to generate a response, which is then sent via email and logged to a Google Sheets document for record-keeping.",
+    "wf_id": "4aaf6dc0-25ea-460e-849b-0ee42e863b79",
+    "nl_hint": "When a webhook fires, use AI to generate a respons"
+  },
+  {
+    "nodes": [
+      {
+        "id": "schedule-1",
+        "data": {
+          "cron": "0 0 */6 * * *",
+          "type": "schedule"
+        },
+        "type": "SCHEDULE",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "nextStepId": "node-1678901234"
+      },
+      {
+        "id": "node-1678901234",
+        "data": {
+          "url": "https://social-media.com/mentions",
+          "type": "scraper"
+        },
+        "type": "SCRAPER",
+        "position": {
+          "x": 300,
+          "y": 0
+        },
+        "nextStepId": "node-1678901235"
+      },
+      {
+        "id": "node-1678901235",
+        "data": {
+          "type": "ai",
+          "prompt": "Analyze sentiment of social media mentions"
+        },
+        "type": "AI",
+        "position": {
+          "x": 600,
+          "y": 0
+        },
+        "nextStepId": "node-1678901236"
+      },
+      {
+        "id": "node-1678901236",
+        "data": {
+          "url": "https://discord.com/api/webhooks/1234567890",
+          "type": "discord",
+          "message": "Social media sentiment report: {{previous_step}}"
+        },
+        "type": "DISCORD",
+        "position": {
+          "x": 900,
+          "y": 0
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__schedule-1-node-1678901234",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "schedule-1",
+        "target": "node-1678901234",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678901234-node-1678901235",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678901234",
+        "target": "node-1678901235",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678901235-node-1678901236",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678901235",
+        "target": "node-1678901236",
+        "animated": true
+      }
+    ],
+    "trigger_id": "schedule-1",
+    "nl_description": "Every 6 hours, this workflow scrapes social media mentions, analyzes the sentiment using AI, and posts a report to Discord with the results.",
+    "wf_id": "ea7a983b-1b78-495c-ad75-ccecf839627a",
+    "nl_hint": "Every 6 hours, scrape social media mentions, use A"
+  },
+  {
+    "nodes": [
+      {
+        "id": "node-1678901234",
+        "data": {
+          "cron": "0 0 * * *",
+          "type": "schedule"
+        },
+        "type": "SCHEDULE",
+        "position": {
+          "x": 0,
+          "y": 100
+        },
+        "nextStepId": "node-1678901235"
+      },
+      {
+        "id": "node-1678901235",
+        "data": {
+          "type": "ai",
+          "prompt": "Write a short poem"
+        },
+        "type": "AI",
+        "position": {
+          "x": 300,
+          "y": 100
+        },
+        "nextStepId": "node-1678901236"
+      },
+      {
+        "id": "node-1678901236",
+        "data": {
+          "type": "notionNode",
+          "content": "Poem: {{previous_step}}",
+          "databaseId": "some_notion_db_id"
+        },
+        "type": "NOTION",
+        "position": {
+          "x": 600,
+          "y": 100
+        },
+        "nextStepId": "node-1678901237"
+      },
+      {
+        "id": "node-1678901237",
+        "data": {
+          "to": "user@example.com",
+          "body": "Your poem: {{previous_step}}",
+          "type": "email",
+          "subject": "Your Daily Poem"
+        },
+        "type": "EMAIL",
+        "position": {
+          "x": 900,
+          "y": 100
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__node-1678901234-node-1678901235",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678901234",
+        "target": "node-1678901235",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678901235-node-1678901236",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678901235",
+        "target": "node-1678901236",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678901236-node-1678901237",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678901236",
+        "target": "node-1678901237",
+        "animated": true
+      }
+    ],
+    "trigger_id": "node-1678901234",
+    "nl_description": "This workflow generates a poem using AI on a daily schedule, saves it to a Notion database, and emails it to the user. The poem is written based on a prompt and the email includes the generated poem. The workflow automates the process of creating and sharing daily poems.",
+    "wf_id": "3b170575-77c3-4cf8-8691-5c5f9460dafc",
+    "nl_hint": "On a schedule, use AI to write a poem, save it to "
+  },
+  {
+    "nodes": [
+      {
+        "id": "node-1678901234",
+        "data": {
+          "type": "trigger",
+          "label": "Webhook Trigger",
+          "subline": "Listening for POST requests..."
+        },
+        "type": "TRIGGER",
+        "position": {
+          "x": 0,
+          "y": 100
+        },
+        "nextStepId": "node-1678901235"
+      },
+      {
+        "id": "node-1678901235",
+        "data": {
+          "type": "ai",
+          "prompt": "Generate SQL from natural language input"
+        },
+        "type": "AI",
+        "position": {
+          "x": 300,
+          "y": 100
+        },
+        "nextStepId": "node-1678901236"
+      },
+      {
+        "id": "node-1678901236",
+        "data": {
+          "type": "sheets",
+          "range": "Sheet1!A:A",
+          "sheetId": "some_sheet_id"
+        },
+        "type": "SHEETS",
+        "position": {
+          "x": 600,
+          "y": 100
+        },
+        "nextStepId": "node-1678901237"
+      },
+      {
+        "id": "node-1678901237",
+        "data": {
+          "to": "example@example.com",
+          "body": "Generated SQL: {{previous_step}}",
+          "type": "email",
+          "subject": "Generated SQL"
+        },
+        "type": "EMAIL",
+        "position": {
+          "x": 900,
+          "y": 100
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__node-1678901234-node-1678901235",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678901234",
+        "target": "node-1678901235",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678901235-node-1678901236",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678901235",
+        "target": "node-1678901236",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678901236-node-1678901237",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678901236",
+        "target": "node-1678901237",
+        "animated": true
+      }
+    ],
+    "trigger_id": "node-1678901234",
+    "nl_description": "This workflow triggers on a webhook, uses AI to generate SQL from natural language, logs the SQL to a Google Sheet, and then sends the SQL via email.",
+    "wf_id": "da948308-7a5d-4926-b88b-ac8267df8b89",
+    "nl_hint": "When a webhook fires, use AI to generate SQL from "
+  },
+  {
+    "nodes": [
+      {
+        "id": "schedule-1",
+        "data": {
+          "cron": "0 0 * * *",
+          "type": "schedule"
+        },
+        "type": "SCHEDULE",
+        "position": {
+          "x": 0,
+          "y": 100
+        },
+        "nextStepId": "node-167898734"
+      },
+      {
+        "id": "node-167898734",
+        "data": {
+          "url": "https://example.com/job-listings",
+          "type": "scraper"
+        },
+        "type": "SCRAPER",
+        "position": {
+          "x": 300,
+          "y": 100
+        },
+        "nextStepId": "node-167898735"
+      },
+      {
+        "id": "node-167898735",
+        "data": {
+          "type": "ai",
+          "prompt": "Filter job listings for software engineering roles"
+        },
+        "type": "AI",
+        "position": {
+          "x": 600,
+          "y": 100
+        },
+        "nextStepId": "node-167898736"
+      },
+      {
+        "id": "node-167898736",
+        "data": {
+          "type": "sheets",
+          "range": "Sheet1!A:A",
+          "sheetId": "1234567890"
+        },
+        "type": "SHEETS",
+        "position": {
+          "x": 900,
+          "y": 100
+        },
+        "nextStepId": "node-167898737"
+      },
+      {
+        "id": "node-167898737",
+        "data": {
+          "to": "user@example.com",
+          "body": "Job listings digest: {{previous_step}}",
+          "type": "email",
+          "subject": "Daily Job Listings"
+        },
+        "type": "EMAIL",
+        "position": {
+          "x": 1200,
+          "y": 100
+        },
+        "nextStepId": "node-167898738"
+      },
+      {
+        "id": "node-167898738",
+        "data": {
+          "type": "notionNode",
+          "content": "Logged {{previous_step}} job listings",
+          "databaseId": "notion-db-123"
+        },
+        "type": "NOTION",
+        "position": {
+          "x": 1500,
+          "y": 100
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__schedule-1-node-167898734",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "schedule-1",
+        "target": "node-167898734",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-167898734-node-167898735",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-167898734",
+        "target": "node-167898735",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-167898735-node-167898736",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-167898735",
+        "target": "node-167898736",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-167898736-node-167898737",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-167898736",
+        "target": "node-167898737",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-167898737-node-167898738",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-167898737",
+        "target": "node-167898738",
+        "animated": true
+      }
+    ],
+    "trigger_id": "schedule-1",
+    "nl_description": "This workflow scrapes job listings daily, filters relevant ones using AI, saves them to Sheets, sends a digest email, and logs the count to Notion. The workflow automates the process of monitoring job listings and keeping track of relevant opportunities. It uses a daily schedule to ensure that the workflow runs consistently and provides up-to-date information.",
+    "wf_id": "a977c9e7-51b6-42c3-9e99-95f2dbd0791f",
+    "nl_hint": "On a daily schedule, scrape job listings, use AI t"
+  },
+  {
+    "nodes": [
+      {
+        "id": "node-1678912800",
+        "data": {
+          "type": "trigger",
+          "label": "Webhook Trigger",
+          "subline": "Listening for POST requests..."
+        },
+        "type": "TRIGGER",
+        "position": {
+          "x": 0,
+          "y": 100
+        },
+        "nextStepId": "node-1678912801"
+      },
+      {
+        "id": "node-1678912801",
+        "data": {
+          "type": "ai",
+          "prompt": "Parse the webhook payload"
+        },
+        "type": "AI",
+        "position": {
+          "x": 300,
+          "y": 100
+        },
+        "nextStepId": "node-1678912802"
+      },
+      {
+        "id": "node-1678912802",
+        "data": {
+          "url": "{{previous_step}}",
+          "type": "scraper"
+        },
+        "type": "SCRAPER",
+        "position": {
+          "x": 600,
+          "y": 100
+        },
+        "nextStepId": "node-1678912803"
+      },
+      {
+        "id": "node-1678912803",
+        "data": {
+          "type": "ai",
+          "prompt": "Summarize the scraped data"
+        },
+        "type": "AI",
+        "position": {
+          "x": 900,
+          "y": 100
+        },
+        "nextStepId": "node-1678912804"
+      },
+      {
+        "id": "node-1678912804",
+        "data": {
+          "url": "https://discord.com/api/webhooks/1234567890",
+          "type": "discord",
+          "message": "Summary: {{previous_step}}"
+        },
+        "type": "DISCORD",
+        "position": {
+          "x": 1200,
+          "y": 100
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__node-1678912800-node-1678912801",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678912800",
+        "target": "node-1678912801",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678912801-node-1678912802",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678912801",
+        "target": "node-1678912802",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678912802-node-1678912803",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678912802",
+        "target": "node-1678912803",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678912803-node-1678912804",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678912803",
+        "target": "node-1678912804",
+        "animated": true
+      }
+    ],
+    "trigger_id": "node-1678912800",
+    "nl_description": "This workflow is triggered by a webhook and uses AI to parse the payload, then scrapes additional data from the provided URL, summarizes the data with AI, and finally posts the summary to a Discord channel.",
+    "wf_id": "e1135643-2dd9-46de-ab6c-cab8aa8f4068",
+    "nl_hint": "When a webhook fires, use AI to parse the payload,"
+  },
+  {
+    "nodes": [
+      {
+        "id": "node-1679774400",
+        "data": {
+          "cron": "0 * * * *",
+          "type": "schedule"
+        },
+        "type": "SCHEDULE",
+        "position": {
+          "x": 0,
+          "y": 100
+        },
+        "nextStepId": "node-1679774410"
+      },
+      {
+        "id": "node-1679774410",
+        "data": {
+          "url": "https://api.coinbase.com/v2/prices/BTC-USD/spot",
+          "type": "scraper"
+        },
+        "type": "SCRAPER",
+        "position": {
+          "x": 300,
+          "y": 100
+        },
+        "nextStepId": "node-1679774420"
+      },
+      {
+        "id": "node-1679774420",
+        "data": {
+          "type": "sheets",
+          "range": "Sheet1!A:A",
+          "sheetId": "1234567890"
+        },
+        "type": "SHEETS",
+        "position": {
+          "x": 600,
+          "y": 100
+        },
+        "nextStepId": "node-1679774430"
+      },
+      {
+        "id": "node-1679774430",
+        "data": {
+          "type": "ai",
+          "prompt": "Predict cryptocurrency trend based on historical data"
+        },
+        "type": "AI",
+        "position": {
+          "x": 900,
+          "y": 100
+        },
+        "nextStepId": "node-1679774440"
+      },
+      {
+        "id": "node-1679774440",
+        "data": {
+          "url": "https://discord.com/api/webhooks/1234567890",
+          "type": "discord",
+          "message": "Predicted trend: {{previous_step}}"
+        },
+        "type": "DISCORD",
+        "position": {
+          "x": 1200,
+          "y": 100
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__node-1679774400-node-1679774410",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1679774400",
+        "target": "node-1679774410",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1679774410-node-1679774420",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1679774410",
+        "target": "node-1679774420",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1679774420-node-1679774430",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1679774420",
+        "target": "node-1679774430",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1679774430-node-1679774440",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1679774430",
+        "target": "node-1679774440",
+        "animated": true
+      }
+    ],
+    "trigger_id": "node-1679774400",
+    "nl_description": "Every hour, this workflow scrapes cryptocurrency prices, saves the raw data to Sheets, uses AI to predict trends, and posts the prediction to Discord. The AI model analyzes historical data to make accurate predictions. The workflow automates the process of tracking and sharing cryptocurrency trends.",
+    "wf_id": "d2a06d81-4fa0-4e35-87a9-68833b300cd9",
+    "nl_hint": "Every hour, scrape cryptocurrency prices, save raw"
+  },
+  {
+    "nodes": [
+      {
+        "id": "node-1679814906",
+        "data": {
+          "cron": "0 0 0 * * 0",
+          "type": "schedule"
+        },
+        "type": "SCHEDULE",
+        "position": {
+          "x": 0,
+          "y": 100
+        },
+        "nextStepId": "node-1679814907"
+      },
+      {
+        "id": "node-1679814907",
+        "data": {
+          "type": "ai",
+          "prompt": "Create a study plan for the upcoming week"
+        },
+        "type": "AI",
+        "position": {
+          "x": 300,
+          "y": 100
+        },
+        "nextStepId": "node-1679814908"
+      },
+      {
+        "id": "node-1679814908",
+        "data": {
+          "type": "notionNode",
+          "content": "Study plan for this week: {{previous_step}}",
+          "databaseId": "some_notion_db_id"
+        },
+        "type": "NOTION",
+        "position": {
+          "x": 600,
+          "y": 100
+        },
+        "nextStepId": "node-1679814909"
+      },
+      {
+        "id": "node-1679814909",
+        "data": {
+          "to": "student@example.com",
+          "body": "Your study plan for the week is attached",
+          "type": "email",
+          "subject": "Weekly Study Plan"
+        },
+        "type": "EMAIL",
+        "position": {
+          "x": 900,
+          "y": 100
+        },
+        "nextStepId": "node-1679814910"
+      },
+      {
+        "id": "node-1679814910",
+        "data": {
+          "url": "https://discord.com/api/webhooks/some_discord_webhook_url",
+          "type": "discord",
+          "message": "Don't forget to follow your study plan this week: {{previous_step}}"
+        },
+        "type": "DISCORD",
+        "position": {
+          "x": 1200,
+          "y": 100
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__node-1679814906-node-1679814907",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1679814906",
+        "target": "node-1679814907",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1679814907-node-1679814908",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1679814907",
+        "target": "node-1679814908",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1679814908-node-1679814909",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1679814908",
+        "target": "node-1679814909",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1679814909-node-1679814910",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1679814909",
+        "target": "node-1679814910",
+        "animated": true
+      }
+    ],
+    "trigger_id": "node-1679814906",
+    "nl_description": "This workflow creates a study plan using AI on a weekly schedule, saves it to Notion, emails it to the student, and posts a reminder to Discord. The AI generates a personalized plan, which is then shared with the student through email and a reminder on Discord. This workflow helps students stay on track with their studies.",
+    "wf_id": "b97961b6-d5b0-45f4-be46-e9138801af0f",
+    "nl_hint": "On a weekly schedule, use AI to create a study pla"
+  },
+  {
+    "nodes": [
+      {
+        "id": "trigger-1678901234",
+        "data": {
+          "type": "trigger",
+          "label": "Webhook Trigger",
+          "subline": "Listening for POST requests..."
+        },
+        "type": "TRIGGER",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "nextStepId": "node-1678901235"
+      },
+      {
+        "id": "node-1678901235",
+        "data": {
+          "url": "{{previous_step.body.url}}",
+          "type": "scraper"
+        },
+        "type": "SCRAPER",
+        "position": {
+          "x": 300,
+          "y": 0
+        },
+        "nextStepId": "node-1678901236"
+      },
+      {
+        "id": "node-1678901236",
+        "data": {
+          "type": "ai",
+          "prompt": "Extract entities from {{previous_step.body.content}}"
+        },
+        "type": "AI",
+        "position": {
+          "x": 600,
+          "y": 0
+        },
+        "nextStepId": "node-1678901237"
+      },
+      {
+        "id": "node-1678901237",
+        "data": {
+          "type": "sheets",
+          "range": "Sheet1!A:A",
+          "sheetId": "some_sheet_id"
+        },
+        "type": "SHEETS",
+        "position": {
+          "x": 900,
+          "y": 0
+        },
+        "nextStepId": "node-1678901238"
+      },
+      {
+        "id": "node-1678901238",
+        "data": {
+          "to": "example@example.com",
+          "body": "Entities extracted: {{previous_step.body.entities}}",
+          "type": "email",
+          "subject": "Entity Extraction Report"
+        },
+        "type": "EMAIL",
+        "position": {
+          "x": 1200,
+          "y": 0
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__trigger-1678901234-node-1678901235",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "trigger-1678901234",
+        "target": "node-1678901235",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678901235-node-1678901236",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678901235",
+        "target": "node-1678901236",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678901236-node-1678901237",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678901236",
+        "target": "node-1678901237",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678901237-node-1678901238",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678901237",
+        "target": "node-1678901238",
+        "animated": true
+      }
+    ],
+    "trigger_id": "trigger-1678901234",
+    "nl_description": "This workflow is triggered by a webhook, then scrapes a provided URL, extracts entities using AI, saves them to a Google Sheet, and finally emails a report with the extracted entities.",
+    "wf_id": "7352ab06-7c7a-4cc5-a189-ef91d2cb4f6a",
+    "nl_hint": "When a webhook fires, scrape the provided URL, use"
+  },
+  {
+    "nodes": [
+      {
+        "id": "trigger-1",
+        "data": {
+          "type": "trigger",
+          "label": "Webhook Trigger",
+          "subline": "Listening for POST requests..."
+        },
+        "type": "TRIGGER",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "nextStepId": "node-1678901234"
+      },
+      {
+        "id": "node-1678901234",
+        "data": {
+          "type": "ai",
+          "prompt": "Generate a customer support reply"
+        },
+        "type": "AI",
+        "position": {
+          "x": 300,
+          "y": 0
+        },
+        "nextStepId": "node-1678901235"
+      },
+      {
+        "id": "node-1678901235",
+        "data": {
+          "to": "customer@example.com",
+          "body": "{{previous_step}}",
+          "type": "email",
+          "subject": "Customer Support Reply"
+        },
+        "type": "EMAIL",
+        "position": {
+          "x": 600,
+          "y": 0
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__trigger-1-node-1678901234",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "trigger-1",
+        "target": "node-1678901234",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678901234-node-1678901235",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678901234",
+        "target": "node-1678901235",
+        "animated": true
+      }
+    ],
+    "trigger_id": "trigger-1",
+    "nl_description": "This workflow is triggered by a webhook and uses AI to generate a customer support reply, which is then sent to the customer via email.",
+    "wf_id": "1d1e7e23-2bee-4357-9ab3-cd6faae34ac2",
+    "nl_hint": "When a webhook fires, use AI to generate a custome"
+  },
+  {
+    "nodes": [
+      {
+        "id": "node-1679761234",
+        "data": {
+          "cron": "*/15 * * * *",
+          "type": "schedule"
+        },
+        "type": "SCHEDULE",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "nextStepId": "node-1679761235"
+      },
+      {
+        "id": "node-1679761235",
+        "data": {
+          "url": "https://example.com/monitoring",
+          "type": "scraper"
+        },
+        "type": "SCRAPER",
+        "position": {
+          "x": 300,
+          "y": 0
+        },
+        "nextStepId": "node-1679761236"
+      },
+      {
+        "id": "node-1679761236",
+        "data": {
+          "url": "https://discord.com/api/webhooks/1234567890",
+          "type": "discord",
+          "message": "Server downtime detected: {{previous_step}}"
+        },
+        "type": "DISCORD",
+        "position": {
+          "x": 600,
+          "y": 0
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__node-1679761234-node-1679761235",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1679761234",
+        "target": "node-1679761235",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1679761235-node-1679761236",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1679761235",
+        "target": "node-1679761236",
+        "animated": true
+      }
+    ],
+    "trigger_id": "node-1679761234",
+    "nl_description": "This workflow checks the server uptime status every 15 minutes by scraping a monitoring page, and sends a Discord alert if downtime is detected.",
+    "wf_id": "0f5aa0d4-cfa9-4f49-a33a-05dc0c2c2c67",
+    "nl_hint": "On a schedule every 15 minutes, scrape server upti"
+  },
+  {
+    "nodes": [
+      {
+        "id": "trigger-1679811111",
+        "data": {
+          "type": "trigger",
+          "label": "Webhook Trigger",
+          "subline": "Listening for POST requests..."
+        },
+        "type": "TRIGGER",
+        "position": {
+          "x": 0,
+          "y": 100
+        },
+        "nextStepId": "node-1679811112"
+      },
+      {
+        "id": "node-1679811112",
+        "data": {
+          "type": "ai",
+          "prompt": "Grade the student's essay based on the provided text."
+        },
+        "type": "AI",
+        "position": {
+          "x": 300,
+          "y": 100
+        },
+        "nextStepId": "node-1679811113"
+      },
+      {
+        "id": "node-1679811113",
+        "data": {
+          "type": "notionNode",
+          "content": "Grade: {{previous_step}}, Feedback: The essay is well-written and effectively argues the point.",
+          "databaseId": "some_notion_db_id"
+        },
+        "type": "NOTION",
+        "position": {
+          "x": 600,
+          "y": 100
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__trigger-1679811111-node-1679811112",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "trigger-1679811111",
+        "target": "node-1679811112",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1679811112-node-1679811113",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1679811112",
+        "target": "node-1679811113",
+        "animated": true
+      }
+    ],
+    "trigger_id": "trigger-1679811111",
+    "nl_description": "This workflow is triggered by a webhook and uses AI to grade a student's essay. The grade and feedback are then saved to a Notion database for further review. The workflow automates the process of evaluating student essays and storing the results in a centralized location.",
+    "wf_id": "126397dc-8240-4082-b894-9f65547b3d88",
+    "nl_hint": "When a webhook fires, use AI to grade a student's "
+  },
+  {
+    "nodes": [
+      {
+        "id": "node-1678901234",
+        "data": {
+          "cron": "0 0 * * *",
+          "type": "schedule"
+        },
+        "type": "SCHEDULE",
+        "position": {
+          "x": 0,
+          "y": 100
+        },
+        "nextStepId": "node-1678901235"
+      },
+      {
+        "id": "node-1678901235",
+        "data": {
+          "type": "ai",
+          "prompt": "Generate a daily standup summary from input"
+        },
+        "type": "AI",
+        "position": {
+          "x": 300,
+          "y": 100
+        },
+        "nextStepId": "node-1678901236"
+      },
+      {
+        "id": "node-1678901236",
+        "data": {
+          "url": "https://discord.com/api/webhooks/WEBHOOK_URL",
+          "type": "discord",
+          "message": "Daily Standup Summary: {{previous_step}}"
+        },
+        "type": "DISCORD",
+        "position": {
+          "x": 600,
+          "y": 100
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__node-1678901234-node-1678901235",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678901234",
+        "target": "node-1678901235",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678901235-node-1678901236",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678901235",
+        "target": "node-1678901236",
+        "animated": true
+      }
+    ],
+    "trigger_id": "node-1678901234",
+    "nl_description": "This workflow generates a daily standup summary using AI on a daily schedule and posts it to Discord. The summary is created based on input and then shared with the team through a Discord webhook. This automates the process of creating and sharing daily standup summaries.",
+    "wf_id": "1a25a52e-f34e-4bb5-93de-260c00c0aef1",
+    "nl_hint": "On a daily schedule, use AI to generate a daily st"
+  },
+  {
+    "nodes": [
+      {
+        "id": "node-1678973908",
+        "data": {
+          "type": "trigger",
+          "label": "Webhook Trigger",
+          "subline": "Listening for POST requests..."
+        },
+        "type": "TRIGGER",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "nextStepId": "node-1678973910"
+      },
+      {
+        "id": "node-1678973910",
+        "data": {
+          "url": "https://www.amazon.com/product-reviews",
+          "type": "scraper"
+        },
+        "type": "SCRAPER",
+        "position": {
+          "x": 300,
+          "y": 0
+        },
+        "nextStepId": "node-1678973912"
+      },
+      {
+        "id": "node-1678973912",
+        "data": {
+          "type": "ai",
+          "prompt": "Summarize the sentiment of the product reviews"
+        },
+        "type": "AI",
+        "position": {
+          "x": 600,
+          "y": 0
+        },
+        "nextStepId": "node-1678973914"
+      },
+      {
+        "id": "node-1678973914",
+        "data": {
+          "to": "example@example.com",
+          "body": "The sentiment summary is: {{previous_step}}",
+          "type": "email",
+          "subject": "Product Review Sentiment Summary"
+        },
+        "type": "EMAIL",
+        "position": {
+          "x": 900,
+          "y": 0
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__node-1678973908-node-1678973910",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678973908",
+        "target": "node-1678973910",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678973910-node-1678973912",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678973910",
+        "target": "node-1678973912",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678973912-node-1678973914",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678973912",
+        "target": "node-1678973914",
+        "animated": true
+      }
+    ],
+    "trigger_id": "node-1678973908",
+    "nl_description": "When a webhook fires, this workflow scrapes product reviews from Amazon, uses AI to summarize the sentiment, and then emails the summary to a designated recipient.",
+    "wf_id": "29be22a0-7b0a-4b0b-8bc6-239ac866853d",
+    "nl_hint": "When a webhook fires, scrape product reviews from "
+  },
+  {
+    "nodes": [
+      {
+        "id": "node-167890",
+        "data": {
+          "cron": "0 * * * *",
+          "type": "schedule"
+        },
+        "type": "SCHEDULE",
+        "position": {
+          "x": 0,
+          "y": 100
+        },
+        "nextStepId": "node-167891"
+      },
+      {
+        "id": "node-167891",
+        "data": {
+          "url": "https://twitter.com/trends",
+          "type": "scraper"
+        },
+        "type": "SCRAPER",
+        "position": {
+          "x": 300,
+          "y": 100
+        },
+        "nextStepId": "node-167892"
+      },
+      {
+        "id": "node-167892",
+        "data": {
+          "type": "ai",
+          "prompt": "Categorize the following Twitter trends: {{previous_step}}"
+        },
+        "type": "AI",
+        "position": {
+          "x": 600,
+          "y": 100
+        },
+        "nextStepId": "node-167893"
+      },
+      {
+        "id": "node-167893",
+        "data": {
+          "type": "sheets",
+          "range": "Sheet1!A:A",
+          "sheetId": "some_sheet_id"
+        },
+        "type": "SHEETS",
+        "position": {
+          "x": 900,
+          "y": 100
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__node-167890-node-167891",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-167890",
+        "target": "node-167891",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-167891-node-167892",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-167891",
+        "target": "node-167892",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-167892-node-167893",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-167892",
+        "target": "node-167893",
+        "animated": true
+      }
+    ],
+    "trigger_id": "node-167890",
+    "nl_description": "This workflow runs hourly, scraping Twitter trending topics and using AI to categorize them, then logs the categories to a Google Sheets document for tracking and analysis.",
+    "wf_id": "afaeff4c-8f78-41c3-a4dc-f95f549e669d",
+    "nl_hint": "On an hourly schedule, scrape Twitter/X trending t"
+  },
+  {
+    "nodes": [
+      {
+        "id": "node-1678901234",
+        "data": {
+          "type": "trigger",
+          "label": "Webhook Trigger",
+          "subline": "Listening for POST requests..."
+        },
+        "type": "TRIGGER",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "nextStepId": "node-1678901235"
+      },
+      {
+        "id": "node-1678901235",
+        "data": {
+          "type": "ai",
+          "prompt": "Auto-tag the incoming content"
+        },
+        "type": "AI",
+        "position": {
+          "x": 300,
+          "y": 0
+        },
+        "nextStepId": "node-1678901236"
+      },
+      {
+        "id": "node-1678901236",
+        "data": {
+          "type": "sheets",
+          "range": "Sheet1!A:A",
+          "sheetId": "some_sheet_id"
+        },
+        "type": "SHEETS",
+        "position": {
+          "x": 600,
+          "y": 0
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__node-1678901234-node-1678901235",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678901234",
+        "target": "node-1678901235",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678901235-node-1678901236",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678901235",
+        "target": "node-1678901236",
+        "animated": true
+      }
+    ],
+    "trigger_id": "node-1678901234",
+    "nl_description": "This workflow is triggered by a webhook, which then uses AI to auto-tag the incoming content. The tags are then saved to Google Sheets for further analysis.",
+    "wf_id": "3e8b5e4a-bd31-44ff-a04c-7b557fde34f1",
+    "nl_hint": "When a webhook fires, use AI to auto-tag the incom"
+  },
+  {
+    "nodes": [
+      {
+        "id": "trigger-1678904321",
+        "data": {
+          "cron": "0 0 * * *",
+          "type": "schedule"
+        },
+        "type": "SCHEDULE",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "nextStepId": "node-1678904322"
+      },
+      {
+        "id": "node-1678904322",
+        "data": {
+          "type": "ai",
+          "prompt": "Generate a daily workout plan"
+        },
+        "type": "AI",
+        "position": {
+          "x": 300,
+          "y": 0
+        },
+        "nextStepId": "node-1678904323"
+      },
+      {
+        "id": "node-1678904323",
+        "data": {
+          "to": "subscriber@example.com",
+          "body": "Your daily workout plan: {{previous_step}}",
+          "type": "email",
+          "subject": "Daily Workout Plan"
+        },
+        "type": "EMAIL",
+        "position": {
+          "x": 600,
+          "y": 0
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__trigger-1678904321-node-1678904322",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "trigger-1678904321",
+        "target": "node-1678904322",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678904322-node-1678904323",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678904322",
+        "target": "node-1678904323",
+        "animated": true
+      }
+    ],
+    "trigger_id": "trigger-1678904321",
+    "nl_description": "This workflow generates a daily workout plan using AI and emails it to a subscriber. The schedule is set to run daily, and the AI model creates a new plan each time. The plan is then sent to the subscriber via email.",
+    "wf_id": "7aa08a6b-e992-4ce2-9ed4-3aff8470e5aa",
+    "nl_hint": "On a daily schedule, use AI to generate workout pl"
+  },
+  {
+    "nodes": [
+      {
+        "id": "node-1678979345",
+        "data": {
+          "type": "trigger",
+          "label": "Webhook Trigger",
+          "subline": "Listening for POST requests..."
+        },
+        "type": "TRIGGER",
+        "position": {
+          "x": 0,
+          "y": 100
+        },
+        "nextStepId": "node-1678979346"
+      },
+      {
+        "id": "node-1678979346",
+        "data": {
+          "type": "ai",
+          "prompt": "Detect spam in the message"
+        },
+        "type": "AI",
+        "position": {
+          "x": 300,
+          "y": 100
+        },
+        "nextStepId": "node-1678979347"
+      },
+      {
+        "id": "node-1678979347",
+        "data": {
+          "url": "https://discord.com/api/webhooks/123456789",
+          "type": "discord",
+          "message": "Spam detected: {{previous_step}}"
+        },
+        "type": "DISCORD",
+        "position": {
+          "x": 600,
+          "y": 100
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__node-1678979345-node-1678979346",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678979345",
+        "target": "node-1678979346",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678979346-node-1678979347",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678979346",
+        "target": "node-1678979347",
+        "animated": true
+      }
+    ],
+    "trigger_id": "node-1678979345",
+    "nl_description": "This workflow detects spam in incoming webhook messages using AI and sends a notification to Discord when spam is detected.",
+    "wf_id": "e4b58e50-1cf0-4bc5-9a19-2c7e54e409aa",
+    "nl_hint": "When a webhook fires, use AI to detect spam in the"
+  },
+  {
+    "nodes": [
+      {
+        "id": "node-1679751600",
+        "data": {
+          "cron": "0 0 * * 0",
+          "type": "schedule"
+        },
+        "type": "SCHEDULE",
+        "position": {
+          "x": 0,
+          "y": 100
+        },
+        "nextStepId": "node-1679751601"
+      },
+      {
+        "id": "node-1679751601",
+        "data": {
+          "url": "https://competitor.com/prices",
+          "type": "scraper"
+        },
+        "type": "SCRAPER",
+        "position": {
+          "x": 300,
+          "y": 100
+        },
+        "nextStepId": "node-1679751602"
+      },
+      {
+        "id": "node-1679751602",
+        "data": {
+          "type": "ai",
+          "prompt": "Generate a comparison report based on the scraped pricing data"
+        },
+        "type": "AI",
+        "position": {
+          "x": 600,
+          "y": 100
+        },
+        "nextStepId": "node-1679751603"
+      },
+      {
+        "id": "node-1679751603",
+        "data": {
+          "type": "notionNode",
+          "content": "Comparison report: {{previous_step}}",
+          "databaseId": "your_notion_db_id"
+        },
+        "type": "NOTION",
+        "position": {
+          "x": 900,
+          "y": 100
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__node-1679751600-node-1679751601",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1679751600",
+        "target": "node-1679751601",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1679751601-node-1679751602",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1679751601",
+        "target": "node-1679751602",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1679751602-node-1679751603",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1679751602",
+        "target": "node-1679751603",
+        "animated": true
+      }
+    ],
+    "trigger_id": "node-1679751600",
+    "nl_description": "This workflow runs on a weekly schedule, scraping competitor pricing data, generating a comparison report using AI, and then saving it to Notion for easy reference.",
+    "wf_id": "4bd42dea-43bf-42d9-86b4-f142fa1f7edd",
+    "nl_hint": "On a weekly schedule, scrape competitor pricing, u"
+  },
+  {
+    "nodes": [
+      {
+        "id": "trigger-1",
+        "data": {
+          "type": "trigger",
+          "label": "Webhook Trigger",
+          "subline": "Listening for POST requests..."
+        },
+        "type": "TRIGGER",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "nextStepId": "node-1678901234"
+      },
+      {
+        "id": "node-1678901234",
+        "data": {
+          "type": "ai",
+          "prompt": "Convert the message to a formal tone: {{previous_step}}"
+        },
+        "type": "AI",
+        "position": {
+          "x": 300,
+          "y": 0
+        },
+        "nextStepId": "node-1678901235"
+      },
+      {
+        "id": "node-1678901235",
+        "data": {
+          "to": "example@example.com",
+          "body": "Formal message: {{previous_step}}",
+          "type": "email",
+          "subject": "Formal Message"
+        },
+        "type": "EMAIL",
+        "position": {
+          "x": 600,
+          "y": 0
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__trigger-1-node-1678901234",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "trigger-1",
+        "target": "node-1678901234",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678901234-node-1678901235",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678901234",
+        "target": "node-1678901235",
+        "animated": true
+      }
+    ],
+    "trigger_id": "trigger-1",
+    "nl_description": "This workflow is triggered by a webhook and uses AI to convert the incoming message to a formal tone, then emails the formal version to a specified recipient.",
+    "wf_id": "337f41bc-0ebe-427d-8bbc-4b7525b58a3e",
+    "nl_hint": "When a webhook fires, use AI to convert the messag"
+  },
+  {
+    "nodes": [
+      {
+        "id": "node-1678901234",
+        "data": {
+          "cron": "*/10 * * * *",
+          "type": "schedule"
+        },
+        "type": "SCHEDULE",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "nextStepId": "node-1678901235"
+      },
+      {
+        "id": "node-1678901235",
+        "data": {
+          "url": "https://example.com/flight-prices",
+          "type": "scraper"
+        },
+        "type": "SCRAPER",
+        "position": {
+          "x": 300,
+          "y": 0
+        },
+        "nextStepId": "node-1678901236"
+      },
+      {
+        "id": "node-1678901236",
+        "data": {
+          "type": "ai",
+          "prompt": "Find the cheapest flight option from the scraped data"
+        },
+        "type": "AI",
+        "position": {
+          "x": 600,
+          "y": 0
+        },
+        "nextStepId": "node-1678901237"
+      },
+      {
+        "id": "node-1678901237",
+        "data": {
+          "to": "user@example.com",
+          "body": "The cheapest flight option is: {{previous_step}}",
+          "type": "email",
+          "subject": "Cheapest Flight Alert"
+        },
+        "type": "EMAIL",
+        "position": {
+          "x": 900,
+          "y": 0
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__node-1678901234-node-1678901235",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678901234",
+        "target": "node-1678901235",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678901235-node-1678901236",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678901235",
+        "target": "node-1678901236",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678901236-node-1678901237",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678901236",
+        "target": "node-1678901237",
+        "animated": true
+      }
+    ],
+    "trigger_id": "node-1678901234",
+    "nl_description": "This workflow scrapes flight prices every 10 minutes, uses AI to find the cheapest option, and sends an email alert with the result. The AI analyzes the scraped data to determine the best choice. The email notification is then sent to the specified recipient.",
+    "wf_id": "cf14125b-181f-45d7-bbcb-f617989a5ce4",
+    "nl_hint": "Every 10 minutes, scrape flight prices, use AI to "
+  },
+  {
+    "nodes": [
+      {
+        "id": "schedule-1",
+        "data": {
+          "cron": "0 0 * * *",
+          "type": "schedule"
+        },
+        "type": "SCHEDULE",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "nextStepId": "ai-1"
+      },
+      {
+        "id": "ai-1",
+        "data": {
+          "type": "ai",
+          "prompt": "Draft social media captions for a new product"
+        },
+        "type": "AI",
+        "position": {
+          "x": 300,
+          "y": 0
+        },
+        "nextStepId": "discord-1"
+      },
+      {
+        "id": "discord-1",
+        "data": {
+          "url": "https://discord.com/api/webhooks/1234567890",
+          "type": "discord",
+          "message": "Review social media captions: {{previous_step}}"
+        },
+        "type": "DISCORD",
+        "position": {
+          "x": 600,
+          "y": 0
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__schedule-1-ai-1",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "schedule-1",
+        "target": "ai-1",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__ai-1-discord-1",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "ai-1",
+        "target": "discord-1",
+        "animated": true
+      }
+    ],
+    "trigger_id": "schedule-1",
+    "nl_description": "This workflow drafts social media captions for a product using AI on a daily schedule, then posts them to Discord for review.",
+    "wf_id": "1130385a-15a6-437b-a970-9e9565adf9f4",
+    "nl_hint": "On a daily schedule, use AI to draft social media "
+  },
+  {
+    "nodes": [
+      {
+        "id": "trigger-1",
+        "data": {
+          "type": "trigger",
+          "label": "Webhook Trigger",
+          "subline": "Listening for POST requests..."
+        },
+        "type": "TRIGGER",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "nextStepId": "node-1678901234"
+      },
+      {
+        "id": "node-1678901234",
+        "data": {
+          "type": "ai",
+          "prompt": "Generate meeting notes from transcript: {{previous_step}}"
+        },
+        "type": "AI",
+        "position": {
+          "x": 300,
+          "y": 0
+        },
+        "nextStepId": "node-1678901235"
+      },
+      {
+        "id": "node-1678901235",
+        "data": {
+          "type": "notionNode",
+          "content": "Meeting Notes: {{previous_step}}",
+          "databaseId": "some_notion_db_id"
+        },
+        "type": "NOTION",
+        "position": {
+          "x": 600,
+          "y": 0
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__trigger-1-node-1678901234",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "trigger-1",
+        "target": "node-1678901234",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678901234-node-1678901235",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678901234",
+        "target": "node-1678901235",
+        "animated": true
+      }
+    ],
+    "trigger_id": "trigger-1",
+    "nl_description": "This workflow generates meeting notes from a transcript using AI when a webhook fires, then saves the notes to Notion. The AI model uses the transcript as input to create the notes. The final notes are stored in a Notion database for easy access.",
+    "wf_id": "e3ba8519-1bc9-4cdd-b8c2-7a0d4404e7d8",
+    "nl_hint": "When a webhook fires, use AI to generate meeting n"
+  },
+  {
+    "nodes": [
+      {
+        "id": "schedule-1",
+        "data": {
+          "cron": "0 0 * * *",
+          "type": "schedule"
+        },
+        "type": "SCHEDULE",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "nextStepId": "scraper-1"
+      },
+      {
+        "id": "scraper-1",
+        "data": {
+          "url": "https://example.com/rss",
+          "type": "scraper"
+        },
+        "type": "SCRAPER",
+        "position": {
+          "x": 300,
+          "y": 0
+        },
+        "nextStepId": "ai-1"
+      },
+      {
+        "id": "ai-1",
+        "data": {
+          "type": "ai",
+          "prompt": "Summarize the text from the previous step"
+        },
+        "type": "AI",
+        "position": {
+          "x": 600,
+          "y": 0
+        },
+        "nextStepId": "email-1"
+      },
+      {
+        "id": "email-1",
+        "data": {
+          "to": "user@example.com",
+          "body": "Here is the digest: {{previous_step}}",
+          "type": "email",
+          "subject": "Daily RSS Digest"
+        },
+        "type": "EMAIL",
+        "position": {
+          "x": 900,
+          "y": 0
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__schedule-1-scraper-1",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "schedule-1",
+        "target": "scraper-1",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__scraper-1-ai-1",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "scraper-1",
+        "target": "ai-1",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__ai-1-email-1",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "ai-1",
+        "target": "email-1",
+        "animated": true
+      }
+    ],
+    "trigger_id": "schedule-1",
+    "nl_description": "This workflow runs daily, scraping RSS feeds for new articles, summarizing them using AI, and emailing a digest to the user.",
+    "wf_id": "d4ed667d-d288-487b-b03e-b020395bd2bc",
+    "nl_hint": "On a schedule, scrape RSS feeds for new articles, "
+  },
+  {
+    "nodes": [
+      {
+        "id": "node-1678901234",
+        "data": {
+          "type": "trigger",
+          "label": "Webhook Trigger",
+          "subline": "Listening for POST requests..."
+        },
+        "type": "TRIGGER",
+        "position": {
+          "x": 0,
+          "y": 100
+        },
+        "nextStepId": "node-1678901235"
+      },
+      {
+        "id": "node-1678901235",
+        "data": {
+          "type": "ai",
+          "prompt": "Extract invoice data from payload"
+        },
+        "type": "AI",
+        "position": {
+          "x": 300,
+          "y": 100
+        },
+        "nextStepId": "node-1678901236"
+      },
+      {
+        "id": "node-1678901236",
+        "data": {
+          "type": "sheets",
+          "range": "Sheet1!A:A",
+          "sheetId": "some_sheet_id"
+        },
+        "type": "SHEETS",
+        "position": {
+          "x": 600,
+          "y": 100
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__node-1678901234-node-1678901235",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678901234",
+        "target": "node-1678901235",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678901235-node-1678901236",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678901235",
+        "target": "node-1678901236",
+        "animated": true
+      }
+    ],
+    "trigger_id": "node-1678901234",
+    "nl_description": "This workflow is triggered by a webhook and uses AI to extract invoice data from the payload, then logs the extracted data to a Google Sheets spreadsheet.",
+    "wf_id": "93ae6488-3c74-4ded-8091-2e4c102f0e12",
+    "nl_hint": "When a webhook fires, use AI to extract invoice da"
+  },
+  {
+    "nodes": [
+      {
+        "id": "node-1679753433",
+        "data": {
+          "cron": "0 0 * * *",
+          "type": "schedule"
+        },
+        "type": "SCHEDULE",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "nextStepId": "node-1679753434"
+      },
+      {
+        "id": "node-1679753434",
+        "data": {
+          "type": "ai",
+          "prompt": "Create flashcards for the topic of the day"
+        },
+        "type": "AI",
+        "position": {
+          "x": 300,
+          "y": 0
+        },
+        "nextStepId": "node-1679753435"
+      },
+      {
+        "id": "node-1679753435",
+        "data": {
+          "type": "notionNode",
+          "content": "Flashcards: {{previous_step}}",
+          "databaseId": "some_notion_db_id"
+        },
+        "type": "NOTION",
+        "position": {
+          "x": 600,
+          "y": 0
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__node-1679753433-node-1679753434",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1679753433",
+        "target": "node-1679753434",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1679753434-node-1679753435",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1679753434",
+        "target": "node-1679753435",
+        "animated": true
+      }
+    ],
+    "trigger_id": "node-1679753433",
+    "nl_description": "This workflow creates flashcards for a topic on a daily schedule using AI, then saves them to a Notion database. The AI generates flashcards based on the prompt, and the Notion node stores the output. The workflow runs daily at midnight.",
+    "wf_id": "c53bea8d-c897-4cdb-b954-484b2bdc6533",
+    "nl_hint": "On a daily schedule, use AI to create flashcards f"
+  },
+  {
+    "nodes": [
+      {
+        "id": "node-1679773721000",
+        "data": {
+          "type": "trigger",
+          "label": "Webhook Trigger",
+          "subline": "Listening for POST requests..."
+        },
+        "type": "TRIGGER",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "nextStepId": "node-1679773721001"
+      },
+      {
+        "id": "node-1679773721001",
+        "data": {
+          "url": "{{previous_step.body}}",
+          "type": "scraper"
+        },
+        "type": "SCRAPER",
+        "position": {
+          "x": 300,
+          "y": 0
+        },
+        "nextStepId": "node-1679773721002"
+      },
+      {
+        "id": "node-1679773721002",
+        "data": {
+          "type": "ai",
+          "prompt": "Check {{previous_step}} for broken links"
+        },
+        "type": "AI",
+        "position": {
+          "x": 600,
+          "y": 0
+        },
+        "nextStepId": "node-1679773721003"
+      },
+      {
+        "id": "node-1679773721003",
+        "data": {
+          "to": "user@example.com",
+          "body": "Report: {{previous_step}}",
+          "type": "email",
+          "subject": "Broken Links Report"
+        },
+        "type": "EMAIL",
+        "position": {
+          "x": 900,
+          "y": 0
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__node-1679773721000-node-1679773721001",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1679773721000",
+        "target": "node-1679773721001",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1679773721001-node-1679773721002",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1679773721001",
+        "target": "node-1679773721002",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1679773721002-node-1679773721003",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1679773721002",
+        "target": "node-1679773721003",
+        "animated": true
+      }
+    ],
+    "trigger_id": "node-1679773721000",
+    "nl_description": "This workflow listens for a webhook trigger, scrapes the provided URL, checks for broken links using AI, and sends a report via email. The report includes the results of the AI check, providing a comprehensive overview of the URL's link integrity.",
+    "wf_id": "f1606683-e22b-4154-976b-6e2519ca4f19",
+    "nl_hint": "When a webhook fires, scrape the URL and use AI to"
+  },
+  {
+    "nodes": [
+      {
+        "id": "schedule-1",
+        "data": {
+          "cron": "0 * * * *",
+          "type": "schedule"
+        },
+        "type": "SCHEDULE",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "nextStepId": "node-167898733"
+      },
+      {
+        "id": "node-167898733",
+        "data": {
+          "type": "ai",
+          "prompt": "Summarize error logs and identify critical errors"
+        },
+        "type": "AI",
+        "position": {
+          "x": 300,
+          "y": 0
+        },
+        "nextStepId": "node-167898734"
+      },
+      {
+        "id": "node-167898734",
+        "data": {
+          "url": "https://discord.com/api/webhooks/your-discord-webhook",
+          "type": "discord",
+          "message": "Critical errors found: {{previous_step}}"
+        },
+        "type": "DISCORD",
+        "position": {
+          "x": 600,
+          "y": 0
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__schedule-1-node-167898733",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "schedule-1",
+        "target": "node-167898733",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-167898733-node-167898734",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-167898733",
+        "target": "node-167898734",
+        "animated": true
+      }
+    ],
+    "trigger_id": "schedule-1",
+    "nl_description": "This workflow runs on an hourly schedule, using AI to summarize error logs and post critical errors to Discord. The AI model analyzes the logs, identifies critical errors, and sends a notification to the Discord channel with the error details.",
+    "wf_id": "6e1b3294-8e47-4abe-a2d3-b75d9d54d478",
+    "nl_hint": "On an hourly schedule, use AI to monitor and summa"
+  },
+  {
+    "nodes": [
+      {
+        "id": "trigger-1",
+        "data": {
+          "type": "trigger",
+          "label": "Webhook Trigger",
+          "subline": "Listening for POST requests..."
+        },
+        "type": "TRIGGER",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "nextStepId": "node-1678901234"
+      },
+      {
+        "id": "node-1678901234",
+        "data": {
+          "type": "ai",
+          "prompt": "Recommend similar products based on the incoming webhook data"
+        },
+        "type": "AI",
+        "position": {
+          "x": 300,
+          "y": 0
+        },
+        "nextStepId": "node-1678901235"
+      },
+      {
+        "id": "node-1678901235",
+        "data": {
+          "to": "user@example.com",
+          "body": "Recommended products: {{previous_step}}",
+          "type": "email",
+          "subject": "Similar Product Recommendations"
+        },
+        "type": "EMAIL",
+        "position": {
+          "x": 600,
+          "y": 0
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__trigger-1-node-1678901234",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "trigger-1",
+        "target": "node-1678901234",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678901234-node-1678901235",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678901234",
+        "target": "node-1678901235",
+        "animated": true
+      }
+    ],
+    "trigger_id": "trigger-1",
+    "nl_description": "This workflow triggers on a webhook, uses AI to recommend similar products based on the incoming data, and then emails the recommendations to the user.",
+    "wf_id": "b0252e7d-44d4-4070-85fe-09fb92998d9f",
+    "nl_hint": "When a webhook fires, use AI to recommend similar "
+  },
+  {
+    "nodes": [
+      {
+        "id": "node-1679753434",
+        "data": {
+          "cron": "0 0 * * *",
+          "type": "schedule"
+        },
+        "type": "SCHEDULE",
+        "position": {
+          "x": 0,
+          "y": 100
+        },
+        "nextStepId": "node-1679753440"
+      },
+      {
+        "id": "node-1679753440",
+        "data": {
+          "type": "ai",
+          "prompt": "Generate a recipe based on available ingredients"
+        },
+        "type": "AI",
+        "position": {
+          "x": 300,
+          "y": 100
+        },
+        "nextStepId": "node-1679753446"
+      },
+      {
+        "id": "node-1679753446",
+        "data": {
+          "to": "user@example.com",
+          "body": "Here is your daily recipe: {{previous_step}}",
+          "type": "email",
+          "subject": "Daily Recipe"
+        },
+        "type": "EMAIL",
+        "position": {
+          "x": 600,
+          "y": 100
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__node-1679753434-node-1679753440",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1679753434",
+        "target": "node-1679753440",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1679753440-node-1679753446",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1679753440",
+        "target": "node-1679753446",
+        "animated": true
+      }
+    ],
+    "trigger_id": "node-1679753434",
+    "nl_description": "This workflow generates a daily recipe using AI based on available ingredients and emails it to the user. The recipe is generated every day at midnight and sent to the user's email address.",
+    "wf_id": "597265d3-71c2-4c0c-af92-e739d7b46004",
+    "nl_hint": "On a daily schedule, use AI to generate a recipe b"
+  },
+  {
+    "nodes": [
+      {
+        "id": "node-1678901234",
+        "data": {
+          "type": "trigger",
+          "label": "Webhook Trigger",
+          "subline": "Listening for POST requests..."
+        },
+        "type": "TRIGGER",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "nextStepId": "node-1678901235"
+      },
+      {
+        "id": "node-1678901235",
+        "data": {
+          "type": "ai",
+          "prompt": "Check grammar in the text from the previous step"
+        },
+        "type": "AI",
+        "position": {
+          "x": 300,
+          "y": 0
+        },
+        "nextStepId": "node-1678901236"
+      },
+      {
+        "id": "node-1678901236",
+        "data": {
+          "to": "example@example.com",
+          "body": "The corrected text is: {{previous_step}}",
+          "type": "email",
+          "subject": "Grammar Corrected Text"
+        },
+        "type": "EMAIL",
+        "position": {
+          "x": 600,
+          "y": 0
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__node-1678901234-node-1678901235",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678901234",
+        "target": "node-1678901235",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678901235-node-1678901236",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678901235",
+        "target": "node-1678901236",
+        "animated": true
+      }
+    ],
+    "trigger_id": "node-1678901234",
+    "nl_description": "This workflow is triggered by a webhook and uses AI to check the grammar of the text received. The corrected text is then sent via email to a specified address. This automates the process of grammar checking and notification.",
+    "wf_id": "5489407e-7fde-46b6-a19c-82fbc4c780ee",
+    "nl_hint": "When a webhook fires, use AI to check grammar in t"
+  },
+  {
+    "nodes": [
+      {
+        "id": "node-1678901234",
+        "data": {
+          "cron": "*/30 * * * *",
+          "type": "schedule"
+        },
+        "type": "SCHEDULE",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "nextStepId": "node-1678901235"
+      },
+      {
+        "id": "node-1678901235",
+        "data": {
+          "url": "https://example.com/exchange-rates",
+          "type": "scraper"
+        },
+        "type": "SCRAPER",
+        "position": {
+          "x": 300,
+          "y": 0
+        },
+        "nextStepId": "node-1678901236"
+      },
+      {
+        "id": "node-1678901236",
+        "data": {
+          "type": "sheets",
+          "range": "Sheet1!A:A",
+          "sheetId": "1234567890"
+        },
+        "type": "SHEETS",
+        "position": {
+          "x": 600,
+          "y": 0
+        },
+        "nextStepId": "node-1678901237"
+      },
+      {
+        "id": "node-1678901237",
+        "data": {
+          "to": "example@example.com",
+          "body": "Exchange rate threshold crossed",
+          "type": "email",
+          "subject": "Exchange Rate Alert"
+        },
+        "type": "EMAIL",
+        "position": {
+          "x": 900,
+          "y": 0
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__node-1678901234-node-1678901235",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678901234",
+        "target": "node-1678901235",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678901235-node-1678901236",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678901235",
+        "target": "node-1678901236",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678901236-node-1678901237",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678901236",
+        "target": "node-1678901237",
+        "animated": true
+      }
+    ],
+    "trigger_id": "node-1678901234",
+    "nl_description": "This workflow scrapes exchange rates every 30 minutes, saves them to a Google Sheet, and sends an email alert if any rate crosses a threshold.",
+    "wf_id": "beef6694-c5c7-4776-ac56-ca7aa429317d",
+    "nl_hint": "Every 30 minutes, scrape exchange rates, save them"
+  },
+  {
+    "nodes": [
+      {
+        "id": "node-1679811600000",
+        "data": {
+          "cron": "0 0 0 * * 0",
+          "type": "schedule"
+        },
+        "type": "SCHEDULE",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "nextStepId": "node-1679811610000"
+      },
+      {
+        "id": "node-1679811610000",
+        "data": {
+          "type": "ai",
+          "prompt": "Create a weekly report from Sheets data"
+        },
+        "type": "AI",
+        "position": {
+          "x": 300,
+          "y": 0
+        },
+        "nextStepId": "node-1679811620000"
+      },
+      {
+        "id": "node-1679811620000",
+        "data": {
+          "url": "https://discord.com/api/webhooks/.../...",
+          "type": "discord",
+          "message": "Weekly report: {{previous_step}}"
+        },
+        "type": "DISCORD",
+        "position": {
+          "x": 600,
+          "y": 0
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__node-1679811600000-node-1679811610000",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1679811600000",
+        "target": "node-1679811610000",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1679811610000-node-1679811620000",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1679811610000",
+        "target": "node-1679811620000",
+        "animated": true
+      }
+    ],
+    "trigger_id": "node-1679811600000",
+    "nl_description": "This workflow runs on a weekly schedule, using AI to generate a report from Sheets data and posting it to a Discord channel.",
+    "wf_id": "101cdb7e-c2f9-42e8-aa5c-225e6243a841",
+    "nl_hint": "On a weekly schedule, use AI to create a weekly re"
+  },
+  {
+    "nodes": [
+      {
+        "id": "node-1678912800",
+        "data": {
+          "type": "trigger",
+          "label": "Webhook Trigger",
+          "subline": "Listening for POST requests..."
+        },
+        "type": "TRIGGER",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "nextStepId": "node-1678912810"
+      },
+      {
+        "id": "node-1678912810",
+        "data": {
+          "type": "ai",
+          "prompt": "Summarize the content of the PDF document"
+        },
+        "type": "AI",
+        "position": {
+          "x": 300,
+          "y": 0
+        },
+        "nextStepId": "node-1678912820"
+      },
+      {
+        "id": "node-1678912820",
+        "data": {
+          "type": "notionNode",
+          "content": "Summary: {{previous_step}}",
+          "databaseId": "some_notion_db_id"
+        },
+        "type": "NOTION",
+        "position": {
+          "x": 600,
+          "y": 0
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__node-1678912800-node-1678912810",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678912800",
+        "target": "node-1678912810",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678912810-node-1678912820",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678912810",
+        "target": "node-1678912820",
+        "animated": true
+      }
+    ],
+    "trigger_id": "node-1678912800",
+    "nl_description": "This workflow is triggered by a webhook, which then uses AI to summarize a PDF document's content and saves the summary to Notion.",
+    "wf_id": "67b68a4e-a723-4fbc-9369-8a94a0d29281",
+    "nl_hint": "When a webhook fires, use AI to summarize a PDF do"
+  },
+  {
+    "nodes": [
+      {
+        "id": "schedule-1",
+        "data": {
+          "cron": "0 0 * * *",
+          "type": "schedule"
+        },
+        "type": "SCHEDULE",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "nextStepId": "node-1678989981"
+      },
+      {
+        "id": "node-1678989981",
+        "data": {
+          "url": "https://www.example.com/weather",
+          "type": "scraper"
+        },
+        "type": "SCRAPER",
+        "position": {
+          "x": 300,
+          "y": 0
+        },
+        "nextStepId": "node-1678989982"
+      },
+      {
+        "id": "node-1678989982",
+        "data": {
+          "type": "ai",
+          "prompt": "Generate outfit suggestions based on the weather forecast {{previous_step}}"
+        },
+        "type": "AI",
+        "position": {
+          "x": 600,
+          "y": 0
+        },
+        "nextStepId": "node-1678989983"
+      },
+      {
+        "id": "node-1678989983",
+        "data": {
+          "to": "user@example.com",
+          "body": "Your daily outfit suggestion is: {{previous_step}}",
+          "type": "email",
+          "subject": "Daily Outfit Suggestion"
+        },
+        "type": "EMAIL",
+        "position": {
+          "x": 900,
+          "y": 0
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__schedule-1-node-1678989981",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "schedule-1",
+        "target": "node-1678989981",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678989981-node-1678989982",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678989981",
+        "target": "node-1678989982",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678989982-node-1678989983",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678989982",
+        "target": "node-1678989983",
+        "animated": true
+      }
+    ],
+    "trigger_id": "schedule-1",
+    "nl_description": "This workflow runs daily, scraping the latest weather forecast and using AI to generate personalized outfit suggestions, which are then emailed to the user.",
+    "wf_id": "bae8479f-8578-4b26-9123-545926e20c45",
+    "nl_hint": "On a daily schedule, scrape weather forecasts, use"
+  },
+  {
+    "nodes": [
+      {
+        "id": "trigger-167890",
+        "data": {
+          "type": "trigger",
+          "label": "Webhook Trigger",
+          "subline": "Listening for POST requests..."
+        },
+        "type": "TRIGGER",
+        "position": {
+          "x": 0,
+          "y": 100
+        },
+        "nextStepId": "node-167891"
+      },
+      {
+        "id": "node-167891",
+        "data": {
+          "type": "ai",
+          "prompt": "Generate a project timeline from the description: {{previous_step}}"
+        },
+        "type": "AI",
+        "position": {
+          "x": 300,
+          "y": 100
+        },
+        "nextStepId": "node-167892"
+      },
+      {
+        "id": "node-167892",
+        "data": {
+          "type": "notionNode",
+          "content": "Project Timeline: {{previous_step}}",
+          "databaseId": "your_notion_db_id"
+        },
+        "type": "NOTION",
+        "position": {
+          "x": 600,
+          "y": 100
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__trigger-167890-node-167891",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "trigger-167890",
+        "target": "node-167891",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-167891-node-167892",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-167891",
+        "target": "node-167892",
+        "animated": true
+      }
+    ],
+    "trigger_id": "trigger-167890",
+    "nl_description": "This workflow generates a project timeline from a description using AI when a webhook fires, and then saves it to Notion. The AI model takes the description as input and produces a timeline, which is then stored in a Notion database for easy reference. The workflow automates the process of creating and updating project timelines.",
+    "wf_id": "fb837db7-dcc5-49e2-a5cc-f46d3d55938e",
+    "nl_hint": "When a webhook fires, use AI to generate a project"
+  },
+  {
+    "nodes": [
+      {
+        "id": "node-1679761234",
+        "data": {
+          "cron": "0 0 */2 * * *",
+          "type": "schedule"
+        },
+        "type": "SCHEDULE",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "nextStepId": "node-1679761235"
+      },
+      {
+        "id": "node-1679761235",
+        "data": {
+          "url": "https://techblog.com/posts",
+          "type": "scraper"
+        },
+        "type": "SCRAPER",
+        "position": {
+          "x": 300,
+          "y": 0
+        },
+        "nextStepId": "node-1679761236"
+      },
+      {
+        "id": "node-1679761236",
+        "data": {
+          "type": "ai",
+          "prompt": "Rank the scraped tech blog posts by relevance"
+        },
+        "type": "AI",
+        "position": {
+          "x": 600,
+          "y": 0
+        },
+        "nextStepId": "node-1679761237"
+      },
+      {
+        "id": "node-1679761237",
+        "data": {
+          "url": "https://discord.com/api/webhooks/1234567890",
+          "type": "discord",
+          "message": "Top 3 tech blog posts: {{previous_step}}"
+        },
+        "type": "DISCORD",
+        "position": {
+          "x": 900,
+          "y": 0
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__node-1679761234-node-1679761235",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1679761234",
+        "target": "node-1679761235",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1679761235-node-1679761236",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1679761235",
+        "target": "node-1679761236",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1679761236-node-1679761237",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1679761236",
+        "target": "node-1679761237",
+        "animated": true
+      }
+    ],
+    "trigger_id": "node-1679761234",
+    "nl_description": "Every 2 hours, this workflow scrapes tech blog posts, uses AI to rank them by relevance, and posts the top 3 to Discord.",
+    "wf_id": "2efbdc72-db34-4f11-b887-031fb3f4319e",
+    "nl_hint": "Every 2 hours, scrape tech blog posts, use AI to r"
+  },
+  {
+    "nodes": [
+      {
+        "id": "node-1679770800000",
+        "data": {
+          "cron": "0 0 * * 0",
+          "type": "schedule"
+        },
+        "type": "SCHEDULE",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "nextStepId": "node-1679770800001"
+      },
+      {
+        "id": "node-1679770800001",
+        "data": {
+          "type": "ai",
+          "prompt": "Generate quiz questions for a course"
+        },
+        "type": "AI",
+        "position": {
+          "x": 300,
+          "y": 0
+        },
+        "nextStepId": "node-1679770800002"
+      },
+      {
+        "id": "node-1679770800002",
+        "data": {
+          "type": "sheets",
+          "range": "Sheet1!A:A",
+          "sheetId": "some_sheet_id"
+        },
+        "type": "SHEETS",
+        "position": {
+          "x": 600,
+          "y": 0
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__node-1679770800000-node-1679770800001",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1679770800000",
+        "target": "node-1679770800001",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1679770800001-node-1679770800002",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1679770800001",
+        "target": "node-1679770800002",
+        "animated": true
+      }
+    ],
+    "trigger_id": "node-1679770800000",
+    "nl_description": "This workflow generates quiz questions for a course on a weekly schedule using AI, then saves them to a Google Sheets document. The AI model is prompted to create questions, and the resulting output is stored in the specified sheet. This automation simplifies the process of creating and organizing quiz questions.",
+    "wf_id": "669d74d9-6d69-4a05-b3a5-792ea20cdd3b",
+    "nl_hint": "On a weekly schedule, use AI to generate quiz ques"
+  },
+  {
+    "nodes": [
+      {
+        "id": "node-1678901234",
+        "data": {
+          "type": "trigger",
+          "label": "Webhook Trigger",
+          "subline": "Listening for POST requests..."
+        },
+        "type": "TRIGGER",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "nextStepId": "node-1678901235"
+      },
+      {
+        "id": "node-1678901235",
+        "data": {
+          "type": "ai",
+          "prompt": "Detect the language of the input"
+        },
+        "type": "AI",
+        "position": {
+          "x": 300,
+          "y": 0
+        },
+        "nextStepId": "node-1678901236"
+      },
+      {
+        "id": "node-1678901236",
+        "data": {
+          "type": "ai",
+          "prompt": "Translate the input to English"
+        },
+        "type": "AI",
+        "position": {
+          "x": 600,
+          "y": 0
+        },
+        "nextStepId": "node-1678901237"
+      },
+      {
+        "id": "node-1678901237",
+        "data": {
+          "to": "example@example.com",
+          "body": "Translated text: {{previous_step}}",
+          "type": "email",
+          "subject": "Translated Text"
+        },
+        "type": "EMAIL",
+        "position": {
+          "x": 900,
+          "y": 0
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__node-1678901234-node-1678901235",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678901234",
+        "target": "node-1678901235",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678901235-node-1678901236",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678901235",
+        "target": "node-1678901236",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1678901236-node-1678901237",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1678901236",
+        "target": "node-1678901237",
+        "animated": true
+      }
+    ],
+    "trigger_id": "node-1678901234",
+    "nl_description": "This workflow detects the language of incoming webhook requests, translates the text to English, and emails the translated result to a specified email address.",
+    "wf_id": "6bc3c70a-d418-4a03-819d-ac10819aff00",
+    "nl_hint": "When a webhook fires, use AI to detect the languag"
+  }
+]

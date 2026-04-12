@@ -1,6 +1,18 @@
-import { Handle, Position } from "@xyflow/react";
+import { Handle, Position, useReactFlow } from "@xyflow/react";
+import { useState, useEffect } from "react";
 
-export default function SaveMemoryNode({ data }: any) {
+export default function SaveMemoryNode({ data, id }: { data: any; id: string }) {
+  const { updateNodeData } = useReactFlow();
+  const [content, setContent] = useState(data.content || "{{previous_step}}");
+
+  useEffect(() => {
+    if (data.content !== undefined) setContent(data.content);
+  }, [data.content]);
+
+  const handleChange = (val: string) => {
+    setContent(val);
+    updateNodeData(id, { content: val });
+  };
   return (
     <div className="bg-yellow-900 border-4 border-yellow-600 shadow-pixel p-4 w-64 rounded-lg font-pixel">
       <div className="flex items-center gap-2 mb-2 border-b-2 border-yellow-700 pb-2">
@@ -15,8 +27,8 @@ export default function SaveMemoryNode({ data }: any) {
           </label>
           <textarea
             className="w-full bg-black border-2 border-yellow-700 text-yellow-100 p-2 text-xs font-mono rounded h-20 focus:outline-none focus:border-yellow-400"
-            defaultValue={data.content || "{{previous_step}}"}
-            onChange={(evt) => (data.content = evt.target.value)}
+            value={content}
+            onChange={(evt) => handleChange(evt.target.value)}
             placeholder="Data to save..."
           />
         </div>

@@ -2,6 +2,7 @@ import "dotenv/config";
 import { Pool } from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcryptjs";
 
 const connectionString = process.env.DATABASE_URL;
 const pool = new Pool({ connectionString });
@@ -12,12 +13,14 @@ const prisma = new PrismaClient({ adapter });
 async function main() {
   console.log("🌱 Seeding database...");
 
+  const hashedPassword = await bcrypt.hash("dev-seed-password-change-me", 10);
+
   const user = await prisma.user.upsert({
     where: { email: "dev@flowforge.com" },
     update: {},
     create: {
       email: "dev@flowforge.com",
-      password: "hashed_password_123",
+      password: hashedPassword,
     },
   });
 

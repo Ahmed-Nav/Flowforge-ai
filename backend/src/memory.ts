@@ -1,16 +1,23 @@
 import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
-import { PrismaClient } from "@prisma/client";
-import { PrismaPg } from "@prisma/adapter-pg";
-import { Pool } from "pg";
+import { prisma } from "./db";
+import { TaskType } from "@google/generative-ai";
 
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-const adapter = new PrismaPg(pool);
-const prisma = new PrismaClient({ adapter });
+const embeddingConfig = {
+  model: "gemini-embedding-001",
+  apiKey: process.env.GEMINI_API_KEY,
+};
 
-function getEmbeddings() {
+function getDocumentEmbeddings() {
   return new GoogleGenerativeAIEmbeddings({
-    model: "text-embedding-004",
-    apiKey: process.env.GEMINI_API_KEY,
+    ...embeddingConfig,
+    taskType: TaskType.RETRIEVAL_DOCUMENT,
+  });
+}
+
+function getQueryEmbeddings() {
+  return new GoogleGenerativeAIEmbeddings({
+    ...embeddingConfig,
+    taskType: TaskType.RETRIEVAL_QUERY,
   });
 }
 
@@ -18,7 +25,7 @@ export async function saveMemory(content: string, metadata: any = {}) {
   try {
     console.log(`🧠 Memorizing: "${content.substring(0, 30)}..."`);
 
-    const vector = await getEmbeddings().embedQuery(content);
+    const vector = await getDocumentEmbeddings().embedQuery(content);
     const vectorString = `[${vector.join(",")}]`;
 
     await prisma.$executeRaw`
@@ -43,7 +50,7 @@ export async function recallMemory(query: string, limit = 3) {
     }
 
     console.log("🧠 [DEBUG] Generating Vector...");
-    const vector = await getEmbeddings().embedQuery(query);
+    const vector = await getQueryEmbeddings().embedQuery(query);
 
     console.log("🧠 [DEBUG] Vector Generated. Querying DB...");
     const vectorString = `[${vector.join(",")}]`;

@@ -1,7 +1,7 @@
 import { X, Save, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
-interface ConfigPanelProps {
+interface AIConfigPanelProps {
   selectedNodeId: string | null;
   nodes: any[];
   setNodes: (nodes: any[]) => void;
@@ -9,13 +9,13 @@ interface ConfigPanelProps {
   onDelete: (id: string) => void;
 }
 
-export default function ConfigPanel({
+export default function AIConfigPanel({
   selectedNodeId,
   nodes,
   setNodes,
   onClose,
   onDelete,
-}: ConfigPanelProps) {
+}: AIConfigPanelProps) {
   const [prompt, setPrompt] = useState("");
   const selectedNode = nodes.find((n) => n.id === selectedNodeId);
 
@@ -56,7 +56,7 @@ export default function ConfigPanel({
     <div className="absolute top-0 right-0 h-full w-80 bg-white border-l-4 border-retro-dark shadow-[-4px_0px_0px_#1D1D1D] z-30 flex flex-col">
       <div className="bg-retro-primary p-4 border-b-4 border-retro-dark flex justify-between items-center">
         <h2 className="text-white font-bold text-xl uppercase font-pixel">
-          CONFIG_NODE_{selectedNodeId}
+          AI_CONFIG_{selectedNodeId}
         </h2>
         <button
           onClick={onClose}

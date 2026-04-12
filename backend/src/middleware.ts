@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = process.env.JWT_SECRET || "super_secret_key_123";
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) throw new Error("JWT_SECRET environment variable is required");
 
 export interface AuthRequest extends Request {
   userId?: string;
@@ -21,10 +22,10 @@ export const authenticateToken = (
 
   try {
     const decoded = jwt.verify(token, JWT_SECRET) as { userId: string };
-    req.userId = decoded.userId; 
-    next(); 
+    req.userId = decoded.userId;
+    next();
   } catch (err) {
-    console.error("⛔ Auth Failed:", err.message);
+    console.error("⛔ Auth Failed:", err);
     res.status(403).json({ error: "Invalid token" });
   }
 };

@@ -2,13 +2,12 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
-import { PrismaClient } from "@prisma/client";
-import { PrismaPg } from "@prisma/adapter-pg";
-import { Pool } from "pg";
+import { prisma } from "./db";
 import { Queue } from "bullmq";
 import IORedis from "ioredis";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { z } from "zod";
 import { authenticateToken, AuthRequest } from "./middleware";
 import { scheduleWorkflow } from "./queue";
 import { saveMemory } from "./memory";
@@ -26,10 +25,6 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   }),
 );
-
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-const adapter = new PrismaPg(pool);
-const prisma = new PrismaClient({ adapter });
 
 const connection = new IORedis(
   process.env.REDIS_URL || "redis://localhost:6379",
@@ -77,10 +72,20 @@ app.post("/tools/parse-pdf", upload.single("file"), async (req: any, res) => {
   }
 });
 
+const RegisterSchema = z.object({
+  email: z.string().email().max(255),
+  password: z.string().min(8).max(128),
+});
+
 app.post(
   "/auth/register",
   async (req: express.Request, res: express.Response) => {
-    const { email, password } = req.body;
+    const result = RegisterSchema.safeParse(req.body);
+    if (!result.success) {
+      return res.status(400).json({ error: result.error.flatten() });
+    }
+
+    const { email, password } = result.data;
 
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) {
@@ -100,8 +105,18 @@ app.post(
   },
 );
 
+const LoginSchema = z.object({
+  email: z.string().email().max(255),
+  password: z.string().min(1).max(128),
+});
+
 app.post("/auth/login", async (req: express.Request, res: express.Response) => {
-  const { email, password } = req.body;
+  const result = LoginSchema.safeParse(req.body);
+  if (!result.success) {
+    return res.status(400).json({ error: result.error.flatten() });
+  }
+
+  const { email, password } = result.data;
 
   const user = await prisma.user.findUnique({ where: { email } });
   if (!user) return res.status(400).json({ error: "User not found" });
@@ -303,6 +318,23 @@ app.delete(
     }
   },
 );
+
+app.post("/compile", authenticateToken, async (req: AuthRequest, res) => {
+  const { nl_description } = req.body;
+  if (!nl_description?.trim())
+    return res.status(400).json({ error: "nl_description required" });
+
+  const compilerUrl = process.env.COMPILER_URL || "http://localhost:8001";
+  const r = await fetch(`${compilerUrl}/compile`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ nl_description }),
+  });
+
+  if (!r.ok) return res.status(502).json({ error: "Compiler failed" });
+  const graph = await r.json();
+  res.json({ ...(graph as any), compiledByDSPy: true });
+});
 
 startGmailPolling();
 

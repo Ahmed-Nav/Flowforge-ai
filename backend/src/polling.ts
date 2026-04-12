@@ -1,14 +1,8 @@
 import imaps from "imap-simple";
 import { simpleParser } from "mailparser";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "./db";
 import { Queue } from "bullmq";
-import { PrismaPg } from "@prisma/adapter-pg";
-import { Pool } from "pg";
 import IORedis from "ioredis";
-
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-const adapter = new PrismaPg(pool);
-const prisma = new PrismaClient({ adapter });
 
 const redisUrl = process.env.REDIS_URL || "redis://127.0.0.1:6379";
 

@@ -1,7 +1,8 @@
-import { Handle, Position } from "@xyflow/react";
+import { Handle, Position, useReactFlow } from "@xyflow/react";
 import { useState, useCallback, useEffect } from "react";
 
 export default function PromptNode({ data, id }: { data: any; id: string }) {
+  const { updateNodeData } = useReactFlow();
   const [prompt, setPrompt] = useState(
     data.prompt || "Write your instruction here..."
   );
@@ -16,9 +17,9 @@ export default function PromptNode({ data, id }: { data: any; id: string }) {
     (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
       const newVal = evt.target.value;
       setPrompt(newVal);
-      data.prompt = newVal;
+      updateNodeData(id, { prompt: newVal });
     },
-    [data]
+    [id, updateNodeData]
   );
 
   return (

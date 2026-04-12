@@ -1,0 +1,373 @@
+[
+  {
+    "wf_id": "242299f9-d4f2-4281-9138-e5ccea799221",
+    "nl_hint": "My Visual Workflow",
+    "nodes": [
+      {
+        "id": "1",
+        "data": {
+          "type": "trigger",
+          "label": "Webhook Trigger",
+          "subline": "Listening for POST requests..."
+        },
+        "type": "TRIGGER",
+        "nextStepId": "2"
+      },
+      {
+        "id": "2",
+        "data": {
+          "type": "ai",
+          "label": "GPT-4 Brain",
+          "prompt": "tell me a one line joke",
+          "subline": "Summarizing input..."
+        },
+        "type": "AI",
+        "nextStepId": "3"
+      },
+      {
+        "id": "3",
+        "data": {
+          "type": "action",
+          "label": "Email Action",
+          "subline": "Sending to user@example.com"
+        },
+        "type": "ACTION",
+        "nextStepId": null
+      }
+    ],
+    "edges": [],
+    "trigger_id": "1"
+  },
+  {
+    "wf_id": "28153a5b-580a-4deb-bb33-1267abb61afc",
+    "nl_hint": "My Visual Workflow",
+    "nodes": [
+      {
+        "id": "1",
+        "data": {
+          "type": "trigger",
+          "label": "Webhook Trigger",
+          "subline": "Listening for POST requests..."
+        },
+        "type": "TRIGGER",
+        "nextStepId": "2"
+      },
+      {
+        "id": "2",
+        "data": {
+          "type": "ai",
+          "label": "GPT-4 Brain",
+          "prompt": "tell me a one line joke",
+          "subline": "Summarizing input..."
+        },
+        "type": "AI",
+        "nextStepId": null
+      },
+      {
+        "id": "3",
+        "data": {
+          "type": "action",
+          "label": "Email Action",
+          "subline": "Sending to user@example.com"
+        },
+        "type": "ACTION",
+        "nextStepId": null
+      }
+    ],
+    "edges": [],
+    "trigger_id": "1"
+  },
+  {
+    "wf_id": "9584c671-15f8-467c-87e4-449b1cba4210",
+    "nl_hint": "My Visual Workflow",
+    "nodes": [
+      {
+        "id": "1",
+        "data": {
+          "type": "trigger",
+          "label": "Webhook Trigger",
+          "subline": "Listening for POST requests..."
+        },
+        "type": "TRIGGER",
+        "position": {
+          "x": 100,
+          "y": 100
+        },
+        "nextStepId": "node-1767799673884"
+      },
+      {
+        "id": "node-1767799673884",
+        "data": {
+          "to": "nuzhathfathima40@gmail.com",
+          "body": "success",
+          "type": "email",
+          "subject": "update"
+        },
+        "type": "EMAIL",
+        "position": {
+          "x": 278,
+          "y": 213
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__1-node-1767799673884",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "1",
+        "target": "node-1767799673884",
+        "animated": true
+      }
+    ],
+    "trigger_id": "1"
+  },
+  {
+    "wf_id": "b595331a-d450-45e6-9007-3053dc4ceee6",
+    "nl_hint": "My Visual Workflow",
+    "nodes": [
+      {
+        "id": "1",
+        "data": {
+          "type": "trigger",
+          "label": "Webhook Trigger",
+          "subline": "Listening for POST requests..."
+        },
+        "type": "TRIGGER",
+        "position": {
+          "x": -108.7953221415177,
+          "y": -30.26367409465684
+        },
+        "nextStepId": null
+      },
+      {
+        "id": "node-1774276083207",
+        "data": {
+          "type": "ai",
+          "prompt": "update me on jobs from google company for SDE Roles"
+        },
+        "type": "AI",
+        "position": {
+          "x": 454.4749975831134,
+          "y": 179.8037190051436
+        },
+        "nextStepId": "node-1774276479928"
+      },
+      {
+        "id": "node-1774276132673",
+        "data": {
+          "cron": "* * * * *",
+          "type": "schedule"
+        },
+        "type": "SCHEDULE",
+        "position": {
+          "x": 104.4163696103346,
+          "y": 234.9775397185968
+        },
+        "nextStepId": "node-1774276083207"
+      },
+      {
+        "id": "node-1774276479928",
+        "data": {
+          "url": "https://www.linkedin.com/",
+          "type": "scraper"
+        },
+        "type": "SCRAPER",
+        "position": {
+          "x": 775.9109847697349,
+          "y": 228.6743395906992
+        },
+        "nextStepId": "node-1774276506357"
+      },
+      {
+        "id": "node-1774276506357",
+        "data": {
+          "type": "sheets",
+          "range": "Sheet1!A:A",
+          "sheetId": "1x_IHNERNwRLwDA7G6oht82tvUQxPfGUvieG4V8uc0HU"
+        },
+        "type": "SHEETS",
+        "position": {
+          "x": 1096.952598001392,
+          "y": 208.9357645175866
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__node-1774276132673-node-1774276083207",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1774276132673",
+        "target": "node-1774276083207",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1774276083207-node-1774276479928",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1774276083207",
+        "target": "node-1774276479928",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1774276479928-node-1774276506357",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1774276479928",
+        "target": "node-1774276506357",
+        "animated": true
+      }
+    ],
+    "trigger_id": "node-1774276132673"
+  },
+  {
+    "wf_id": "7042afa8-c5b1-43fe-a1df-a6835ad3c301",
+    "nl_hint": "My Visual Workflow",
+    "nodes": [
+      {
+        "id": "1",
+        "data": {
+          "type": "trigger",
+          "label": "Webhook Trigger",
+          "subline": "Listening for POST requests..."
+        },
+        "type": "TRIGGER",
+        "position": {
+          "x": 279.1752125136985,
+          "y": 66.66507674163749
+        },
+        "nextStepId": "node-1774536350942"
+      },
+      {
+        "id": "node-1774535935954",
+        "data": {
+          "type": "notionNode",
+          "content": "New Alert: {{previous_step}}",
+          "databaseId": "304fe241b4018052b9c2d3f113256154"
+        },
+        "type": "NOTION",
+        "position": {
+          "x": 689.2500291302173,
+          "y": 282.874927174457
+        },
+        "nextStepId": null
+      },
+      {
+        "id": "node-1774536350942",
+        "data": {
+          "type": "ai",
+          "prompt": "generate me a one line poem"
+        },
+        "type": "AI",
+        "position": {
+          "x": 384.392869627236,
+          "y": 272.1427239761498
+        },
+        "nextStepId": "node-1774535935954"
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__1-node-1774536350942",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "1",
+        "target": "node-1774536350942",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1774536350942-node-1774535935954",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1774536350942",
+        "target": "node-1774535935954",
+        "animated": true
+      }
+    ],
+    "trigger_id": "1"
+  },
+  {
+    "wf_id": "fa67d1fd-313f-41d5-8134-978fb97cdaae",
+    "nl_hint": "My Visual Workflow",
+    "nodes": [
+      {
+        "id": "node-1774270554773",
+        "data": {
+          "cron": "* * * * *",
+          "type": "schedule"
+        },
+        "type": "SCHEDULE",
+        "position": {
+          "x": -180,
+          "y": 327
+        },
+        "nextStepId": "node-1774270586920"
+      },
+      {
+        "id": "node-1774270586920",
+        "data": {
+          "type": "ai",
+          "prompt": "Brainstorm me one leetcode problem that will help me improve my DSA skill and problem solving skill"
+        },
+        "type": "AI",
+        "position": {
+          "x": 230,
+          "y": 338
+        },
+        "nextStepId": "node-1774270725315"
+      },
+      {
+        "id": "node-1774270725315",
+        "data": {
+          "url": "https://discord.com/api/webhooks/1485624905364934807/XXR5TGb5aGSUxGw5XIh1EI9EtwQijP3phiIc7UJhPssvsm7lkYZBrGtUX2XeUf2JwFUX",
+          "type": "discord",
+          "message": "Your Leetcode Problem : {{previous_step}}"
+        },
+        "type": "DISCORD",
+        "position": {
+          "x": 564.3465844565378,
+          "y": 330.8355361759777
+        },
+        "nextStepId": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__node-1774270554773-node-1774270586920",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1774270554773",
+        "target": "node-1774270586920",
+        "animated": true
+      },
+      {
+        "id": "xy-edge__node-1774270586920-node-1774270725315",
+        "style": {
+          "stroke": "#1D1D1D",
+          "strokeWidth": 2
+        },
+        "source": "node-1774270586920",
+        "target": "node-1774270725315",
+        "animated": true
+      }
+    ],
+    "trigger_id": "node-1774270554773"
+  }
+]

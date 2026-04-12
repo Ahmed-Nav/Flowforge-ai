@@ -1,10 +1,11 @@
-import { Handle, Position } from "@xyflow/react";
+import { Handle, Position, useReactFlow } from "@xyflow/react";
 import { Clock, Calendar } from "lucide-react";
 import { useEffect, useState } from "react";
 
 const isNum = (val: string) => !isNaN(Number(val));
 
-export default function ScheduleNode({ data }: any) {
+export default function ScheduleNode({ data, id }: { data: any; id: string }) {
+  const { updateNodeData } = useReactFlow();
   const initialCron = data.cron || "* * * * *";
   const parts = initialCron.split(" ");
 
@@ -57,9 +58,10 @@ export default function ScheduleNode({ data }: any) {
     } else if (mode === "custom") {
       newCron = customCron;
     }
-
-    data.cron = newCron;
-  }, [mode, time, selectedDays, customCron, data]);
+    if (newCron !== data.cron) {
+      updateNodeData(id, { cron: newCron });
+    }
+  }, [mode, time, selectedDays, customCron, data.cron, id, updateNodeData]);
 
   const toggleDay = (day: string) => {
     setSelectedDays((prev) =>

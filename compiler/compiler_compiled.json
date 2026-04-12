@@ -1,0 +1,531 @@
+{
+  "intent.parse.predict": {
+    "traces": [],
+    "train": [],
+    "demos": [
+      {
+        "augmented": true,
+        "nl_description": "This workflow is triggered by a webhook, scrapes the linked article, uses AI to summarize it, and logs the summary to a Google Sheets document.",
+        "reasoning": "Based on the provided natural language description, it appears that this workflow is an automated data extraction and summarization process. The workflow likely involves web scraping, AI-powered text analysis, and data logging using Google Sheets.",
+        "trigger_type": "Webhook",
+        "workflow_steps": [
+          "Scrape article from linked source",
+          "Use AI to summarize the scraped article",
+          "Log the summary to a Google Sheets document"
+        ],
+        "conditions": []
+      },
+      {
+        "augmented": true,
+        "nl_description": "This workflow is triggered by a webhook and uses AI to classify the incoming text as positive or negative, then writes the result to Google Sheets.",
+        "reasoning": "Based on the nl_description, it appears that the workflow is an NLP pipeline that involves text classification and data storage in a spreadsheet.",
+        "trigger_type": "webhook",
+        "workflow_steps": [
+          "Classify incoming text as positive or negative using AI",
+          "Store classification result in Google Sheets"
+        ],
+        "conditions": []
+      },
+      {
+        "augmented": true,
+        "nl_description": "This workflow generates quiz questions for a course on a weekly schedule using AI, then saves them to a Google Sheets document. The AI model is prompted to create questions, and the resulting output is stored in the specified sheet. This automation simplifies the process of creating and organizing quiz questions.",
+        "reasoning": "This automation is triggered and executed on a weekly schedule to generate quiz questions using AI and save them to a Google Sheets document, simplifying the process of creating and organizing quiz questions.",
+        "trigger_type": "Weekly Schedule Trigger",
+        "workflow_steps": [
+          "Prompt AI model to generate quiz questions",
+          "Store AI output in a list or data structure",
+          "Format AI output into a suitable format for Google Sheets",
+          "Save the formatted data to the specified Google Sheets document"
+        ],
+        "conditions": [
+          "The AI model is functioning correctly",
+          "The Google Sheets document exists and is accessible",
+          "The specified sheet in the Google Sheets document is accessible",
+          "The internet connection is stable during execution"
+        ]
+      },
+      {
+        "nl_description": "This workflow is triggered by a webhook, which then uses AI to auto-tag the incoming content. The tags are then saved to Google Sheets for further analysis.",
+        "nodes": [
+          {
+            "id": "node-1678901234",
+            "data": {
+              "type": "trigger",
+              "label": "Webhook Trigger",
+              "subline": "Listening for POST requests..."
+            },
+            "type": "TRIGGER",
+            "position": {
+              "x": 0,
+              "y": 0
+            },
+            "nextStepId": "node-1678901235"
+          },
+          {
+            "id": "node-1678901235",
+            "data": {
+              "type": "ai",
+              "prompt": "Auto-tag the incoming content"
+            },
+            "type": "AI",
+            "position": {
+              "x": 300,
+              "y": 0
+            },
+            "nextStepId": "node-1678901236"
+          },
+          {
+            "id": "node-1678901236",
+            "data": {
+              "type": "sheets",
+              "range": "Sheet1!A:A",
+              "sheetId": "some_sheet_id"
+            },
+            "type": "SHEETS",
+            "position": {
+              "x": 600,
+              "y": 0
+            },
+            "nextStepId": null
+          }
+        ],
+        "edges": [
+          {
+            "id": "xy-edge__node-1678901234-node-1678901235",
+            "style": {
+              "stroke": "#1D1D1D",
+              "strokeWidth": 2
+            },
+            "source": "node-1678901234",
+            "target": "node-1678901235",
+            "animated": true
+          },
+          {
+            "id": "xy-edge__node-1678901235-node-1678901236",
+            "style": {
+              "stroke": "#1D1D1D",
+              "strokeWidth": 2
+            },
+            "source": "node-1678901235",
+            "target": "node-1678901236",
+            "animated": true
+          }
+        ],
+        "trigger_id": "node-1678901234"
+      },
+      {
+        "nl_description": "This workflow generates an AI summary of the request body when a webhook fires, then creates a new Notion page with the summary.",
+        "nodes": [
+          {
+            "id": "trigger-1",
+            "data": {
+              "type": "trigger",
+              "label": "Webhook Trigger",
+              "subline": "Listening for POST requests..."
+            },
+            "type": "TRIGGER",
+            "position": {
+              "x": 0,
+              "y": 0
+            },
+            "nextStepId": "node-1678987340563"
+          },
+          {
+            "id": "node-1678987340563",
+            "data": {
+              "type": "ai",
+              "prompt": "Summarize the request body"
+            },
+            "type": "AI",
+            "position": {
+              "x": 300,
+              "y": 0
+            },
+            "nextStepId": "node-1678987340564"
+          },
+          {
+            "id": "node-1678987340564",
+            "data": {
+              "type": "notionNode",
+              "content": "Summary: {{previous_step}}",
+              "databaseId": "your-notion-db-id"
+            },
+            "type": "NOTION",
+            "position": {
+              "x": 600,
+              "y": 0
+            },
+            "nextStepId": null
+          }
+        ],
+        "edges": [
+          {
+            "id": "xy-edge__trigger-1-node-1678987340563",
+            "style": {
+              "stroke": "#1D1D1D",
+              "strokeWidth": 2
+            },
+            "source": "trigger-1",
+            "target": "node-1678987340563",
+            "animated": true
+          },
+          {
+            "id": "xy-edge__node-1678987340563-node-1678987340564",
+            "style": {
+              "stroke": "#1D1D1D",
+              "strokeWidth": 2
+            },
+            "source": "node-1678987340563",
+            "target": "node-1678987340564",
+            "animated": true
+          }
+        ],
+        "trigger_id": "trigger-1"
+      }
+    ],
+    "signature": {
+      "instructions": "Given the fields `nl_description`, produce the fields `trigger_type`, `workflow_steps`, `conditions`.",
+      "fields": [
+        {
+          "prefix": "Nl Description:",
+          "description": "${nl_description}"
+        },
+        {
+          "prefix": "Reasoning: Let's think step by step in order to",
+          "description": "${reasoning}"
+        },
+        {
+          "prefix": "Trigger Type:",
+          "description": "${trigger_type}"
+        },
+        {
+          "prefix": "Workflow Steps:",
+          "description": "${workflow_steps}"
+        },
+        {
+          "prefix": "Conditions:",
+          "description": "${conditions}"
+        }
+      ]
+    },
+    "lm": null
+  },
+  "mapper.map": {
+    "traces": [],
+    "train": [],
+    "demos": [
+      {
+        "augmented": true,
+        "step": "Log the summary to a Google Sheets document",
+        "valid_types": [
+          "GMAIL_TRIGGER",
+          "WEBHOOK",
+          "AI",
+          "HTTP",
+          "CONDITION",
+          "EMAIL",
+          "DISCORD",
+          "SLACK",
+          "SHEETS",
+          "NOTION",
+          "SCRAPER"
+        ],
+        "node_type": "SHEETS",
+        "node_config": {
+          "spreadsheetId": "",
+          "range": "",
+          "majorDimension": "ROWS",
+          "valueInputOption": "USER_ENTERED"
+        }
+      },
+      {
+        "augmented": true,
+        "step": "Store classification result in Google Sheets",
+        "valid_types": [
+          "GMAIL_TRIGGER",
+          "WEBHOOK",
+          "AI",
+          "HTTP",
+          "CONDITION",
+          "EMAIL",
+          "DISCORD",
+          "SLACK",
+          "SHEETS",
+          "NOTION",
+          "SCRAPER"
+        ],
+        "node_type": "SHEETS",
+        "node_config": {
+          "operation": "WRITE",
+          "sheet_id": "YOUR_SHEET_ID",
+          "range": "YOUR_RANGE",
+          "value": "${{classification_result}}"
+        }
+      },
+      {
+        "augmented": true,
+        "step": "Format AI output into a suitable format for Google Sheets",
+        "valid_types": [
+          "GMAIL_TRIGGER",
+          "WEBHOOK",
+          "AI",
+          "HTTP",
+          "CONDITION",
+          "EMAIL",
+          "DISCORD",
+          "SLACK",
+          "SHEETS",
+          "NOTION",
+          "SCRAPER"
+        ],
+        "node_type": "'Google Sheets Compatible Node'",
+        "node_config": {
+          "header": {
+            "input": {
+              "step": {
+                "type": "string"
+              },
+              "valid_types": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "output": {
+            "node_type": {
+              "type": "string"
+            },
+            "node_config": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          },
+          "google_sheets_config": {
+            "spreadsheet_id": {
+              "type": "string",
+              "description": "Google Sheets Spreadsheet ID"
+            },
+            "sheet_name": {
+              "type": "string",
+              "description": "Google Sheets Sheet Name"
+            },
+            "start_row": {
+              "type": "integer",
+              "description": "Starting row for writing to Google Sheets"
+            },
+            "sep": {
+              "type": "string",
+              "description": "Separator used to write to Google Sheets",
+              "enum": [
+                "",
+                ",",
+                ";",
+                "\t"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "nl_description": "This workflow generates an AI summary of the request body when a webhook fires, then creates a new Notion page with the summary.",
+        "nodes": [
+          {
+            "id": "trigger-1",
+            "data": {
+              "type": "trigger",
+              "label": "Webhook Trigger",
+              "subline": "Listening for POST requests..."
+            },
+            "type": "TRIGGER",
+            "position": {
+              "x": 0,
+              "y": 0
+            },
+            "nextStepId": "node-1678987340563"
+          },
+          {
+            "id": "node-1678987340563",
+            "data": {
+              "type": "ai",
+              "prompt": "Summarize the request body"
+            },
+            "type": "AI",
+            "position": {
+              "x": 300,
+              "y": 0
+            },
+            "nextStepId": "node-1678987340564"
+          },
+          {
+            "id": "node-1678987340564",
+            "data": {
+              "type": "notionNode",
+              "content": "Summary: {{previous_step}}",
+              "databaseId": "your-notion-db-id"
+            },
+            "type": "NOTION",
+            "position": {
+              "x": 600,
+              "y": 0
+            },
+            "nextStepId": null
+          }
+        ],
+        "edges": [
+          {
+            "id": "xy-edge__trigger-1-node-1678987340563",
+            "style": {
+              "stroke": "#1D1D1D",
+              "strokeWidth": 2
+            },
+            "source": "trigger-1",
+            "target": "node-1678987340563",
+            "animated": true
+          },
+          {
+            "id": "xy-edge__node-1678987340563-node-1678987340564",
+            "style": {
+              "stroke": "#1D1D1D",
+              "strokeWidth": 2
+            },
+            "source": "node-1678987340563",
+            "target": "node-1678987340564",
+            "animated": true
+          }
+        ],
+        "trigger_id": "trigger-1"
+      },
+      {
+        "nl_description": "This workflow is triggered by a webhook, which then uses AI to auto-tag the incoming content. The tags are then saved to Google Sheets for further analysis.",
+        "nodes": [
+          {
+            "id": "node-1678901234",
+            "data": {
+              "type": "trigger",
+              "label": "Webhook Trigger",
+              "subline": "Listening for POST requests..."
+            },
+            "type": "TRIGGER",
+            "position": {
+              "x": 0,
+              "y": 0
+            },
+            "nextStepId": "node-1678901235"
+          },
+          {
+            "id": "node-1678901235",
+            "data": {
+              "type": "ai",
+              "prompt": "Auto-tag the incoming content"
+            },
+            "type": "AI",
+            "position": {
+              "x": 300,
+              "y": 0
+            },
+            "nextStepId": "node-1678901236"
+          },
+          {
+            "id": "node-1678901236",
+            "data": {
+              "type": "sheets",
+              "range": "Sheet1!A:A",
+              "sheetId": "some_sheet_id"
+            },
+            "type": "SHEETS",
+            "position": {
+              "x": 600,
+              "y": 0
+            },
+            "nextStepId": null
+          }
+        ],
+        "edges": [
+          {
+            "id": "xy-edge__node-1678901234-node-1678901235",
+            "style": {
+              "stroke": "#1D1D1D",
+              "strokeWidth": 2
+            },
+            "source": "node-1678901234",
+            "target": "node-1678901235",
+            "animated": true
+          },
+          {
+            "id": "xy-edge__node-1678901235-node-1678901236",
+            "style": {
+              "stroke": "#1D1D1D",
+              "strokeWidth": 2
+            },
+            "source": "node-1678901235",
+            "target": "node-1678901236",
+            "animated": true
+          }
+        ],
+        "trigger_id": "node-1678901234"
+      }
+    ],
+    "signature": {
+      "instructions": "Given a natural language step description and a list of valid types, predict a node type and configuration in Google Sheets for automation and integration.",
+      "fields": [
+        {
+          "prefix": "Step:",
+          "description": "${step}"
+        },
+        {
+          "prefix": "Valid Types:",
+          "description": "${valid_types}"
+        },
+        {
+          "prefix": "Node Type:",
+          "description": "${node_type}"
+        },
+        {
+          "prefix": "Node Config:",
+          "description": "${node_config}"
+        }
+      ]
+    },
+    "lm": null
+  },
+  "resolver.resolve.predict": {
+    "traces": [],
+    "train": [],
+    "demos": [],
+    "signature": {
+      "instructions": "To provide a more accurate prediction of the edges and trigger id for a given set of nodes and conditions in the Predict module, please provide the following additional information: \n1) Nodes: A list of nodes with their respective types and configurations (e.g., id, type, data, position)\n2) Conditions: A list of conditions that should be taken into account for the prediction (e.g., 'webhook data is received', 'Notion database is accessible')\n3) The goal of the workflow (e.g., 'automate a workflow for customer support', 'analyze customer data')\n4) Any additional context or details about the workflow (e.g., 'this is a scheduled workflow', 'this workflow uses a specific AI model')\n\nThe proposed instruction aims to improve the accuracy of the Predict module by incorporating more relevant information about the nodes, conditions, and workflow goal. This will enable the module to provide more nuanced and context-specific predictions of the edges and trigger id.",
+      "fields": [
+        {
+          "prefix": "Nodes:",
+          "description": "${nodes}"
+        },
+        {
+          "prefix": "Conditions:",
+          "description": "${conditions}"
+        },
+        {
+          "prefix": "Reasoning: Let's think step by step in order to",
+          "description": "${reasoning}"
+        },
+        {
+          "prefix": "Edges:",
+          "description": "${edges}"
+        },
+        {
+          "prefix": "Trigger Id:",
+          "description": "${trigger_id}"
+        }
+      ]
+    },
+    "lm": null
+  },
+  "metadata": {
+    "dependency_versions": {
+      "python": "3.14",
+      "dspy": "3.1.3",
+      "cloudpickle": "3.1"
+    }
+  }
+}

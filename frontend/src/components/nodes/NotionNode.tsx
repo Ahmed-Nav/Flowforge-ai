@@ -1,7 +1,22 @@
-import { Handle, Position } from "@xyflow/react";
+import { Handle, Position, useReactFlow } from "@xyflow/react";
 import { FileText } from "lucide-react";
+import { useState, useEffect } from "react";
 
-export default function NotionNode({ data }: any) {
+export default function NotionNode({ data, id }: { data: any; id: string }) {
+  const { updateNodeData } = useReactFlow();
+  const [databaseId, setDatabaseId] = useState(data.databaseId || "");
+  const [content, setContent] = useState(data.content || "");
+
+  useEffect(() => {
+    if (data.databaseId !== undefined) setDatabaseId(data.databaseId);
+    if (data.content !== undefined) setContent(data.content);
+  }, [data.databaseId, data.content]);
+
+  const handleChange = (key: string, val: string) => {
+    if (key === "databaseId") setDatabaseId(val);
+    if (key === "content") setContent(val);
+    updateNodeData(id, { [key]: val });
+  };
   return (
     <div className="bg-white border-2 border-black shadow-xl p-4 w-72 rounded-lg font-mono text-black relative">
       <Handle
@@ -24,8 +39,8 @@ export default function NotionNode({ data }: any) {
             type="text"
             className="w-full bg-gray-100 border border-gray-300 rounded p-1 text-xs text-black focus:outline-none focus:border-black"
             placeholder="e.g., 845dd7c03aa7..."
-            defaultValue={data.databaseId}
-            onChange={(e) => (data.databaseId = e.target.value)}
+            value={databaseId}
+            onChange={(e) => handleChange("databaseId", e.target.value)}
           />
         </div>
 
@@ -36,8 +51,8 @@ export default function NotionNode({ data }: any) {
           <textarea
             className="w-full bg-gray-100 border border-gray-300 rounded p-1 text-xs text-black focus:outline-none focus:border-black h-16 resize-none"
             placeholder="Content: {{previous_step}}"
-            defaultValue={data.content}
-            onChange={(e) => (data.content = e.target.value)}
+            value={content}
+            onChange={(e) => handleChange("content", e.target.value)}
           />
         </div>
       </div>
