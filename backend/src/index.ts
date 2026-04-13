@@ -324,16 +324,34 @@ app.post("/compile", authenticateToken, async (req: AuthRequest, res) => {
   if (!nl_description?.trim())
     return res.status(400).json({ error: "nl_description required" });
 
-  const compilerUrl = process.env.COMPILER_URL || "http://localhost:8001";
-  const r = await fetch(`${compilerUrl}/compile`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ nl_description }),
-  });
+  try {
+    const compilerUrl = process.env.COMPILER_URL || "http://localhost:8001";
+    console.log(`📡 Calling Compiler at: ${compilerUrl}/compile`);
+    
+    const r = await fetch(`${compilerUrl}/compile`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ nl_description }),
+    });
 
-  if (!r.ok) return res.status(502).json({ error: "Compiler failed" });
-  const graph = await r.json();
-  res.json({ ...(graph as any), compiledByDSPy: true });
+    if (!r.ok) {
+      const errText = await r.text();
+      console.error(`❌ Compiler Error (${r.status}):`, errText);
+      return res.status(r.status).json({ 
+        error: "Compiler service error", 
+        details: errText 
+      });
+    }
+
+    const graph = await r.json();
+    res.json({ ...(graph as any), compiledByDSPy: true });
+  } catch (error: any) {
+    console.error("⛔ Compiler Fetch Failed:", error.message);
+    res.status(503).json({ 
+      error: "Compiler service unavailable", 
+      details: "The backend could not connect to the AI compiler service. Please ensure it is deployed and reachable." 
+    });
+  }
 });
 
 startGmailPolling();

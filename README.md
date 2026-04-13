@@ -25,7 +25,20 @@ Unlike simple automation tools, FlowForge agents allow for **Logic**, **Memory (
 - **Backend:** Node.js, Express, TypeScript.
 - **Database:** PostgreSQL (via NeonDB), Prisma ORM.
 - **Queue/Cache:** Redis (via Render), BullMQ.
-- **AI:** Google Gemini Pro (`gemini-2.5-flash`), LangChain.
+- **AI:** Google Gemini Pro (`gemini-1.5-flash`), LangChain.
+- **NLP Engine:** DSPy (via Groq/Llama-3.1).
+
+---
+
+## 🧠 AI Compiler (The "Interpreter")
+
+FlowForge features a powerful Natural Language Compiler that allows you to build workflows just by describing them. 
+
+- **How it works**: It uses a DSPy-optimized pipeline to parse your text and map it to actual React Flow nodes and edges.
+- **Technology**: Built with Python and FastAPI, utilizing the Groq Llama-3.1 model for high-speed intelligence.
+- **Customization**: You can "train" or optimize the compiler by providing new examples and running the optimization scripts.
+
+For detailed technical details on the compiler, see [compiler/README.md](file:///d:/Projects/Flowforge-ai/compiler/README.md).
 
 ---
 
