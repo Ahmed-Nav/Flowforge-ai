@@ -5,19 +5,27 @@ VALID_TYPES = ["GMAIL_TRIGGER","WEBHOOK","AI","HTTP","CONDITION",
 
 class IntentSignature(dspy.Signature):
     """
-    Parses the user's natural language description into high-level workflow components.
-    Identify the most appropriate primary trigger and a concise list of 1-3 logical actions.
+    You are an Expert Automation Architect. Parse the user's natural language into a high-value workflow blueprint.
+    
+    CRITICAL COGNITION:
+    1. If the prompt is VAGUE (e.g., 'Track my crypto'), do NOT just map what's there. Fill in the logical gaps.
+    2. 'Track' or 'Monitor' tasks ALWAYS require a 'SCHEDULE' trigger and a data log (Default to 'SHEETS').
+    3. 'Notify' or 'Alert' tasks should use 'SLACK' or 'DISCORD'.
+    4. If the user name-drops a tool like 'Notion', use it. Otherwise, default to 'SHEETS' for any database/log intent.
+    5. Keep the workflow professional and complete (Usually 2-4 nodes).
     """
     nl_description = dspy.InputField(desc="User's automation prompt")
     trigger_type = dspy.OutputField(desc=f"Primary trigger type from: {', '.join(VALID_TYPES)}")
-    workflow_steps = dspy.OutputField(desc="Concise list of logical steps (1-3 max)")
-    reasoning = dspy.OutputField()
+    workflow_steps = dspy.OutputField(desc="Concise list of logical architectural steps (1-4 max)")
+    reasoning = dspy.OutputField(desc="Internal logic for the blueprint (keep it technical)")
 
 class MappingSignature(dspy.Signature):
     """
-    Maps logical steps to physical system nodes. 
-    Each node must belong to one of the VALID_TYPES.
-    Specific mentions (Slack, Discord, Sheets) must use those types.
+    Maps logical steps to specific system nodes.
+    Guidelines:
+    - Default to 'SHEETS' for any tracking, logging, or database storage unless 'NOTION' is explicitly mentioned.
+    - If a step implies web data, use 'HTTP' or 'SCRAPER'.
+    - If a step implies decision making or content generation, use 'AI'.
     """
     workflow_steps = dspy.InputField()
     valid_types = dspy.InputField()
@@ -25,7 +33,7 @@ class MappingSignature(dspy.Signature):
 
 class EdgeSignature(dspy.Signature):
     """
-    Determines the connections (edges) between nodes.
+    Determines the connections (edges) between nodes to ensure a functional graph.
     """
     nl_description = dspy.InputField()
     nodes = dspy.InputField()
@@ -55,7 +63,6 @@ def extract_list(text):
     text = str(text).strip()
     text = re.sub(r'#.*$', '', text, flags=re.MULTILINE)
     
-    # Try finding the first block starts with [ and ends with ]
     start = text.find('[')
     end = text.rfind(']')
     if start != -1 and end != -1 and end > start:
@@ -64,7 +71,6 @@ def extract_list(text):
             return ast.literal_eval(blob)
         except:
             try:
-                # Basic cleanup for common small-model errors
                 blob = blob.replace("true", "True").replace("false", "False").replace("null", "None")
                 return ast.literal_eval(blob)
             except:
@@ -85,9 +91,9 @@ class FlowForgeCompiler(dspy.Module):
         
         if trigger_suggested in VALID_TYPES:
             trigger_type = trigger_suggested
-        elif any(w in trigger_suggested for w in ["DAILY", "SCHEDULE", "TIME", "9AM", "AM", "PM", "MORNING"]):
+        elif any(w in trigger_suggested for w in ["DAILY", "SCHEDULE", "TIME", "9AM", "AM", "PM", "MORNING", "TRACK", "MONITOR"]):
             trigger_type = "SCHEDULE"
-        elif any(w in trigger_suggested for w in ["GMAIL", "MAIL"]):
+        elif any(w in trigger_suggested for w in ["GMAIL", "MAIL", "EMAIL"]):
             trigger_type = "GMAIL_TRIGGER"
         else:
             for vt in VALID_TYPES:
@@ -111,26 +117,28 @@ class FlowForgeCompiler(dspy.Module):
             
             n_type = str(node_data.get("node_type", "AI")).upper().strip("'\" ")
             
-            # Normalization
-            if "SLACK" in n_type: n_type = "SLACK"
-            elif "DISCORD" in n_type: n_type = "DISCORD"
-            elif "SHEETS" in n_type: n_type = "SHEETS"
-            elif "NOTION" in n_type: n_type = "NOTION"
-            elif "GMAIL" in n_type or "EMAIL" in n_type:
-                # If it's a trigger type and we already have a trigger, don't use it as a middle node
-                # unless it's specifically requested as an action.
-                n_type = "GMAIL_TRIGGER"
-            
+            # Use SHEETS as default for vague saving intents
             if n_type not in VALID_TYPES:
-                for vt in VALID_TYPES:
-                    if vt in n_type:
-                        n_type = vt
-                        break
-                else: n_type = "AI"
+                if any(w in n_type for w in ["SAVE", "LOG", "TRACK", "DB", "DATABASE", "TABLE", "EXCEL"]):
+                    n_type = "SHEETS"
+                elif "NOTION" in n_type:
+                    n_type = "NOTION"
+                elif "SLACK" in n_type:
+                    n_type = "SLACK"
+                elif "DISCORD" in n_type:
+                    n_type = "DISCORD"
+                else:
+                    for vt in VALID_TYPES:
+                        if vt in n_type:
+                            n_type = vt
+                            break
+                    else: n_type = "AI"
             
-            # Deduplicate the starting trigger node
             if n_type == trigger_type and len(nodes) == 1:
                 nodes[0]["data"].update(node_data.get("node_config", {}))
+                continue
+
+            if len(nodes) > 1 and nodes[-1]["type"] == n_type:
                 continue
 
             nodes.append({
@@ -145,15 +153,16 @@ class FlowForgeCompiler(dspy.Module):
         raw_edges = extract_list(graph.edges)
         
         node_ids = [n["id"] for n in nodes]
-        for e in raw_edges:
-            if isinstance(e, dict) and "source" in e and "target" in e:
-                s, t = str(e["source"]), str(e["target"])
-                if s in node_ids and t in node_ids and s != t:
-                    edges.append({
-                        "id": f"edge-{len(edges)}",
-                        "source": s,
-                        "target": t
-                    })
+        if raw_edges:
+            for e in raw_edges:
+                if isinstance(e, dict) and "source" in e and "target" in e:
+                    s, t = str(e["source"]), str(e["target"])
+                    if s in node_ids and t in node_ids and s != t:
+                        edges.append({
+                            "id": f"edge-{len(edges)}",
+                            "source": s,
+                            "target": t
+                        })
             
         if not edges and len(nodes) > 1:
             for i in range(len(nodes) - 1):

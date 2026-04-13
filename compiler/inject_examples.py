@@ -1,63 +1,99 @@
 import pickle, os, dspy
 
 splits_path = os.path.join('..', 'backend', 'data', 'dspy_splits.pkl')
-with open(splits_path, 'rb') as f:
-    splits = pickle.load(f)
+if not os.path.exists(splits_path):
+    # Create empty splits if they don't exist
+    splits = {'train': [], 'val': [], 'test': []}
+else:
+    with open(splits_path, 'rb') as f:
+        splits = pickle.load(f)
 
-# Define complex examples to guide the optimizer
-new_examples = [
+# Define creative examples for vague prompts
+creative_examples = [
     dspy.Example(
-        nl_description="Every morning at 8 AM, use AI to summarize the news from Hacker News using a scraper and then save the summary to a new Notion page.",
+        nl_description="Track my crypto",
         nodes=[
-            {"id": "node-1", "type": "SCHEDULE", "data": {"cron": "0 8 * * *"}},
-            {"id": "node-2", "type": "SCRAPER", "data": {"url": "https://news.ycombinator.com/"}},
-            {"id": "node-3", "type": "AI", "data": {"prompt": "Summarize the scraped news"}},
-            {"id": "node-4", "type": "NOTION", "data": {"type": "notionNode", "content": "{{previous_step}}", "databaseId": "db_123"}}
+            {"id": "node-0", "type": "SCHEDULE", "data": {"cron": "0 0 * * *"}},
+            {"id": "node-1", "type": "HTTP", "data": {"url": "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd"}},
+            {"id": "node-2", "type": "SHEETS", "data": {"operation": "APPEND", "spreadsheetId": "YOUR_SHEET_ID"}}
         ],
         edges=[
-            {"id": "e1", "source": "node-1", "target": "node-2"},
-            {"id": "e2", "source": "node-2", "target": "node-3"},
-            {"id": "e3", "source": "node-3", "target": "node-4"}
+            {"id": "e1", "source": "node-0", "target": "node-1"},
+            {"id": "e2", "source": "node-1", "target": "node-2"}
         ],
-        trigger_id="node-1"
+        trigger_id="node-0"
     ).with_inputs("nl_description"),
     
     dspy.Example(
-        nl_description="When a webhook is received, use AI to analyze the sentiment. If it's negative, log it to Google Sheets and send a Discord alert.",
+        nl_description="Alert me for important emails",
         nodes=[
-            {"id": "node-1", "type": "TRIGGER", "data": {"type": "trigger", "label": "Webhook"}},
-            {"id": "node-2", "type": "AI", "data": {"prompt": "Analyze sentiment: {{previous_step}}"}},
-            {"id": "node-3", "type": "SHEETS", "data": {"type": "sheets", "range": "A:A", "sheetId": "sheet_123"}},
-            {"id": "node-4", "type": "DISCORD", "data": {"type": "discord", "url": "https://discord.com/...", "message": "Negative sentiment detected!"}}
+            {"id": "node-0", "type": "GMAIL_TRIGGER", "data": {}},
+            {"id": "node-1", "type": "AI", "data": {"prompt": "Determine if this email is high priority. Respond only with 'high' or 'low'."}},
+            {"id": "node-2", "type": "CONDITION", "data": {"expression": "{{previous_step}} == 'high'"}},
+            {"id": "node-3", "type": "SLACK", "data": {"channel": "#alerts", "message": "Important Email: {{subject}}"}}
         ],
         edges=[
-            {"id": "e1", "source": "node-1", "target": "node-2"},
-            {"id": "e2", "source": "node-2", "target": "node-3"},
-            {"id": "e3", "source": "node-2", "target": "node-4"}
+            {"id": "e1", "source": "node-0", "target": "node-1"},
+            {"id": "e2", "source": "node-1", "target": "node-2"},
+            {"id": "e3", "source": "node-2", "target": "node-3"}
         ],
-        trigger_id="node-1"
+        trigger_id="node-0"
     ).with_inputs("nl_description"),
 
     dspy.Example(
-        nl_description="Scrape product prices from a URL every hour, compare them with previous ones using AI, and if dropped, send an email notification.",
+        nl_description="Sync Discord to Slack",
         nodes=[
-            {"id": "node-1", "type": "SCHEDULE", "data": {"cron": "0 * * * *"}},
-            {"id": "node-2", "type": "SCRAPER", "data": {"url": "https://example.com/p"}},
-            {"id": "node-3", "type": "AI", "data": {"prompt": "Compare prices and detect drop"}},
-            {"id": "node-4", "type": "EMAIL", "data": {"type": "email", "to": "user@ex.com", "subject": "Price Drop!"}}
+            {"id": "node-0", "type": "WEBHOOK", "data": {"label": "Discord Incoming"}},
+            {"id": "node-1", "type": "SLACK", "data": {"channel": "#cross-platform", "message": "{{webhook_content}}"}}
         ],
         edges=[
-            {"id": "e1", "source": "node-1", "target": "node-2"},
-            {"id": "e2", "source": "node-2", "target": "node-3"},
-            {"id": "e3", "source": "node-3", "target": "node-4"}
+            {"id": "e1", "source": "node-0", "target": "node-1"}
         ],
-        trigger_id="node-1"
+        trigger_id="node-0"
+    ).with_inputs("nl_description"),
+
+    dspy.Example(
+        nl_description="Organize my research",
+        nodes=[
+            {"id": "node-0", "type": "WEBHOOK", "data": {"label": "Research Input"}},
+            {"id": "node-1", "type": "SCRAPER", "data": {"url": "{{webhook_url}}"}},
+            {"id": "node-2", "type": "AI", "data": {"prompt": "Categorize this research and summarize key findings."}},
+            {"id": "node-3", "type": "SHEETS", "data": {"operation": "APPEND", "label": "Research Log"}}
+        ],
+        edges=[
+            {"id": "e1", "source": "node-0", "target": "node-1"},
+            {"id": "e2", "source": "node-1", "target": "node-2"},
+            {"id": "e3", "source": "node-2", "target": "node-3"}
+        ],
+        trigger_id="node-0"
+    ).with_inputs("nl_description"),
+
+    dspy.Example(
+        nl_description="Summarize the news daily",
+        nodes=[
+            {"id": "node-0", "type": "SCHEDULE", "data": {"cron": "0 9 * * *"}},
+            {"id": "node-1", "type": "SCRAPER", "data": {"url": "https://news.google.com"}},
+            {"id": "node-2", "type": "AI", "data": {"prompt": "Summarize today's top news in bullet points."}},
+            {"id": "node-3", "type": "SHEETS", "data": {"operation": "APPEND", "label": "Daily News"}}
+        ],
+        edges=[
+            {"id": "e1", "source": "node-0", "target": "node-1"},
+            {"id": "e2", "source": "node-1", "target": "node-2"},
+            {"id": "e3", "source": "node-2", "target": "node-3"}
+        ],
+        trigger_id="node-0"
     ).with_inputs("nl_description")
 ]
 
-# Add to training set
-splits['train'].extend(new_examples)
-print(f"Injected {len(new_examples)} high-quality examples. Total training set: {len(splits['train'])}")
+# Add to training set and ensure no duplicates by comparing nl_description
+existing_descriptions = [ex.nl_description for ex in splits['train'] if hasattr(ex, 'nl_description')]
+added_count = 0
+for ex in creative_examples:
+    if ex.nl_description not in existing_descriptions:
+        splits['train'].append(ex)
+        added_count += 1
+
+print(f"Injected {added_count} creative examples. Total training set: {len(splits['train'])}")
 
 with open(splits_path, 'wb') as f:
     pickle.dump(splits, f)
